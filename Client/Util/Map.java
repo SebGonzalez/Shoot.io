@@ -3,6 +3,9 @@ package Client.Util;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import org.lwjgl.opengl.Display;
+import static org.lwjgl.opengl.GL11.*;
+
 public class Map {
 
 	private int largeur;
@@ -34,7 +37,7 @@ public class Map {
 		this.longueur = longueur;
 	}
 
-
+	//swing
 	public void drawMap(Graphics g, Personnage p, int largeurFenetre, int hauteurFenetre) {
 		for(int i=0; i<largeurFenetre; i++) {
 			if(((p.getX() - largeurFenetre/2) + i) == 0) {
@@ -56,6 +59,49 @@ public class Map {
 				g.setColor(Color.BLACK);
 				g.drawString(""+((p.getY() - hauteurFenetre/2) + i), 10, i);
 				g.drawLine(0, i, largeurFenetre, i);
+			}
+		}
+	}
+	
+	//lwjgl
+	public void drawMap(Personnage p) {
+		for(int i=0; i<Display.getWidth(); i++) {
+			if(((p.getX() - Display.getWidth()/2) + i) == 0) {
+				glBegin(GL_QUADS);
+				glColor3f(1.0F, 0.0F, 0.0F);
+				glVertex2i(i, 0);
+				glVertex2i(i+10, 0);
+				glVertex2i(i, Display.getHeight());
+				glVertex2i(i+10, Display.getHeight());
+				glEnd();
+			}
+			if(((p.getX() - Display.getWidth()/2) + i)%200 == 0) {
+				glBegin(GL_LINES);
+				glColor3f(0.0F, 0.0F, 0.0F);
+				glVertex2i(i, 0);
+				glVertex2i(i, Display.getHeight());
+				glEnd();
+				//g.drawString(""+((p.getX() - Display.getWidth()/2) + i), i, 10);
+			}
+		}
+		for(int i=0; i<Display.getHeight(); i++) {
+			if(((p.getY() - Display.getHeight()/2) + i) == 0) {
+				glBegin(GL_QUADS);
+				glColor3f(1.0F, 0.0F, 0.0F);
+				glVertex2i(0, i);
+				glVertex2i(0, i+10);
+				glVertex2i(Display.getWidth(), i);
+				glVertex2i(Display.getWidth(), i+10);
+				glEnd();
+			}
+			if(((p.getY() - Display.getHeight()/2) + i)%200 == 0) {
+				glBegin(GL_LINES);
+				glColor3f(0.0F, 0.0F, 0.0F);
+				glVertex2i(0, i);
+				glVertex2i(Display.getWidth(), i);
+				glEnd();
+
+				//g.drawString(""+((p.getY() - Display.getHeight()/2) + i), 10, i);
 			}
 		}
 	}

@@ -14,27 +14,8 @@ import javax.swing.JPanel;
 
 public class Panel extends JPanel implements MouseListener, MouseMotionListener{
 	
-	private int largeurFenetre;
-	private int hauteurFenetre;
 	public Panel() {
 		this.setLayout(null);
-		
-		this.addComponentListener(new ComponentListener() {		
-			@Override
-			public void componentShown(ComponentEvent e) {	
-			}	
-			@Override
-			public void componentResized(ComponentEvent e) {
-				largeurFenetre = e.getComponent().getWidth();
-				hauteurFenetre = e.getComponent().getHeight();
-			}	
-			@Override
-			public void componentMoved(ComponentEvent e) {	
-			}	
-			@Override
-			public void componentHidden(ComponentEvent e) {
-			}
-		});
 		
 		final Runnable task = new Runnable() {
             

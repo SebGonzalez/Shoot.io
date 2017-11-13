@@ -3,6 +3,9 @@ package Client.Util;
 import java.awt.Graphics;
 import java.util.Vector;
 
+import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.opengl.Display;
+
 public class Personnage {
 	private static double VITESSE = 2;
 	
@@ -35,6 +38,7 @@ public class Personnage {
 		this.y = y;
 	}
 	
+	//swing
 	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap, int largeurFenetre, int hauteurFenetre) {
 		//System.out.println("SOURIS  "+xSouris + " : " + ySouris);
 		System.out.println("DARONNE "+x + " : " + y);
@@ -50,10 +54,27 @@ public class Personnage {
 		System.out.println("VECTOR : "+ xVector +" : " + yVector);
 	}
 	
+	//lwjgl
+	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap) {
+		//System.out.println("SOURIS  "+xSouris + " : " + ySouris);
+		//System.out.println("DARONNE "+x + " : " + y);
+		
+		xVector = xSouris - (Display.getWidth()/2);
+		yVector = ySouris - (Display.getHeight()/2);
+		
+		double longueur = Math.sqrt(xVector*xVector + yVector*yVector);
+		
+		xVector/=longueur;
+		yVector/=longueur;
+		
+		move(largeurMap, hauteurMap);
+		//System.out.println("VECTOR : "+ xVector +" : " + yVector);
+	}
+	
 	public void move(int largeurMap, int hauteurMap) {
 		
-		double deplacementX = x +xVector*VITESSE;
-		double deplacementY = y + yVector * VITESSE;
+		double deplacementX = x + xVector*VITESSE;
+		double deplacementY = y - yVector * VITESSE;
 		if(deplacementX > 0 && deplacementX < largeurMap)
 			x = (int) deplacementX;
 		else if(deplacementX < 0)
@@ -70,8 +91,19 @@ public class Personnage {
 		
 	}
 	
+	//swing
 	public void drawPersonnage(Graphics g, int largeurFenetre, int hauteurFenetre) {
 		g.fillOval(largeurFenetre/2, hauteurFenetre/2, 15, 15);
 		g.drawString("Le personnage", largeurFenetre/2-15, hauteurFenetre/2+15 );
+	}
+	
+	//lwjgl
+	public void drawPersonnage() {
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.0F, 0.0F, 0.0F);
+		glVertex2i(Display.getWidth()/2, Display.getHeight()/2);
+		glVertex2i(Display.getWidth()/2+30, Display.getHeight()/2+80);
+		glVertex2i(Display.getWidth()/2-30, Display.getHeight()/2+80);
+		glEnd();
 	}
 }
