@@ -71,10 +71,27 @@ public class Personnage {
 		//System.out.println("VECTOR : "+ xVector +" : " + yVector);
 	}
 	
+	public void setVecteur2(int xSouris, int ySouris, int largeurMap, int hauteurMap) {
+		
+		xVector = xSouris - (Display.getWidth()/2);
+		yVector = ySouris - (Display.getHeight()/2);
+		
+		//Vec2 vector = new Vec2(xVector, yVector);
+		
+		double longueur = Math.sqrt(xVector*xVector + yVector*yVector);
+		
+		//xVector=vector.x/vector.length();
+		//yVector=vector.y/vector.length();;
+		
+		move(largeurMap, hauteurMap);
+	}
+	
 	public void move(int largeurMap, int hauteurMap) {
 		
 		double deplacementX = x + xVector*VITESSE;
 		double deplacementY = y - yVector * VITESSE;
+		
+		System.out.println("Deplacement x : " + (xVector*VITESSE) + " Deplacement y : " + (yVector*VITESSE));
 		if(deplacementX > 0 && deplacementX < largeurMap)
 			x = (int) deplacementX;
 		else if(deplacementX < 0)
