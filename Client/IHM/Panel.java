@@ -21,7 +21,7 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
             
 	        @Override
 	        public void run() {
-	            Frame.personnage.move(Frame.map.getLargeur(), Frame.map.getLongueur());
+	            //Frame.personnage.move(Frame.map.getLargeur(), Frame.map.getLongueur());
 	            repaint();
 	        }
 	    };

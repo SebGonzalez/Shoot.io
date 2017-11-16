@@ -66,16 +66,16 @@ public class Map {
 	//lwjgl
 	public void drawMap(Personnage p) {
 		for(int i=0; i<Display.getWidth(); i++) {
-			if(((p.getX() - Display.getWidth()/2) + i) == 0) {
+			if((((int)p.getX() - Display.getWidth()/2) + i) == 0) {
 				glBegin(GL_QUADS);
 				glColor3f(1.0F, 0.0F, 0.0F);
 				glVertex2i(i, 0);
 				glVertex2i(i+10, 0);
-				glVertex2i(i, Display.getHeight());
 				glVertex2i(i+10, Display.getHeight());
+				glVertex2i(i, Display.getHeight());
 				glEnd();
 			}
-			if(((p.getX() - Display.getWidth()/2) + i)%200 == 0) {
+			if((((int)p.getX() - Display.getWidth()/2) + i)%200 == 0) {
 				glBegin(GL_LINES);
 				glColor3f(0.0F, 0.0F, 0.0F);
 				glVertex2i(i, 0);
@@ -85,16 +85,16 @@ public class Map {
 			}
 		}
 		for(int i=0; i<Display.getHeight(); i++) {
-			if(((p.getY() - Display.getHeight()/2) + i) == 0) {
+			if((((int)p.getY() - Display.getHeight()/2) + i) == 0) {
 				glBegin(GL_QUADS);
 				glColor3f(1.0F, 0.0F, 0.0F);
 				glVertex2i(0, i);
 				glVertex2i(0, i+10);
-				glVertex2i(Display.getWidth(), i);
 				glVertex2i(Display.getWidth(), i+10);
+				glVertex2i(Display.getWidth(), i);
 				glEnd();
 			}
-			if(((p.getY() - Display.getHeight()/2) + i)%200 == 0) {
+			if((((int)p.getY() - Display.getHeight()/2) + i)%200 == 0) {
 				glBegin(GL_LINES);
 				glColor3f(0.0F, 0.0F, 0.0F);
 				glVertex2i(0, i);

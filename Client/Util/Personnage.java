@@ -1,20 +1,28 @@
 package Client.Util;
 
-import java.awt.Graphics;
-import java.util.Vector;
-
 import static org.lwjgl.opengl.GL11.*;
+
+import Client.RessourceFactory.*;
+
+import java.awt.Graphics;
+
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 public class Personnage {
 	private static double VITESSE = 2;
 	
 	private String nom;
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	
-	private double xVector;
-	private double yVector;
+	private float xVector;
+	private float yVector;
+	
+	private float nbSprite = 0;
+	private float position = 0; //0 droite, 1 gauche, 2 haut, 3 bas
+	private float cumulDelta = 0;
+	private double angle=0;
 	
 	public Personnage(String nom) {
 		this.nom = nom;
@@ -22,7 +30,7 @@ public class Personnage {
 		y=2000;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -30,7 +38,7 @@ public class Personnage {
 		this.x = x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -56,55 +64,66 @@ public class Personnage {
 	
 	//lwjgl
 	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap) {
-		//System.out.println("SOURIS  "+xSouris + " : " + ySouris);
-		//System.out.println("DARONNE "+x + " : " + y);
+		
+		//System.out.println(xSouris + " : " + ySouris);
 		
 		xVector = xSouris - (Display.getWidth()/2);
 		yVector = ySouris - (Display.getHeight()/2);
+		angle = Math.toDegrees(Math.atan2(ySouris- (Display.getHeight()/2), xSouris));
+		if(xSouris>Display.getWidth()/2) angle=-angle;
+		System.out.println(angle);
 		
-		double longueur = Math.sqrt(xVector*xVector + yVector*yVector);
+		Vec2 vector = new Vec2(xVector, yVector);
 		
-		xVector/=longueur;
-		yVector/=longueur;
+		xVector=vector.x/vector.length();
+		yVector=vector.y/vector.length();
 		
-		move(largeurMap, hauteurMap);
-		//System.out.println("VECTOR : "+ xVector +" : " + yVector);
+		if(xSouris > Display.getWidth()/2-50 && xSouris < Display.getWidth()/2+50) {
+			if(ySouris < Display.getHeight()/2)
+				position = 3;
+			else
+				position = 2;
+			angle = 0;
+		}
+		else if(xSouris < Display.getWidth()/2)
+			position=1;
+		else
+			position=0;
+		
 	}
 	
-	public void setVecteur2(int xSouris, int ySouris, int largeurMap, int hauteurMap) {
+	public void move(int largeurMap, int hauteurMap, double delta) {
 		
-		xVector = xSouris - (Display.getWidth()/2);
-		yVector = ySouris - (Display.getHeight()/2);
-		
-		//Vec2 vector = new Vec2(xVector, yVector);
-		
-		double longueur = Math.sqrt(xVector*xVector + yVector*yVector);
-		
-		//xVector=vector.x/vector.length();
-		//yVector=vector.y/vector.length();;
-		
-		move(largeurMap, hauteurMap);
-	}
-	
-	public void move(int largeurMap, int hauteurMap) {
-		
-		double deplacementX = x + xVector*VITESSE;
-		double deplacementY = y - yVector * VITESSE;
-		
-		System.out.println("Deplacement x : " + (xVector*VITESSE) + " Deplacement y : " + (yVector*VITESSE));
+		double deplacementX = x + xVector*delta*VITESSE;
+		double deplacementY = y - yVector*delta*VITESSE;
+		//System.out.println(deplacementX + ", " + xVector*VITESSE + " : " + deplacementY + ", " + yVector*VITESSE);
 		if(deplacementX > 0 && deplacementX < largeurMap)
-			x = (int) deplacementX;
+			x = deplacementX;
 		else if(deplacementX < 0)
 			x=0;
 		else
 			x=largeurMap;
 		
 		if(deplacementY > 0 && deplacementY < hauteurMap)
-			y = (int) deplacementY;
+			y = deplacementY;
 		else if(deplacementY < 0)
 			y=0;
 		else
 			y=hauteurMap;
+		
+	}
+	
+	public void updatePersonnage(int xSouris, int ySouris, int largeurMap, int hauteurMap, double delta) {
+		setVecteur(Mouse.getX(), Mouse.getY(), largeurMap, hauteurMap);
+		move(largeurMap, hauteurMap, delta*0.1);
+		
+		cumulDelta += delta;
+		if(cumulDelta > 60) {
+			nbSprite++;
+			cumulDelta=0;
+		}
+		if(nbSprite>2)
+			nbSprite=0;
 		
 	}
 	
@@ -116,11 +135,32 @@ public class Personnage {
 	
 	//lwjgl
 	public void drawPersonnage() {
-		glBegin(GL_TRIANGLES);
-		glColor3f(0.0F, 0.0F, 0.0F);
-		glVertex2i(Display.getWidth()/2, Display.getHeight()/2);
-		glVertex2i(Display.getWidth()/2+30, Display.getHeight()/2+80);
-		glVertex2i(Display.getWidth()/2-30, Display.getHeight()/2+80);
+		glColor3f(1f, 1f, 1f); //reset color
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		//System.out.println("oui");
+		RessourcesFactory.getImage(TypeImage.PERSONNAGE).bind();
+		
+		glPushMatrix();
+
+		glTranslated(Display.getWidth()/2, Display.getHeight()/2, 0.0d);
+		
+		glRotatef( (float)angle, 0, 0, 1 ); // now rotate
+		
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.20F*nbSprite, 0.20F*position);
+		glVertex2i(-25, -25);
+		glTexCoord2f(0.20F*(nbSprite+1), 0.20F*position);
+		glVertex2i(+100, -25);
+		glTexCoord2f(0.20F*(nbSprite+1), 0.20F*(position+1));
+		glVertex2i(+100, +100);
+		glTexCoord2f(0.20F*nbSprite, 0.20F*(position+1));
+		glVertex2i(-25, +100);
 		glEnd();
+		
+		glPopMatrix(); // pop off the rotation and transformation
+		glDisable(GL_BLEND);
+		
 	}
 }
