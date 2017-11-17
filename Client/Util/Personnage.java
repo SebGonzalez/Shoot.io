@@ -71,7 +71,7 @@ public class Personnage {
 		yVector = ySouris - (Display.getHeight()/2);
 		angle = Math.toDegrees(Math.atan2(ySouris- (Display.getHeight()/2), xSouris));
 		if(xSouris>Display.getWidth()/2) angle=-angle;
-		System.out.println(angle);
+		//System.out.println(angle);
 		
 		Vec2 vector = new Vec2(xVector, yVector);
 		
