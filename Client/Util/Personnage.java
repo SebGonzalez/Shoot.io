@@ -68,11 +68,15 @@ public class Personnage {
 
 	// lwjgl
 	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap) {
-
-		xVector = xSouris - (Display.getWidth() / 2);
-		yVector = ySouris - (Display.getHeight() / 2);
-		angle = Math.toDegrees(Math.atan2(ySouris - (Display.getHeight() / 2), xSouris));
-
+		
+		//System.out.println(xSouris + " : " + ySouris);
+		
+		xVector = xSouris - (Display.getWidth()/2);
+		yVector = ySouris - (Display.getHeight()/2);
+		angle = Math.toDegrees(Math.atan2(ySouris- (Display.getHeight()/2), xSouris));
+		if(xSouris>Display.getWidth()/2) angle=-angle;
+		//System.out.println(angle);
+		
 		Vec2 vector = new Vec2(xVector, yVector);
 
 		xVector = vector.x / vector.length();

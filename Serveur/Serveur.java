@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Serveur {
-	
+	static int compteur = 0;
+	static List<Client> list_cli = new ArrayList<Client>();
 	
 	public static void main(String[] args){
 		List<Integer> nb = new ArrayList<Integer>();
@@ -15,7 +16,6 @@ public class Serveur {
 	         public void run(){
 	            try {             
 	               //Création de la connexion côté serveur, en spécifiant un port d'écoute
-	            	
 	               DatagramSocket server = new DatagramSocket(12346);
 	               System.out.println("lancement serveur");
 	               while(true){
