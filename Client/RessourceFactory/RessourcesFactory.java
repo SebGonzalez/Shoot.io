@@ -13,40 +13,31 @@ public class RessourcesFactory {
 	static int NB_POSITION = 4;
 	static int NB_SPRITE = 3;
 	
-	private static String imagePersonnage = "/Client/IHM/Images/personnage.png";
+	private static String cheminImagePersonnage = "/Client/IHM/Images/personnage.png";
+	private static String cheminImageArme = "/Client/IHM/Images/arme.jpg";
 	
-	private static Texture imagePersonnageB;
-	private static BufferedImage imagePersonnageDecoupeB[][] = new BufferedImage[NB_POSITION][NB_SPRITE];
-	
+	private static Texture texturePersonnage;
+	private static Texture textureArme;
+
 	public static void loadImage() {
 		try {
-			imagePersonnageB = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(imagePersonnage));
+			texturePersonnage = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminImagePersonnage));
+			textureArme = TextureLoader.getTexture("JPG", Class.class.getResourceAsStream(cheminImageArme));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//decoupePersonnage();
-	}
-	
-	/*public static void decoupePersonnage() {
-		int width = imagePersonnageB.getWidth();
-		int height = imagePersonnageB.getHeight();
-		
-		for(int i=0; i<imagePersonnageDecoupeB.length; i++) {
-			for(int y=0; y<imagePersonnageDecoupeB[0].length; y++) {
-				imagePersonnageDecoupeB[i][y] = imagePersonnageB.getSubimage(i*(width/NB_SPRITE), y*(height/NB_POSITION), (width/NB_SPRITE), (height/NB_POSITION));
-			}
-		}
-	}*/
-	
-	public static Image getImagePersonnage(int nbSprite, int position) {
-		return imagePersonnageDecoupeB[position][nbSprite];
+
 	}
 	
 	public static Texture getImage(TypeImage type) {
 		switch(type) {
 		case PERSONNAGE :
-			return imagePersonnageB;
+			return texturePersonnage;
+		case ARME :
+			return textureArme;
+		default:
+			break;
 		}
 		return null;
 	}
