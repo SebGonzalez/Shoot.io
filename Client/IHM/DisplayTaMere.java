@@ -6,6 +6,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import Client.Util.GestionnaireAdversaire;
 import Client.Util.Map;
 import Client.Util.Personnage;
 import Client.Util.State;
@@ -24,6 +25,7 @@ public class DisplayTaMere implements ComponentListener {
 
 	private static State state = State.MAIN_MENU;
 	
+	public static  GestionnaireAdversaire gestionnaireAdversaire = new GestionnaireAdversaire();
 	public static Personnage personnage = new Personnage("Test");
 	public static Map map = new Map(5000, 5000);
 	public static GestionnaireComposant gestionnaireComposant;
@@ -34,10 +36,10 @@ public class DisplayTaMere implements ComponentListener {
 	
 	public DisplayTaMere() {
 		try {
-			Display.setDisplayMode(new DisplayMode(1200, 600));
+			//Display.setDisplayMode(new DisplayMode(1200, 600));
 			Display.setTitle("Ta Mere");
             Display.setInitialBackground(1.0F, 1.0F, 1.0F);
-            Display.setFullscreen(false);
+            Display.setFullscreen(true);
 			Display.create();
 		} catch (LWJGLException e) {
 			System.err.println("Display wasn't initialized correctly.");
@@ -99,6 +101,7 @@ public class DisplayTaMere implements ComponentListener {
 	public static void loopGame() {
 		map.drawMap(personnage);
 		personnage.drawPersonnage();
+		gestionnaireAdversaire.draw(personnage);
     		
 		personnage.updatePersonnage(Mouse.getX(), Mouse.getY(), map.getLargeur(), map.getLongueur(), getDelta());
 	}

@@ -31,6 +31,12 @@ public class Personnage {
 		x = 2000;
 		y = 2000;
 	}
+	
+	public Personnage(String nom, int x, int y) {
+		this.nom = nom;
+		this.x = x;
+		this.y = y;
+	}
 
 	public double getX() {
 		return x;
@@ -132,9 +138,12 @@ public class Personnage {
 				nbSprite = 0;
 			
 			if (Mouse.isButtonDown(0)) {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, true); // il y a un clique
-			} else {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, false); // pas de clique
+				arme.updateArme(delta * 0.1, xVector, yVector, position, true,false, x, y); // il y a un clique gauche
+			} else if(Mouse.isButtonDown(1)) {
+				arme.updateArme(delta * 0.1, xVector, yVector, position, false,true, x, y); // il y a un clique droit
+			}
+			else {
+				arme.updateArme(delta * 0.1, xVector, yVector, position, false, false, x, y); // pas de clique
 			}
 		} else
 			nbSprite = 0;
@@ -183,6 +192,46 @@ public class Personnage {
 		glDisable(GL_BLEND);
 
 		arme.draw(this);
+	}
+	
+	public void drawPersonnageX(Personnage joueur) {
+		int xEcran;
+		int yEcran;
+		if(this.getX() > joueur.x)
+			xEcran = (int) (Display.getWidth() / 2 + (this.getX() - joueur.x));
+		else
+			xEcran = (int) (Display.getWidth() / 2 - (joueur.x-this.getX()));
+		if(this.getY() > y)
+			yEcran = (int) (Display.getHeight() / 2 + (this.getY() - joueur.getY()));
+		else
+			yEcran = (int) (Display.getHeight() / 2 - (joueur.getY()-this.getY()));
+		
+		glColor3f(1f, 1f, 1f); // reset color
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		RessourcesFactory.getImage(TypeImage.PERSONNAGE).bind();
+
+		glPushMatrix();
+
+		glTranslated(xEcran, yEcran, 0.0d);
+
+		glRotatef((float) angle, 0, 0, 1); // now rotate
+
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.20F * nbSprite, 0.20F * position);
+		glVertex2i(-50, -50);
+		glTexCoord2f(0.20F * (nbSprite + 1), 0.20F * position);
+		glVertex2i(+50, -50);
+		glTexCoord2f(0.20F * (nbSprite + 1), 0.20F * (position + 1));
+		glVertex2i(+50, +50);
+		glTexCoord2f(0.20F * nbSprite, 0.20F * (position + 1));
+		glVertex2i(-50, +50);
+		glEnd();
+
+		glPopMatrix(); // pop off the rotation and transformation
+		glDisable(GL_BLEND);
+
+		//arme.draw(this);
 	}
 }

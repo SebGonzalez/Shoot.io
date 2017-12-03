@@ -13,9 +13,12 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2i;
 
-import org.lwjgl.Sys;
+import java.awt.Rectangle;
+import java.util.Iterator;
+
 import org.lwjgl.opengl.Display;
 
+import Client.IHM.DisplayTaMere;
 import Client.RessourceFactory.RessourcesFactory;
 import Client.RessourceFactory.TypeImage;
 
@@ -71,11 +74,17 @@ public class Arme {
 		this.jeter = jeter;
 	}
 
-	public void updateArme(double delta, double xVector, double yVector,int direction, boolean action) {
-		if(action) {
+	public void updateArme(double delta, double xVector, double yVector,int direction, boolean jeter, boolean recuperer, double xPerso, double yPerso) {
+		if(jeter && etatArme != EtatArme.JETER) {
 			xVectorJeter = xVector;
 			yVectorJeter = yVector;
 			if(etatArme == EtatArme.PORTER) etatArme = EtatArme.JETER;
+		}
+		else if(recuperer) {
+			if(etatArme == EtatArme.LACHER) etatArme = EtatArme.RECUPERER;
+		}
+		else {
+			if(etatArme == EtatArme.RECUPERER) etatArme = EtatArme.LACHER;
 		}
 		
 		this.xVector = xVector;
@@ -87,8 +96,11 @@ public class Arme {
 		} else if (etatArme == EtatArme.JETER) {
 			moveJeter(delta);
 		}
-
+		else if(etatArme == EtatArme.RECUPERER) {
+			moveRecuperer(delta, xPerso, yPerso);
+		}
 		//System.out.println(etatArme);
+		collision();
 	}
 	
 	public void setDecalage(int position) { // 0 droite, 1 gauche, 2 haut, 3 bas
@@ -107,15 +119,45 @@ public class Arme {
 	}
 
 	public void moveJeter(double delta) {
-		x = x + xVectorJeter * delta * VITESSE;
-		y = y - yVectorJeter * delta * VITESSE;
+		x = x + xVectorJeter * delta * VITESSE*2;
+		y = y - yVectorJeter * delta * VITESSE*2;
 		cumulDelta += delta;
-		if (cumulDelta > 100)
+		if (cumulDelta > 50) {
+			cumulDelta = 0;
 			etatArme = EtatArme.LACHER;
+		}
 	}
+	
+	public void moveRecuperer(double delta, double xPerso, double yPerso) {
+		float xVectorRecuperer = (float) (xPerso - x);
+		float yVectorRecuperer = (float) (yPerso - y);
+		Vec2 vector = new Vec2(xVectorRecuperer, yVectorRecuperer);
 
-	public void moveLacher() {
+		xVectorRecuperer = vector.x / vector.length();
+		yVectorRecuperer = vector.y / vector.length();
+		
+		x = x + xVectorRecuperer * delta * VITESSE*2;
+		y = y + yVectorRecuperer * delta * VITESSE*2;
+		
+		//System.out.println(x + " : " + xPerso + " " + y + " : " + yPerso);
+		if(Math.abs(x-xPerso)< 1 && Math.abs(y-yPerso) < 1) {
+			etatArme = EtatArme.PORTER;
 
+		}
+		//cumulDelta += delta;
+	}
+	
+	public void collision() {
+		Rectangle armeJoueur = new Rectangle((int)this.getX(), (int)y, 100, 50);
+		//System.out.println(this.getX() + " " + this.getY());
+		for(Iterator<Personnage> it = DisplayTaMere.gestionnaireAdversaire.getListeAdversaire().iterator(); it.hasNext();) {
+			Personnage p = it.next();
+			Rectangle adversaire = new Rectangle((int)p.getX(), (int)p.getY(), 100, 100);
+			//System.out.println(p.getX() + " " + p.getY());
+			if(adversaire.intersects(armeJoueur)) {
+				it.remove();
+			}
+		}
 	}
 
 	public void draw(Personnage p) {
