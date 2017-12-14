@@ -8,26 +8,25 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class UDPClient implements Runnable{
-    String name = "";
+    Personnage p;
     long sleepTime = 1000;
     
     public final static int port = 12346;
     
     public static void main(String args[]) {
-    		UDPClient cli = new UDPClient("je suis beau", 1000);
+    		/*UDPClient cli = new UDPClient("je suis beau", 1000);
     		Thread t = new Thread(cli);
-    		t.start();
+    		t.start();*/
     }
     
-    public UDPClient(String pName, long sleep){
-       name = pName;
-       sleepTime = sleep;
+    public UDPClient(Personnage p){
+      this.p = p;
     }
     
     public void run(){
        int nbre = 0;
        while(true){
-          String envoi = name + " - " + (++nbre);
+          String envoi = p.getX() + "/" + p.getY() + "/" + (++nbre);
           byte[] buffer = envoi.getBytes();
           
           try {
@@ -35,7 +34,7 @@ public class UDPClient implements Runnable{
              DatagramSocket client = new DatagramSocket();
              
              //On crée notre datagramme
-             InetAddress adresse = InetAddress.getByName("172.20.10.2");
+             InetAddress adresse = InetAddress.getByName("92.222.22.48");
              System.out.println("connexion");
              DatagramPacket packet = new DatagramPacket(buffer, buffer.length, adresse, port);
              System.out.println("creation packet");

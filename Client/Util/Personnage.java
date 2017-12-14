@@ -1,17 +1,38 @@
 package Client.Util;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glVertex2i;
 
-import Client.RessourceFactory.*;
-
+import java.awt.Font;
 import java.awt.Graphics;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
+
+import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.TypeImage;
 
 public class Personnage {
 	private static double VITESSE = 2;
 
+	private TrueTypeFont font;
 	private String nom;
 	private double x;
 	private double y;
@@ -32,17 +53,27 @@ public class Personnage {
 		y = 2000;
 	}
 	
-	public Personnage(String nom, int x, int y) {
+	public Personnage(String nom, double x, double y) {
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
+	}
+	public Personnage(String nom, double x, double y, TrueTypeFont font) {
+		this.nom = nom;
+		this.x = x;
+		this.y = y;
+		this.font = font;
+	}
+	
+	public String getNom() {
+		return nom;
 	}
 
 	public double getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
@@ -50,7 +81,7 @@ public class Personnage {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
@@ -107,6 +138,7 @@ public class Personnage {
 		double deplacementY = -(yVector * delta * VITESSE);
 	//	System.out.println("Personnage : " + deplacementX + " " + deplacementY + " " + delta);
 
+		//System.out.println(nom + " : " + deplacementX);
 		if (x + deplacementX > 0 && x + deplacementX < largeurMap) {
 			x += deplacementX;
 		} else if (x + deplacementX < 0) {
@@ -189,6 +221,11 @@ public class Personnage {
 		glEnd();
 
 		glPopMatrix(); // pop off the rotation and transformation
+		glDisable(GL_BLEND);
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		font.drawString(Display.getWidth()/2, Display.getHeight()/2+60, nom, Color.black); // x, y, string to draw, color
 		glDisable(GL_BLEND);
 
 		arme.draw(this);

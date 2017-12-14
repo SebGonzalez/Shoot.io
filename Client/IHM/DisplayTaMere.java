@@ -5,11 +5,13 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.TrueTypeFont;
 
 import Client.Util.GestionnaireAdversaire;
 import Client.Util.Map;
 import Client.Util.Personnage;
 import Client.Util.State;
+import Client.Connect.Client;
 import Client.IHM.Component.Component;
 import Client.IHM.Component.ComponentListener;
 import Client.IHM.Component.GestionnaireComposant;
@@ -26,35 +28,39 @@ public class DisplayTaMere implements ComponentListener {
 	private static State state = State.MAIN_MENU;
 	
 	public static  GestionnaireAdversaire gestionnaireAdversaire = new GestionnaireAdversaire();
-	public static Personnage personnage = new Personnage("Test");
+	public static Personnage personnage;
 	public static Map map = new Map(5000, 5000);
 	public static GestionnaireComposant gestionnaireComposant;
 	private OpenGlButton start;
 	private OpenGlTextField pseudo;
+
+	TrueTypeFont font;
 	
 	private static long lastFrame;
 	
 	public DisplayTaMere() {
 		try {
-			//Display.setDisplayMode(new DisplayMode(1200, 600));
+			Display.setDisplayMode(new DisplayMode(1200, 600));
 			Display.setTitle("Ta Mere");
             Display.setInitialBackground(1.0F, 1.0F, 1.0F);
-            Display.setFullscreen(true);
+           // Display.setFullscreen(true);
 			Display.create();
 		} catch (LWJGLException e) {
 			System.err.println("Display wasn't initialized correctly.");
             System.exit(1);
 		}
 		
-	glMatrixMode(GL_PROJECTION); //The following code initialises a projection matrix where (0,0) is the upper-left corner of the drawing canvas and (640,480) the bottom-right corner of the drawing canvas:
+		glMatrixMode(GL_PROJECTION); //The following code initialises a projection matrix where (0,0) is the upper-left corner of the drawing canvas and (640,480) the bottom-right corner of the drawing canvas:
     	glLoadIdentity(); // Resets any previous projection matrices
     	glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
     	glMatrixMode(GL_MODELVIEW);
     	
     	RessourcesFactory.loadImage();
+    	Font awtFont = new Font("Times New Roman", Font.ITALIC, 20);
+    	font = new TrueTypeFont(awtFont, false);
     	gestionnaireComposant = new GestionnaireComposant(this);
     	
-    	pseudo = new OpenGlTextField();
+    	pseudo = new OpenGlTextField(font);
     	pseudo.setBounds(Display.getWidth()/2-120-320, Display.getHeight()/2-22, 300, 45);
     	gestionnaireComposant.addComponent(pseudo);
     	
@@ -101,13 +107,14 @@ public class DisplayTaMere implements ComponentListener {
 	public static void loopGame() {
 		map.drawMap(personnage);
 		personnage.drawPersonnage();
+		//System.out.println("Joueur : " + personnage.getX() + " " + personnage.getY());
 		gestionnaireAdversaire.draw(personnage);
     		
 		personnage.updatePersonnage(Mouse.getX(), Mouse.getY(), map.getLargeur(), map.getLongueur(), getDelta());
 	}
 	
 	public static void loopMenu() {
-		map.drawMap(personnage);
+		map.drawMap();
 		gestionnaireComposant.render();
 		gestionnaireComposant.update();
 		gestionnaireComposant.doAction();
@@ -117,6 +124,8 @@ public class DisplayTaMere implements ComponentListener {
 	@Override
 	public void actionPerformed(Component c) {
 		if(c == start) {
+			personnage = new Personnage(pseudo.getText(), 2000,2000,font);
+			Client client = new Client(personnage);
 			personnage.setArme();
 			state = State.GAME;
 			lastFrame = getTime();

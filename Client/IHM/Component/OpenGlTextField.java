@@ -34,7 +34,6 @@ public class OpenGlTextField implements Component {
 
 	TrueTypeFont font;
 	Thread t;
-	boolean charge = false;
 
 	public OpenGlTextField() {
 		lastFrame = getTime();
@@ -45,16 +44,15 @@ public class OpenGlTextField implements Component {
 		//	public void run() {
 				Font awtFont = new Font("Times New Roman", Font.ITALIC, 20); //name, style (PLAIN, BOLD, or ITALIC), size
 				font = new TrueTypeFont(awtFont, false); // base Font, anti-aliasing true/false
-				charge = true;
 		//	}
 		//});
 		
 	}
 	
-	public OpenGlTextField(Font awtFont) {
+	public OpenGlTextField(TrueTypeFont font) {
 		lastFrame = getTime();
 
-		font = new TrueTypeFont(awtFont, false); // base Font, anti-aliasing true/false
+		this.font = font; // base Font, anti-aliasing true/false
 	}
 
 	public void setBounds(int x, int y, int width, int height) {
@@ -62,6 +60,10 @@ public class OpenGlTextField implements Component {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+	}
+	
+	public String getText() {
+		return texte;
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class OpenGlTextField implements Component {
 
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		if(charge) font.drawString(x, y, texte, Color.black); // x, y, string to draw, color
+		font.drawString(x, y, texte, Color.black); // x, y, string to draw, color
 		glDisable(GL_BLEND);
 	}
 
