@@ -106,8 +106,9 @@ public class OpenGlTextField implements Component {
 		if (cursor) {
 			glBegin(GL_LINES);
 			glColor3f(0.0F, 0.0F, 0.0F); // noir
-			glVertex2i(x + 10 + texte.length() * 8, y + 4);
-			glVertex2i(x + 10 + texte.length() * 8, y + 4 + height - 8);
+			
+			glVertex2i(x + 3 + font.getWidth(texte), y + 4);
+			glVertex2i(x + 3 + font.getWidth(texte), y + 4 + height - 8);
 			glEnd();
 		}
 
@@ -161,6 +162,11 @@ public class OpenGlTextField implements Component {
 		double delta = (double) (currentTime - lastFrame);
 		lastFrame = getTime();
 		return delta;
+	}
+
+	@Override
+	public boolean isFocused() {
+		return focus;
 	}
 
 }

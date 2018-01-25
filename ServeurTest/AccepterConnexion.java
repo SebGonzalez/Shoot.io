@@ -24,12 +24,14 @@ public class AccepterConnexion implements Runnable{
 			while(true){
 				
 			socket = socketserver.accept();
-			System.out.println("Un zéro veut se connecter  ");
+			socket.setTcpNoDelay(true);
+			System.out.println("Un zï¿½ro veut se connecter  ");
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream());
 			
 			String login = in.readLine();
 			String[] loginSplit = login.split("/");
+			System.out.println("login : " + login);
 			ServeurTest.gestionnaireJoueur.addJoueur(new Personnage(loginSplit[0], Double.parseDouble(loginSplit[1]),  Double.parseDouble(loginSplit[2])), out);
 			//ServeurTest.addClient(out);
 			out.println(ServeurTest.gestionnaireJoueur.envoiePos(loginSplit[0]));

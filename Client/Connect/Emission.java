@@ -9,7 +9,7 @@ import Client.Util.Personnage;
 public class Emission implements Runnable {
 
 	private PrintWriter out;
-	private String login = null, message = null;
+	private String message = null;
 	private Personnage p;
 	
 	public Emission(PrintWriter out, Personnage p) {
@@ -23,12 +23,13 @@ public class Emission implements Runnable {
 		  
 		  while(true){
 			  try {
-				Thread.sleep(10);
+				Thread.sleep(5);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-				message = p.getNom() + "/" + p.getX() + "/" + p.getY();
+				message = p.getNom() + "/" + p.getX() + "/" + p.getY() + "/" + p.getxVector() + "/" + p.getyVector() + "/" + p.getAngle() + "/" + p.getPosition() 
+							+ "/" + p.getArme().getX() + "/" + p.getArme().getY() + "/" + p.getArme().getDecalage();
 				out.println(message);
 			    out.flush();
 			  }

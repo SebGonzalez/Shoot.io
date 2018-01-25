@@ -65,6 +65,7 @@ public class Arme {
 	public void setY(double y) {
 		this.y = y;
 	}
+	
 
 	public boolean isJeter() {
 		return jeter;
@@ -103,11 +104,19 @@ public class Arme {
 		collision();
 	}
 	
+	
+	public int getDecalage() {
+		return decalage;
+	}
+
 	public void setDecalage(int position) { // 0 droite, 1 gauche, 2 haut, 3 bas
 		if(position == 0)
 			decalage = 100;
 		else if(position == 1)
 			decalage = -100;
+	}
+	public void setDecalageX(int value) {
+		this.decalage = value;
 	}
 
 	public void movePorter(double delta) {
@@ -148,11 +157,11 @@ public class Arme {
 	}
 	
 	public void collision() {
-		Rectangle armeJoueur = new Rectangle((int)this.getX(), (int)y, 100, 50);
+		Rectangle armeJoueur = new Rectangle((int)this.getX()+decalage-50, (int)y-25, 100, 50);
 		//System.out.println(this.getX() + " " + this.getY());
 		for(Iterator<Personnage> it = DisplayTaMere.gestionnaireAdversaire.getListeAdversaire().iterator(); it.hasNext();) {
 			Personnage p = it.next();
-			Rectangle adversaire = new Rectangle((int)p.getX(), (int)p.getY(), 100, 100);
+			Rectangle adversaire = new Rectangle((int)p.getX()-50, (int)p.getY()-50, 100, 100);
 			//System.out.println(p.getX() + " " + p.getY());
 			if(adversaire.intersects(armeJoueur)) {
 				it.remove();
@@ -173,6 +182,41 @@ public class Arme {
 			yEcran = (int) (Display.getHeight() / 2 + (y - p.getY())) - 25;
 		else
 			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-y)) - 25;
+
+		glColor3f(1f, 1f, 1f); // reset color
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		RessourcesFactory.getImage(TypeImage.ARME).bind();
+
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0F, 0.0F);
+		glVertex2i(xEcran, yEcran);
+		glTexCoord2f(1F, 0);
+		glVertex2i(xEcran + 100, yEcran);
+		glTexCoord2f(1, 1);
+		glVertex2i(xEcran + 100, yEcran + 50);
+		glTexCoord2f(0, 1);
+		glVertex2i(xEcran, yEcran + 50);
+		glEnd();
+
+		glDisable(GL_BLEND);
+	}
+	
+	public void drawX(Personnage p) {
+		//System.out.println(p.getX() + " : " + this.x);
+		
+		int xEcran;
+		int yEcran;
+		
+		if(this.getX() > p.getX())
+			xEcran = (int) (Display.getWidth() / 2 + (this.getX() - p.getX())) + decalage - 50;
+		else
+			xEcran = (int) (Display.getWidth() / 2 - (p.getX()-this.getX())) + decalage - 50;
+		if(this.getY() > y)
+			yEcran = (int) (Display.getHeight() / 2 + (this.getY() - p.getY())) - 25;
+		else
+			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-this.getY())) - 25;
 
 		glColor3f(1f, 1f, 1f); // reset color
 		glEnable(GL_BLEND);

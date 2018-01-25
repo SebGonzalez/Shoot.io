@@ -16,6 +16,7 @@ import Client.IHM.Component.Component;
 import Client.IHM.Component.ComponentListener;
 import Client.IHM.Component.GestionnaireComposant;
 import Client.IHM.Component.OpenGlButton;
+import Client.IHM.Component.OpenGlLabel;
 import Client.IHM.Component.OpenGlTextField;
 import Client.RessourceFactory.*;
 
@@ -60,12 +61,16 @@ public class DisplayTaMere implements ComponentListener {
     	font = new TrueTypeFont(awtFont, false);
     	gestionnaireComposant = new GestionnaireComposant(this);
     	
+    	OpenGlLabel titre = new OpenGlLabel("Ta Mere.io", 50);
+    	titre.setBounds(Display.getWidth()/2-100, 80, 0, 0);
+    	gestionnaireComposant.addComponent(titre);
+    	
     	pseudo = new OpenGlTextField(font);
-    	pseudo.setBounds(Display.getWidth()/2-120-320, Display.getHeight()/2-22, 300, 45);
+    	pseudo.setBounds(Display.getWidth()/2 - 320, Display.getHeight()/2-22, 300, 45);
     	gestionnaireComposant.addComponent(pseudo);
     	
     	start = new OpenGlButton("/Client/IHM/Images/play.png", "/Client/IHM/Images/play_hover.png");
-    	start.setBounds(Display.getWidth()/2-120, Display.getHeight()/2-22, 240, 45);
+    	start.setBounds(Display.getWidth()/2 + 20, Display.getHeight()/2-22, 240, 45);
     	gestionnaireComposant.addComponent(start);
     	
 	}
@@ -105,12 +110,15 @@ public class DisplayTaMere implements ComponentListener {
     }
 	
 	public static void loopGame() {
+		double delta = getDelta();
+		
 		map.drawMap(personnage);
 		personnage.drawPersonnage();
-		//System.out.println("Joueur : " + personnage.getX() + " " + personnage.getY());
+
+		gestionnaireAdversaire.updateAdversaire(delta);
 		gestionnaireAdversaire.draw(personnage);
     		
-		personnage.updatePersonnage(Mouse.getX(), Mouse.getY(), map.getLargeur(), map.getLongueur(), getDelta());
+		personnage.updatePersonnage(Mouse.getX(), Mouse.getY(), map.getLargeur(), map.getLongueur(), delta);
 	}
 	
 	public static void loopMenu() {

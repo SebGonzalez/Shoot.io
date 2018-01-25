@@ -8,9 +8,9 @@ import Client.Util.Personnage;
 public class Emission implements Runnable {
 
 	int wait;
-	
+	int compteur = 0;
 	public Emission(int wait) {
-		this.wait = wait;
+		this.wait = 0;
 	}
 	
 	public void run() {
@@ -26,23 +26,23 @@ public class Emission implements Runnable {
 			String message;
 			Iterator<Personnage> it = ServeurTest.gestionnaireJoueur.listeJoueur.keySet().iterator();
 			while (it.hasNext()){
+				System.out.println(ServeurTest.gestionnaireJoueur.listeJoueur.size());
 			   Personnage cle = it.next(); // tu peux typer plus finement ici
+			   System.out.println(cle);
 			   message = ServeurTest.gestionnaireJoueur.envoiePos(cle.getNom());
+			   
 			   for(String nomJoueurDeco : ServeurTest.gestionnaireJoueur.listeJoueurSuppr) {
 				   message += "S/"+nomJoueurDeco+";";
 			   }
-			   ServeurTest.gestionnaireJoueur.listeJoueurSuppr.clear();
 			   ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).println(message);
 			   ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).flush();
+			   compteur++;
 			}
+			ServeurTest.gestionnaireJoueur.listeJoueurSuppr.clear();
+			if(compteur > 0)
+				ServeurTest.compteurEmission++;
+			compteur=0;
+			//System.out.println("Emission : " + ServeurTest.compteurEmission + ", Reception : " + ServeurTest.compteurReception);
 		}
 	}
-	
-	/*public static void suppressionJoueur(String nom) {
-		gestionnaireJoueur.remove(nom);
-		for(PrintWriter pw : listeClient) {
-			pw.println("S/"+nom+";");
-			System.out.println("suppression envoye");
-		}
-	}*/
 }

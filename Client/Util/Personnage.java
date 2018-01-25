@@ -37,8 +37,8 @@ public class Personnage {
 	private double x;
 	private double y;
 
-	private float xVector;
-	private float yVector;
+	private double xVector;
+	private double yVector;
 
 	private float nbSprite = 0;
 	private int position = 0; // 0 droite, 1 gauche, 2 haut, 3 bas
@@ -51,18 +51,21 @@ public class Personnage {
 		this.nom = nom;
 		x = 2000;
 		y = 2000;
+		setArme();
 	}
 	
 	public Personnage(String nom, double x, double y) {
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
+		setArme();
 	}
 	public Personnage(String nom, double x, double y, TrueTypeFont font) {
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
 		this.font = font;
+		setArme();
 	}
 	
 	public String getNom() {
@@ -89,6 +92,46 @@ public class Personnage {
 		arme = new Arme(x, y);
 	}
 
+	public double getxVector() {
+		return xVector;
+	}
+
+	public void setxVector(double xVector) {
+		this.xVector = xVector;
+	}
+
+	public double getyVector() {
+		return yVector;
+	}
+
+	public void setyVector(double yVector) {
+		this.yVector = yVector;
+	}
+
+	public double getAngle() {
+		return angle;
+	}
+
+	public void setAngle(double angle) {
+		this.angle = angle;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	public Arme getArme() {
+		return arme;
+	}
+
+	public void setArme(Arme arme) {
+		this.arme = arme;
+	}
+
 	// swing
 	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap, int largeurFenetre,
 			int hauteurFenetre) {
@@ -104,7 +147,7 @@ public class Personnage {
 	}
 
 	// lwjgl
-	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap) {
+	public void setVecteur(double xSouris, double ySouris) {
 		
 		//System.out.println(xSouris + " : " + ySouris);
 		
@@ -114,7 +157,7 @@ public class Personnage {
 		if(xSouris>Display.getWidth()/2) angle=-angle;
 		//System.out.println(angle);
 		
-		Vec2 vector = new Vec2(xVector, yVector);
+		Vec2 vector = new Vec2((float)xVector, (float)yVector);
 
 		xVector = vector.x / vector.length();
 		yVector = vector.y / vector.length();
@@ -129,6 +172,8 @@ public class Personnage {
 			position = 1;
 		else
 			position = 0;
+		
+	//	System.out.println("xVector : " + xVector + " yVector : " + yVector + " position : " + positioni);
 
 	}
 
@@ -157,7 +202,7 @@ public class Personnage {
 	}
 
 	public void updatePersonnage(int xSouris, int ySouris, int largeurMap, int hauteurMap, double delta) {
-		setVecteur(Mouse.getX(), Mouse.getY(), largeurMap, hauteurMap);
+		setVecteur(Mouse.getX(), Mouse.getY());
 		if (!estDansPersonnage(xSouris, ySouris)) {
 			move(largeurMap, hauteurMap, delta * 0.1);
 
@@ -177,9 +222,32 @@ public class Personnage {
 			else {
 				arme.updateArme(delta * 0.1, xVector, yVector, position, false, false, x, y); // pas de clique
 			}
-		} else
+		} else {
 			nbSprite = 0;
-
+			xVector = 0;
+			yVector = 0;
+		}
+	}
+	
+	public void updatePersonnageX(double x, double y, double xVector, double yVector, double angle, int position, double xArme, double yArme, int decalageArme, boolean updateServeur, double delta) {
+		//System.out.println(x + " " + this.x);
+		if(updateServeur) {
+			setX(x);
+			setY(y);
+			setxVector(xVector);
+			setyVector(yVector);
+			setAngle(angle);
+			setPosition(position);
+			arme.setX(xArme);
+			arme.setY(yArme);
+			arme.setDecalageX(decalageArme);
+		}
+		else {
+			if(!Double.isNaN(this.xVector) && !Double.isNaN(this.yVector)) {
+				this.x += this.xVector * (delta*0.1) * VITESSE;
+				this.y += -(this.yVector * (delta*0.1) * VITESSE);
+			}
+		}
 	}
 
 	public boolean estDansPersonnage(int xSouris, int ySouris) {
@@ -269,6 +337,6 @@ public class Personnage {
 		glPopMatrix(); // pop off the rotation and transformation
 		glDisable(GL_BLEND);
 
-		//arme.draw(this);
+		arme.drawX(joueur);
 	}
 }

@@ -102,5 +102,10 @@ public class OpenGlButton implements Component {
 		    }
 		}
 	}
+
+	@Override
+	public boolean isFocused() {
+		return false;
+	}
 	
 }

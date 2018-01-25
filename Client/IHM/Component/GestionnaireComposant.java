@@ -3,6 +3,8 @@ package Client.IHM.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 public class GestionnaireComposant {
 	private ComponentListener listener;
 	private List<Component> listComponent;
@@ -26,6 +28,7 @@ public class GestionnaireComposant {
 	}
 	
 	public void update() {
+		clearBufferText();
 		for(Component c : listComponent)
 			c.update();
 	}
@@ -37,5 +40,15 @@ public class GestionnaireComposant {
 	
 	public void clear() {
 		listComponent.clear();
+	}
+	
+	public void clearBufferText() {
+		for(Component c : listComponent) {
+			if(c.isFocused()) return;
+		}
+		
+		while (Keyboard.next()) {
+			//on vide le buffer
+		}
 	}
 }

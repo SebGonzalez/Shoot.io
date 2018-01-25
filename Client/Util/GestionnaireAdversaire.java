@@ -10,6 +10,7 @@ import org.lwjgl.opengl.Display;
 public class GestionnaireAdversaire {
 	private List<Personnage> listeAdversaire;
 	private List<Personnage> listeAdversaireDessine;
+	private String reception;
 	
 	public GestionnaireAdversaire() {
 		listeAdversaire = new ArrayList<>();
@@ -27,6 +28,39 @@ public class GestionnaireAdversaire {
 		listeAdversaire.add(p);
 	}
 	
+	public void setReception(String message) {
+		this.reception = message;
+	}
+	
+	public void updateAdversaire(double delta) {
+		if(reception != null)
+			updateAdversaireServeur(delta);
+		else
+			updateAdversaireSimule(delta);
+		reception = null;
+	}
+	
+	
+	public void updateAdversaireServeur(double delta) {
+		String messageSplit[] = reception.split(";");
+		for(String s : messageSplit) {
+			String messageSplit2[] = s.split("/");
+			if(messageSplit2[0].equals("S")) { //suppresion
+				remove(messageSplit2[1]);
+				
+			}
+			if(messageSplit2[0].equals("U")) //update
+				setInfoAdversaire(messageSplit2[1], Double.parseDouble(messageSplit2[2]),  Double.parseDouble(messageSplit2[3]), Double.parseDouble(messageSplit2[4]), Double.parseDouble(messageSplit2[5]),
+						Double.parseDouble(messageSplit2[6]), Integer.parseInt(messageSplit2[7]), Double.parseDouble(messageSplit2[8]), Double.parseDouble(messageSplit2[9]), Integer.parseInt(messageSplit2[10]), delta);
+		}
+	}
+	
+	public void updateAdversaireSimule(double delta) {
+		for(Personnage p : listeAdversaire) {
+			p.updatePersonnageX(0, 0, 0, 0, 0, 0, 0, 0, 0, false, delta);
+		}
+	}
+	
 	public void remove(String nom) {
 		for(Iterator<Personnage> it = listeAdversaire.iterator(); it.hasNext();) {
 			Personnage p = it.next();
@@ -36,15 +70,12 @@ public class GestionnaireAdversaire {
 		}
 	}
 	
-	public void setPosition(String nom, double x, double y) {
+	public void setInfoAdversaire(String nom, double x, double y, double xVector, double yVector, double angle, int position, double xArme, double yArme, int decalageArme, double delta) {
 		boolean trouve = false;
 		for(Personnage p : listeAdversaire) {
-			//System.out.println(p.getNom() + " : " + nom);
 			if(p.getNom().equals(nom)) {
-				System.out.println("oui" + p.getNom() + " : " + Math.abs(p.getX() - x));
-				p.setX(x);
-				p.setY(y);
-				trouve=true;
+				p.updatePersonnageX(x,y,xVector, yVector, angle, position, xArme, yArme, decalageArme, true, delta);
+				trouve = true;
 				break;
 			}
 		}

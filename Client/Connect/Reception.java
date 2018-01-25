@@ -21,17 +21,8 @@ public class Reception implements Runnable {
 		while(true){
 	        try {
 			message = in.readLine();
-			String[] messageSplit = message.split(";");
-			for(String s : messageSplit) {
-				String messageSplit2[] = s.split("/");
-				if(messageSplit2[0].equals("S")) { //suppresion
-					System.out.println("Le serveur vous dit :" +message);
-					DisplayTaMere.gestionnaireAdversaire.remove(messageSplit2[1]);
-					
-				}
-				if(messageSplit2[0].equals("U")) //update
-					DisplayTaMere.gestionnaireAdversaire.setPosition(messageSplit2[1], Double.parseDouble(messageSplit2[2]),  Double.parseDouble(messageSplit2[3]));
-			}
+			DisplayTaMere.gestionnaireAdversaire.setReception(message);
+		//	System.out.println(message);
 			
 		    } catch (IOException e) {
 				

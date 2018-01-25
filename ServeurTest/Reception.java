@@ -22,24 +22,31 @@ public class Reception implements Runnable {
 		while (true) {
 			try {
 				message = in.readLine();
-				String messageSplit[] = message.split("/");
-
-				ServeurTest.gestionnaireJoueur.setPosition(messageSplit[0], Double.parseDouble(messageSplit[1]),
-						Double.parseDouble(messageSplit[2]));
+				if(message == null) {
+					deconnexion();
+					break;
+				}
+					
+				ServeurTest.gestionnaireJoueur.updateJoueur(message);
+				ServeurTest.compteurReception++;
 
 			} catch (IOException e) {
 
 				System.out.println(e.toString());
-				try {
-					ServeurTest.gestionnaireJoueur.remove(login);
-					in.close();
-					out.close();
-					break;
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				deconnexion();
+				break;
 			}
+		}
+	}
+	
+	public void deconnexion() {
+		try {
+			ServeurTest.gestionnaireJoueur.remove(login);
+			in.close();
+			out.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 
