@@ -2,5 +2,6 @@ package Client.RessourceFactory;
 
 public enum TypeImage {
 	PERSONNAGE,
-	ARME;
+	ARME,
+	STAT;
 }

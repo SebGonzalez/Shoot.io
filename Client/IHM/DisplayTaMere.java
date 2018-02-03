@@ -12,12 +12,15 @@ import Client.Util.Map;
 import Client.Util.Personnage;
 import Client.Util.State;
 import Client.Connect.Client;
+import Client.IHM.Component.Animator;
 import Client.IHM.Component.Component;
 import Client.IHM.Component.ComponentListener;
 import Client.IHM.Component.GestionnaireComposant;
 import Client.IHM.Component.OpenGlButton;
+import Client.IHM.Component.OpenGlImage;
 import Client.IHM.Component.OpenGlLabel;
 import Client.IHM.Component.OpenGlTextField;
+import Client.IHM.Component.TypeAnimation;
 import Client.RessourceFactory.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -34,10 +37,15 @@ public class DisplayTaMere implements ComponentListener {
 	public static GestionnaireComposant gestionnaireComposant;
 	private OpenGlButton start;
 	private OpenGlTextField pseudo;
+	
+	OpenGlImage imageStat1;
 
 	TrueTypeFont font;
 	
 	private static long lastFrame;
+	
+	static int tempPasse;
+	static boolean bite = false;
 	
 	public DisplayTaMere() {
 		try {
@@ -111,7 +119,23 @@ public class DisplayTaMere implements ComponentListener {
 	
 	public static void loopGame() {
 		double delta = getDelta();
+		tempPasse += delta;
 		
+		if(tempPasse > 2000 && !bite) {
+			Animator animator = new Animator(gestionnaireComposant.getComponent().get(0), TypeAnimation.TRANSLATE, 600, 0, 500);
+			gestionnaireComposant.addComponent(animator);
+			bite = true;
+		}
+		if(tempPasse > 4000 && bite) {
+			Animator animator = new Animator(gestionnaireComposant.getComponent().get(0), TypeAnimation.TRANSLATE, -600, 0, 500);
+			gestionnaireComposant.addComponent(animator);
+			bite = false;
+			tempPasse = 0;
+		}
+		
+		gestionnaireComposant.render();
+		gestionnaireComposant.update();
+
 		map.drawMap(personnage);
 		personnage.drawPersonnage();
 
@@ -126,15 +150,23 @@ public class DisplayTaMere implements ComponentListener {
 		gestionnaireComposant.render();
 		gestionnaireComposant.update();
 		gestionnaireComposant.doAction();
-		
 	}
 
 	@Override
 	public void actionPerformed(Component c) {
 		if(c == start) {
+			state = State.INTRO;
+			
 			personnage = new Personnage(pseudo.getText(), 2000,2000,font);
 			Client client = new Client(personnage);
 			personnage.setArme();
+
+			gestionnaireComposant.clear();
+			
+			imageStat1 = new OpenGlImage(TypeImage.STAT);
+			imageStat1.setBounds(20, 20, 200, 30);
+			gestionnaireComposant.addComponent(imageStat1);
+			
 			state = State.GAME;
 			lastFrame = getTime();
 		}
