@@ -15,14 +15,17 @@ public class RessourcesFactory {
 	
 	private static String cheminImagePersonnage = "/Client/IHM/Images/personnage.png";
 	private static String cheminImageArme = "/Client/IHM/Images/arme.jpg";
+	private static String cheminImageStat = "/Client/IHM/Images/stat.png";
 	
 	private static Texture texturePersonnage;
 	private static Texture textureArme;
+	private static Texture textureStat;
 
 	public static void loadImage() {
 		try {
 			texturePersonnage = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminImagePersonnage));
 			textureArme = TextureLoader.getTexture("JPG", Class.class.getResourceAsStream(cheminImageArme));
+			textureStat = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminImageStat));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,6 +39,8 @@ public class RessourcesFactory {
 			return texturePersonnage;
 		case ARME :
 			return textureArme;
+		case STAT:
+			return textureStat;
 		default:
 			break;
 		}

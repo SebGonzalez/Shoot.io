@@ -49,6 +49,15 @@ public class OpenGlButton implements Component {
 		this.width = width;
 		this.height = height;
 	}
+	
+	@Override
+	public int getX() {return x;}
+	@Override
+	public int getY() {return y;}
+	@Override
+	public int getWidth() {return width;}
+	@Override
+	public int getHeight() {return height;}
 
 	@Override
 	public void update() {
@@ -105,6 +114,11 @@ public class OpenGlButton implements Component {
 
 	@Override
 	public boolean isFocused() {
+		return false;
+	}
+
+	@Override
+	public boolean autoSupression() {
 		return false;
 	}
 	

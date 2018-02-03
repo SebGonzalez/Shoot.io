@@ -62,6 +62,15 @@ public class OpenGlTextField implements Component {
 		this.height = height;
 	}
 	
+	@Override
+	public int getX() {return x;}
+	@Override
+	public int getY() {return y;}
+	@Override
+	public int getWidth() {return 0;}
+	@Override
+	public int getHeight() {return 0;}
+	
 	public String getText() {
 		return texte;
 	}
@@ -167,6 +176,11 @@ public class OpenGlTextField implements Component {
 	@Override
 	public boolean isFocused() {
 		return focus;
+	}
+
+	@Override
+	public boolean autoSupression() {
+		return false;
 	}
 
 }

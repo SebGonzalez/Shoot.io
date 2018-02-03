@@ -36,6 +36,15 @@ public class OpenGlLabel implements Component {
 		this.x = x;
 		this.y = y;
 	}
+	
+	@Override
+	public int getX() {return x;}
+	@Override
+	public int getY() {return y;}
+	@Override
+	public int getWidth() {return 0;}
+	@Override
+	public int getHeight() {return 0;}
 
 	@Override
 	public void update() {
@@ -62,6 +71,11 @@ public class OpenGlLabel implements Component {
 
 	@Override
 	public boolean isFocused() {
+		return false;
+	}
+
+	@Override
+	public boolean autoSupression() {
 		return false;
 	}
 
