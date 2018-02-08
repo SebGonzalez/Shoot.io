@@ -9,12 +9,14 @@ import org.lwjgl.opengl.Display;
 
 public class GestionnaireAdversaire {
 	private List<Personnage> listeAdversaire;
-	private List<Personnage> listeAdversaireDessine;
+	//private List<Personnage> listeAdversaireDessine;
+	private ArrayList<Personnage> listeAdversaireTue;
 	private String reception;
 	
 	public GestionnaireAdversaire() {
 		listeAdversaire = new ArrayList<>();
-		listeAdversaireDessine = new ArrayList<>();
+		listeAdversaireTue = new ArrayList<>();
+		//listeAdversaireDessine = new ArrayList<>();
 		
 		Random r = new Random();
 		
@@ -26,6 +28,10 @@ public class GestionnaireAdversaire {
 	
 	public void addAversaire(Personnage p) {
 		listeAdversaire.add(p);
+	}
+	
+	public void addAversaireTue(Personnage p) {
+		listeAdversaireTue.add(p);
 	}
 	
 	public void setReception(String message) {
@@ -86,13 +92,16 @@ public class GestionnaireAdversaire {
 	public List<Personnage> getListeAdversaire() {
 		return listeAdversaire;
 	}
+	public List<Personnage> getListeAdversaireTue() {
+		return listeAdversaireTue;
+	}
 
 	public void draw(Personnage joueur) {
 		for(Personnage p : listeAdversaire) {
 			//System.out.println("Adversaire : " + p.getX() + " " + p.getY());
 			if(p.getX() >= joueur.getX() - Display.getWidth()/2-200 && p.getX() <= joueur.getX() + Display.getWidth()/2+200 && p.getY() >= joueur.getY() - Display.getHeight()/2-200 && p.getY() <= joueur.getY() + Display.getHeight()/2+200) {
 				p.drawPersonnageX(joueur);
-				listeAdversaireDessine.add(p);
+				//listeAdversaireDessine.add(p);
 			}
 		}
 	}

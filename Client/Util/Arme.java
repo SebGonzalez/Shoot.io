@@ -164,6 +164,7 @@ public class Arme {
 			Rectangle adversaire = new Rectangle((int)p.getX()-50, (int)p.getY()-50, 100, 100);
 			//System.out.println(p.getX() + " " + p.getY());
 			if(adversaire.intersects(armeJoueur)) {
+				DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
 				it.remove();
 			}
 		}
