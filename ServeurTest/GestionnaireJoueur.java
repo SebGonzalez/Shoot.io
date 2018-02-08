@@ -21,7 +21,6 @@ public class GestionnaireJoueur {
 
 	public void addJoueur(Personnage p, PrintWriter pw) {
 		listeJoueur.put(p, pw);
-		System.out.println("nous");
 	}
 	
 	public void remove(String nom) {

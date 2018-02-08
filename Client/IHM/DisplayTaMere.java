@@ -1,5 +1,15 @@
 package Client.IHM;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+
+import java.awt.Font;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
@@ -7,25 +17,22 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.TrueTypeFont;
 
+import Client.Connect.Client;
+import Client.IHM.OpenGlGraphics.Component;
+import Client.IHM.OpenGlGraphics.ComponentListener;
+import Client.IHM.OpenGlGraphics.GestionnaireComposant;
+import Client.IHM.OpenGlGraphics.Animator.PoolComponentMultiAnimator;
+import Client.IHM.OpenGlGraphics.Animator.TypeAnimation;
+import Client.IHM.OpenGlGraphics.Components.OpenGlButton;
+import Client.IHM.OpenGlGraphics.Components.OpenGlImage;
+import Client.IHM.OpenGlGraphics.Components.OpenGlLabel;
+import Client.IHM.OpenGlGraphics.Components.OpenGlTextField;
+import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.TypeImage;
 import Client.Util.GestionnaireAdversaire;
 import Client.Util.Map;
 import Client.Util.Personnage;
 import Client.Util.State;
-import Client.Connect.Client;
-import Client.IHM.Component.Animator;
-import Client.IHM.Component.Component;
-import Client.IHM.Component.ComponentListener;
-import Client.IHM.Component.GestionnaireComposant;
-import Client.IHM.Component.OpenGlButton;
-import Client.IHM.Component.OpenGlImage;
-import Client.IHM.Component.OpenGlLabel;
-import Client.IHM.Component.OpenGlTextField;
-import Client.IHM.Component.TypeAnimation;
-import Client.RessourceFactory.*;
-
-import static org.lwjgl.opengl.GL11.*;
-
-import java.awt.Font;
 
 public class DisplayTaMere implements ComponentListener {
 
@@ -38,7 +45,9 @@ public class DisplayTaMere implements ComponentListener {
 	private OpenGlButton start;
 	private OpenGlTextField pseudo;
 	
-	OpenGlImage imageStat1;
+	static OpenGlImage imageStat1;
+	static OpenGlImage imageStat2;
+	static OpenGlImage imageStat3;
 
 	TrueTypeFont font;
 	
@@ -122,16 +131,19 @@ public class DisplayTaMere implements ComponentListener {
 		tempPasse += delta;
 		
 		if(tempPasse > 2000 && !bite) {
-			Animator animator = new Animator(gestionnaireComposant.getComponent().get(0), TypeAnimation.TRANSLATE, 600, 0, 500);
-			gestionnaireComposant.addComponent(animator);
+			//PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {imageStat1, imageStat2, imageStat3}, TypeAnimation.TRANSLATE, 600, 0, 500);
+			//gestionnaireComposant.addComponent(animator);
 			bite = true;
+			PoolComponentMultiAnimator animator = new PoolComponentMultiAnimator(new Component[] {imageStat1, imageStat2, imageStat3}, new TypeAnimation[] {TypeAnimation.TRANSLATE, TypeAnimation.TRANSLATE}, new Integer[] {600, -600}, new Integer[] {0, 0}, new Integer[] {500, 500}, new Integer[] {500, 500});
+			gestionnaireComposant.addComponent(animator);
+			animator.setLoop(true);
 		}
-		if(tempPasse > 4000 && bite) {
-			Animator animator = new Animator(gestionnaireComposant.getComponent().get(0), TypeAnimation.TRANSLATE, -600, 0, 500);
+		/*if(tempPasse > 4000 && bite) {
+			PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {imageStat1, imageStat2, imageStat3}, TypeAnimation.TRANSLATE, -600, 0, 500);
 			gestionnaireComposant.addComponent(animator);
 			bite = false;
 			tempPasse = 0;
-		}
+		}*/
 		
 		gestionnaireComposant.render();
 		gestionnaireComposant.update();
@@ -143,6 +155,7 @@ public class DisplayTaMere implements ComponentListener {
 		gestionnaireAdversaire.draw(personnage);
     		
 		personnage.updatePersonnage(Mouse.getX(), Mouse.getY(), map.getLargeur(), map.getLongueur(), delta);
+		//System.out.println(gestionnaireComposant.getComponent().size() + " " + imageStat1.getX() + " " + imageStat1.getY());
 	}
 	
 	public static void loopMenu() {
@@ -166,6 +179,12 @@ public class DisplayTaMere implements ComponentListener {
 			imageStat1 = new OpenGlImage(TypeImage.STAT);
 			imageStat1.setBounds(20, 20, 200, 30);
 			gestionnaireComposant.addComponent(imageStat1);
+			imageStat2 = new OpenGlImage(TypeImage.STAT);
+			imageStat2.setBounds(20, 50, 200, 30);
+			gestionnaireComposant.addComponent(imageStat2);
+			imageStat3 = new OpenGlImage(TypeImage.STAT);
+			imageStat3.setBounds(20, 80, 200, 30);
+			gestionnaireComposant.addComponent(imageStat3);
 			
 			state = State.GAME;
 			lastFrame = getTime();

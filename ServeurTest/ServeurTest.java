@@ -19,7 +19,7 @@ public class ServeurTest {
 		if(args.length != 2) { System.out.println("Usage : java -jar Serveur.jar [ms] [port]"); System.exit(0); }
 		try {
 			ss = new ServerSocket(Integer.parseInt(args[1]));
-			System.out.println("Le serveur est � l'�coute du port " + ss.getLocalPort());
+			System.out.println("Le serveur est l'écoutet sur le port : " + ss.getLocalPort());
 
 			threadNewClient = new Thread(new AccepterConnexion(ss));
 			threadNewClient.start();
