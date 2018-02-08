@@ -26,7 +26,7 @@ public class Reception implements Runnable {
 					deconnexion();
 					break;
 				}
-					
+				
 				ServeurTest.gestionnaireJoueur.updateJoueur(message);
 				ServeurTest.compteurReception++;
 

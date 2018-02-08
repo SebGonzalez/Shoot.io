@@ -26,13 +26,14 @@ public class Emission implements Runnable {
 			String message;
 			Iterator<Personnage> it = ServeurTest.gestionnaireJoueur.listeJoueur.keySet().iterator();
 			while (it.hasNext()){
-				System.out.println(ServeurTest.gestionnaireJoueur.listeJoueur.size());
+				//System.out.println(ServeurTest.gestionnaireJoueur.listeJoueur.size());
 			   Personnage cle = it.next(); // tu peux typer plus finement ici
-			   System.out.println(cle);
+			   //System.out.println(cle);
 			   message = ServeurTest.gestionnaireJoueur.envoiePos(cle.getNom());
 			   
-			   for(String nomJoueurDeco : ServeurTest.gestionnaireJoueur.listeJoueurSuppr) {
-				   message += "S/"+nomJoueurDeco+";";
+			   Iterator<String> it2 = ServeurTest.gestionnaireJoueur.listeJoueurSuppr.iterator();
+			   while(it2.hasNext()){
+				   message += "S/"+it2.next()+";";
 			   }
 			   ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).println(message);
 			   ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).flush();

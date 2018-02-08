@@ -16,7 +16,7 @@ public class Client {
 	try {
 		
 		System.out.println("Demande de connexion");
-		//socket = new Socket("92.222.22.48",18000);
+		//socket = new Socket("195.221.218.183",18000);
 		socket = new Socket("localhost",18000);
 		socket.setTcpNoDelay(true);
 		System.out.println("Connexion �tablie avec le serveur, authentification :"); // Si le message s'affiche c'est que je suis connect�
