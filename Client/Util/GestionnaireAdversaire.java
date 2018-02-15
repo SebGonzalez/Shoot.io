@@ -53,11 +53,14 @@ public class GestionnaireAdversaire {
 			String messageSplit2[] = s.split("/");
 			if(messageSplit2[0].equals("S")) { //suppresion
 				remove(messageSplit2[1]);
-				
 			}
-			if(messageSplit2[0].equals("U")) //update
+			else if(messageSplit2[0].equals("U")) //update
 				setInfoAdversaire(messageSplit2[1], Double.parseDouble(messageSplit2[2]),  Double.parseDouble(messageSplit2[3]), Double.parseDouble(messageSplit2[4]), Double.parseDouble(messageSplit2[5]),
 						Double.parseDouble(messageSplit2[6]), Integer.parseInt(messageSplit2[7]), Double.parseDouble(messageSplit2[8]), Double.parseDouble(messageSplit2[9]), Integer.parseInt(messageSplit2[10]), delta);
+			else if(messageSplit2[0].equals("D")) {
+				System.out.println("AHHHHHHHHHH");
+				System.exit(0);
+			}
 		}
 	}
 	
@@ -71,6 +74,7 @@ public class GestionnaireAdversaire {
 		for(Iterator<Personnage> it = listeAdversaire.iterator(); it.hasNext();) {
 			Personnage p = it.next();
 			if(p.getNom().equals(nom)) {
+				System.out.println("remove : " + nom);
 				it.remove();
 			}
 		}

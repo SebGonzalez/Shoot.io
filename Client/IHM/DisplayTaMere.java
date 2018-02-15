@@ -59,7 +59,7 @@ public class DisplayTaMere implements ComponentListener {
             System.exit(1);
 		}
 		
-		glMatrixMode(GL_PROJECTION); //The following code initialises a projection matrix where (0,0) is the upper-left corner of the drawing canvas and (640,480) the bottom-right corner of the drawing canvas:
+	glMatrixMode(GL_PROJECTION); //The following code initialises a projection matrix where (0,0) is the upper-left corner of the drawing canvas and (640,480) the bottom-right corner of the drawing canvas:
     	glLoadIdentity(); // Resets any previous projection matrices
     	glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
     	glMatrixMode(GL_MODELVIEW);

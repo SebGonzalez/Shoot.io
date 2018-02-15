@@ -165,6 +165,7 @@ public class Arme {
 			//System.out.println(p.getX() + " " + p.getY());
 			if(adversaire.intersects(armeJoueur)) {
 				DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
+				System.out.println("eeeeeeeee");
 				it.remove();
 			}
 		}
