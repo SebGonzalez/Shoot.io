@@ -1,8 +1,11 @@
-package Client.IHM.Component;
+package Client.IHM.OpenGlGraphics.Animator;
 
 import org.lwjgl.Sys;
 
-public class Animator implements Component {
+import Client.IHM.OpenGlGraphics.Component;
+import Client.IHM.OpenGlGraphics.ComponentListener;
+
+public class ComponentAnimator implements Component {
 
 	private Component c;
 	private TypeAnimation typeAnimation;
@@ -16,7 +19,7 @@ public class Animator implements Component {
 	private double tempsPasse;
 	private long lastFrame;
 	
-	public Animator(Component c, TypeAnimation typeAnimation, int translateX, int translateY, int duree) {
+	public ComponentAnimator(Component c, TypeAnimation typeAnimation, int translateX, int translateY, int duree) {
 		this.c = c;
 		this.xBase = c.getX();
 		this.yBase = c.getY();

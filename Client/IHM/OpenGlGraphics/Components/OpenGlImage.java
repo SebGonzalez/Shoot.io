@@ -1,4 +1,4 @@
-package Client.IHM.Component;
+package Client.IHM.OpenGlGraphics.Components;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
@@ -21,6 +21,8 @@ import java.awt.Image;
 
 import org.lwjgl.opengl.Display;
 
+import Client.IHM.OpenGlGraphics.Component;
+import Client.IHM.OpenGlGraphics.ComponentListener;
 import Client.RessourceFactory.RessourcesFactory;
 import Client.RessourceFactory.TypeImage;
 

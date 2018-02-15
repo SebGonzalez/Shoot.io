@@ -25,7 +25,7 @@ public class AccepterConnexion implements Runnable{
 				
 			socket = socketserver.accept();
 			socket.setTcpNoDelay(true);
-			System.out.println("Un z�ro veut se connecter  ");
+			System.out.println("Une bite se connecte  ");
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream());
 			
