@@ -21,10 +21,8 @@ public class Reception implements Runnable {
 			try {
 				message = in.readLine();
 				if (message != null) {
-					System.out.println(message);
 					DisplayTaMere.gestionnaireAdversaire.setReception(message);
 				} else {
-					System.out.println("aaaaaaah");
 					deconnexion();
 				}
 

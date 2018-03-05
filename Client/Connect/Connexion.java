@@ -39,18 +39,23 @@ public class Connexion implements Runnable {
 			String[] messageSplit = listeAdversaire.split(";");
 			for (String s : messageSplit) {
 				String messageSplit2[] = s.split("/");
-				if (messageSplit2.length == 3) {
-					System.out.println("AJOUTTTTTTTTTTTTTTT");
-					DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[0],Double.parseDouble(messageSplit2[1]), Double.parseDouble(messageSplit2[2])));
+				System.out.println("AAAAAAAAAAA : " + s);
+				if (messageSplit2[0].equals("U")) {
+					System.out.println("AJOUTTTTTTTTTTTTTTT : " + messageSplit2[0]);
+					DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1],Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3])));
+				}
+				else if(messageSplit2[0].equals("MA")) {
+					System.out.println("Merde");
+					DisplayTaMere.gestionnaireMerde.addMerde(Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[3]));
 				}
 			}
 
-			t2 = new Thread(new Chat_ClientServeur(socket, p));
+			t2 = new Thread(new Chat_ClientServeur(socket, p, out, in));
 			t2.start();
 
 		} catch (IOException e) {
 
-			System.err.println("Le serveur ne répond plus ");
+			System.err.println("Le serveur ne rï¿½pond plus ");
 		}
 	}
 

@@ -30,6 +30,7 @@ import Client.IHM.OpenGlGraphics.Components.OpenGlTextField;
 import Client.RessourceFactory.RessourcesFactory;
 import Client.RessourceFactory.TypeImage;
 import Client.Util.GestionnaireAdversaire;
+import Client.Util.GestionnaireMerde;
 import Client.Util.Map;
 import Client.Util.Personnage;
 import Client.Util.State;
@@ -39,6 +40,7 @@ public class DisplayTaMere implements ComponentListener {
 	private static State state = State.MAIN_MENU;
 	
 	public static  GestionnaireAdversaire gestionnaireAdversaire = new GestionnaireAdversaire();
+	public static GestionnaireMerde gestionnaireMerde = new GestionnaireMerde();
 	public static Personnage personnage;
 	public static Map map = new Map(5000, 5000);
 	public static GestionnaireComposant gestionnaireComposant;
@@ -61,7 +63,7 @@ public class DisplayTaMere implements ComponentListener {
 			Display.setDisplayMode(new DisplayMode(1200, 600));
 			Display.setTitle("Ta Mere");
             Display.setInitialBackground(1.0F, 1.0F, 1.0F);
-           // Display.setFullscreen(true);
+           //Display.setFullscreen(true);
 			Display.create();
 		} catch (LWJGLException e) {
 			System.err.println("Display wasn't initialized correctly.");
@@ -147,6 +149,7 @@ public class DisplayTaMere implements ComponentListener {
 		
 		gestionnaireComposant.render();
 		gestionnaireComposant.update();
+		gestionnaireMerde.drawMerde();
 
 		map.drawMap(personnage);
 		personnage.drawPersonnage();

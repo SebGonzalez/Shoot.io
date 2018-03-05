@@ -34,7 +34,11 @@ public class AccepterConnexion implements Runnable{
 			System.out.println("login : " + login);
 			ServeurTest.gestionnaireJoueur.addJoueur(new Personnage(loginSplit[0], Double.parseDouble(loginSplit[1]),  Double.parseDouble(loginSplit[2])), out);
 			//ServeurTest.addClient(out);
-			out.println(ServeurTest.gestionnaireJoueur.envoiePos(loginSplit[0]));
+			
+			String messageInitial = ServeurTest.gestionnaireJoueur.envoiePos(loginSplit[0]);
+			messageInitial += ServeurTest.gestionnaireMerde.envoieAll();
+			System.out.println("oui :  " + messageInitial);
+			out.println(messageInitial);
 			
 			Thread threadReception = new Thread(new Reception(in,loginSplit[0], out));
 			threadReception.start();

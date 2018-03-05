@@ -39,7 +39,6 @@ public class Emission implements Runnable {
 			   ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).flush();
 			   }
 			   compteur++;
-			   System.out.println(cle.getNom() + " : " + message);
 			}
 			ServeurTest.gestionnaireJoueur.listeJoueurSuppr.clear();
 			if(compteur > 0)

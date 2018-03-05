@@ -10,6 +10,7 @@ public class ServeurTest {
 	public static ServerSocket ss = null;
 	public static Thread threadNewClient;
 	public static GestionnaireJoueur gestionnaireJoueur = new GestionnaireJoueur();
+	public static GestionnaireMerde gestionnaireMerde = new GestionnaireMerde();
 	
 	public static int compteurReception = 0;
 	public static int compteurEmission = 0;
