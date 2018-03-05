@@ -1,16 +1,16 @@
 package ServeurTest;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class Reception implements Runnable {
 
-	private BufferedReader in;
-	private PrintWriter out;
+	private DataInputStream in;
+	private DataOutputStream out;
 	private String message = null, login = null;
 
-	public Reception(BufferedReader in, String login, PrintWriter out) {
+	public Reception(DataInputStream in, String login, DataOutputStream out) {
 
 		this.in = in;
 		this.login = login;
@@ -21,15 +21,20 @@ public class Reception implements Runnable {
 
 		while (true) {
 			try {
-				message = in.readLine();
-				if(message == null) {
+				int length = in.readInt();
+				if (length > 0) {
+					byte[] message = new byte[length];
+				    in.readFully(message, 0, message.length); // read the message
+				    
+				    String messageS = new String(message);
+
+					ServeurTest.gestionnaireJoueur.updateJoueur(messageS);
+					ServeurTest.compteurReception++;
+				}
+				else {
 					deconnexion();
 					break;
 				}
-				
-				ServeurTest.gestionnaireJoueur.updateJoueur(message);
-				ServeurTest.compteurReception++;
-
 			} catch (IOException e) {
 
 				System.out.println(e.toString());
@@ -38,9 +43,10 @@ public class Reception implements Runnable {
 			}
 		}
 	}
-	
+
 	public void deconnexion() {
 		try {
+			System.out.println("DECONNEXION CLIENT");
 			ServeurTest.gestionnaireJoueur.remove(login);
 			in.close();
 			out.close();

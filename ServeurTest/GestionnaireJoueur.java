@@ -1,5 +1,7 @@
 package ServeurTest;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,15 +11,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import Client.Util.Personnage;
 
 public class GestionnaireJoueur {
-	public ConcurrentHashMap<Personnage, PrintWriter> listeJoueur;
+	public ConcurrentHashMap<Personnage, DataOutputStream> listeJoueur;
 	public ArrayList<String> listeJoueurSuppr;
 
 	public GestionnaireJoueur() {
-		listeJoueur = new ConcurrentHashMap<Personnage, PrintWriter>();
+		listeJoueur = new ConcurrentHashMap<Personnage, DataOutputStream>();
 		listeJoueurSuppr = new ArrayList();
 	}
 
-	public void addJoueur(Personnage p, PrintWriter pw) {
+	public void addJoueur(Personnage p, DataOutputStream pw) {
 		listeJoueur.put(p, pw);
 	}
 	
@@ -28,9 +30,14 @@ public class GestionnaireJoueur {
 		   if (cle.getNom().equals(nom)) {
 			   System.out.println("WOOOOOOOOW");
 			   listeJoueurSuppr.add(cle.getNom());
-			   	PrintWriter pw = listeJoueur.get(cle);
+			   DataOutputStream pw = listeJoueur.get(cle);
 				it.remove();
-				pw.close();
+				try {
+					pw.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
