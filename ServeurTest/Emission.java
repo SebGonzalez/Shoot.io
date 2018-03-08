@@ -32,6 +32,7 @@ public class Emission implements Runnable {
 				joueurTue += "S/" + nom + ";";
 				System.out.println("S/" + nom + ";");
 			}
+			joueurTue += ServeurTest.gestionnaireMerde.envoieInfo();
 
 			String message;
 			Iterator<Personnage> it = ServeurTest.gestionnaireJoueur.listeJoueur.keySet().iterator();
@@ -49,6 +50,7 @@ public class Emission implements Runnable {
 						e.printStackTrace();
 						try {
 							ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).close();
+							it.remove();
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -58,6 +60,7 @@ public class Emission implements Runnable {
 				}
 			}
 			ServeurTest.gestionnaireJoueur.listeJoueurSuppr.clear();
+			ServeurTest.gestionnaireMerde.listeMerdeModifie.clear();
 
 			// System.out.println("Emission : " + ServeurTest.compteurEmission + ",
 			// Reception : " + ServeurTest.compteurReception);

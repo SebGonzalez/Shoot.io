@@ -67,6 +67,9 @@ public class GestionnaireJoueur {
 			} else if (messageSplit2[0].equals("K")) {
 				remove(messageSplit2[1]);
 			}
+			else if(messageSplit2[0].equals("M")) {
+				ServeurTest.gestionnaireMerde.genererMerde(Integer.parseInt(messageSplit2[1]));
+			}
 		}
 	}
 

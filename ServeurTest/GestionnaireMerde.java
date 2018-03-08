@@ -6,46 +6,41 @@ import java.util.Random;
 import Client.Util.Personnage;
 
 public class GestionnaireMerde {
-	public ArrayList<Merde> listeMerde;
+	public static final int MAX_MERDE = 100;
 	
-	public ArrayList<Merde> listeMerdeSuppr;
-	public ArrayList<Merde> listeMerdeAjoute;
+	public ArrayList<Merde> listeMerde;
+	public ArrayList<Integer> listeMerdeModifie;
 	Random r;
 	
 	public GestionnaireMerde()  {
 		listeMerde = new ArrayList<>();
-		listeMerdeSuppr = new ArrayList<>();
-		listeMerdeAjoute = new ArrayList<>();
+		listeMerdeModifie = new ArrayList<>();
 		r = new Random();
-		for(int i=0; i<100; i++) {
+		for(int i=0; i<MAX_MERDE; i++) {
 			Merde m = new Merde(r.nextInt(5000), r.nextInt(5000), 35);
 			listeMerde.add(m);
 		}
+		//listeMerde.add(new Merde(2050, 2050, 35));
 	}
 	
-	public void genererMerde() {
-		if(listeMerde.size() < 100) {
-			Merde m = new Merde(r.nextInt(5000), r.nextInt(500), 35);
-			listeMerde.add(m);
-			listeMerdeAjoute.add(m);
-		}
+	public void genererMerde(int id) {
+		listeMerde.get(id).setX(r.nextInt(5000));
+		listeMerde.get(id).setY(r.nextInt(5000));
+		listeMerdeModifie.add(id);
 	}
 	
 	public String envoieInfo() {
 		String message = "";
-		for(Merde m : listeMerdeAjoute) {
-			message += "MA/"+m.getX()+"/"+m.getY()+"/"+m.getWidth()+";";
-		}
-		for(Merde m : listeMerdeSuppr) {
-			message += "MS/"+m.getX()+"/"+m.getY()+"/"+m.getWidth()+";";
+		for(int m : listeMerdeModifie) {
+			message += "M/"+ m + "/" + listeMerde.get(m).getX()+"/"+listeMerde.get(m).getY() + ";";
 		}
 		return message;
 	}
 	
 	public String envoieAll() {
 		String message = "MA/" + listeMerde.size() + "/";
-		for(int i=0; i<100; i++) {
-			message += listeMerde.get(i).getX()+"/"+listeMerde.get(i).getY()+"/";
+		for(Merde m : listeMerde) {
+			message += m.getX()+"/"+m.getY()+"/";
 		}
 		return message + ";";
 	}

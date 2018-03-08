@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import Client.IHM.DisplayTaMere;
+import Client.Util.Merde;
 import Client.Util.Personnage;
 
 public class Emission implements Runnable {
@@ -33,7 +34,12 @@ public class Emission implements Runnable {
 				System.out.println("KO");
 				message += "K/" + pTue.getNom() + ";";
 			}
+			for(Merde m : DisplayTaMere.gestionnaireMerde.getListeMerdeGraille()) {
+				message += "M/" + m.getId() + ";"; 
+			}
+			
 			DisplayTaMere.gestionnaireAdversaire.getListeAdversaireTue().clear();
+			DisplayTaMere.gestionnaireMerde.getListeMerdeGraille().clear();
 
 			try {
 				out.writeBytes(message + "\n");

@@ -149,6 +149,8 @@ public class DisplayTaMere implements ComponentListener {
 		
 		gestionnaireComposant.render();
 		gestionnaireComposant.update();
+		
+		gestionnaireMerde.collision();
 		gestionnaireMerde.drawMerde();
 
 		map.drawMap(personnage);

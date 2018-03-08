@@ -20,15 +20,24 @@ import Client.RessourceFactory.RessourcesFactory;
 import Client.RessourceFactory.TypeImage;
 
 public class Merde {
+	private int id;
 	private int x;
 	private int y;
 	private int width;
 	
-	public Merde(int x, int y, int width) {
-		super();
+	public Merde(int id, int x, int y, int width) {
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		this.width = width;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getX() {

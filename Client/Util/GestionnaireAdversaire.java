@@ -59,8 +59,12 @@ public class GestionnaireAdversaire {
 			else if (messageSplit2[0].equals("A")) {
 				DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3])));
 			} else if (messageSplit2[0].equals("MA")) {
-				for(int i=2; i<Integer.parseInt(messageSplit2[1]); i+=2)
+				for(int i=2; i<Integer.parseInt(messageSplit2[1])*2 + 2; i+=2)
 					DisplayTaMere.gestionnaireMerde.addMerde(Integer.parseInt(messageSplit2[i]), Integer.parseInt(messageSplit2[i+1]), 35);
+				System.out.println("SIIIIZE : " + DisplayTaMere.gestionnaireMerde.listeMerde.size());
+			}
+			else if(messageSplit2[0].equals("M")) {
+				DisplayTaMere.gestionnaireMerde.updateMerde(Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[2]), Integer.parseInt(messageSplit2[3]));
 			}
 			else if(messageSplit2[0].equals("D")) {
 				System.out.println("AHHHHHHHHHH");

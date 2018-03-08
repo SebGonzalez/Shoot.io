@@ -25,8 +25,12 @@ public class Reception implements Runnable {
 				String messageS = in.readLine();
 				//System.out.println("Message : " + messageS);
 
-				ServeurTest.gestionnaireJoueur.updateJoueur(messageS);
-				ServeurTest.compteurReception++;
+				if(messageS != null)
+					ServeurTest.gestionnaireJoueur.updateJoueur(messageS);
+				else {
+					deconnexion();
+					break;
+				}
 
 			} catch (IOException e) {
 
