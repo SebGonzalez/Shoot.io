@@ -1,16 +1,16 @@
 package Client.Connect;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 
 import Client.IHM.DisplayTaMere;
 
 public class Reception implements Runnable {
 
-	private BufferedReader in;
+	private DataInputStream in;
 	private String message = "";
 
-	public Reception(BufferedReader in) {
+	public Reception(DataInputStream in) {
 
 		this.in = in;
 	}
@@ -19,12 +19,12 @@ public class Reception implements Runnable {
 
 		while (true) {
 			try {
-				message = in.readLine();
-				if (message != null) {
-					DisplayTaMere.gestionnaireAdversaire.setReception(message);
-				} else {
-					deconnexion();
-				}
+
+				String messageS = in.readLine();
+				if(messageS.length() > 1 && messageS.charAt(0) == 'I')
+					DisplayTaMere.gestionnaireAdversaire.updateDonneCritique(messageS.substring(1));
+
+				DisplayTaMere.gestionnaireAdversaire.setReception(messageS);
 
 			} catch (IOException e) {
 

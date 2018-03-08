@@ -40,7 +40,7 @@ public class Personnage {
 	private double xVector;
 	private double yVector;
 
-	private float nbSprite = 0;
+	private int nbSprite = 0;
 	private int position = 0; // 0 droite, 1 gauche, 2 haut, 3 bas
 	private float cumulDelta = 0;
 	private double angle = 0;
@@ -269,7 +269,7 @@ public class Personnage {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		RessourcesFactory.getImage(TypeImage.PERSONNAGE).bind();
+		RessourcesFactory.getImageDaronne(nbSprite, position).bind();
 
 		glPushMatrix();
 
@@ -278,14 +278,14 @@ public class Personnage {
 		glRotatef((float) angle, 0, 0, 1); // now rotate
 
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.20F * nbSprite, 0.20F * position);
-		glVertex2i(-50, -50);
-		glTexCoord2f(0.20F * (nbSprite + 1), 0.20F * position);
-		glVertex2i(+50, -50);
-		glTexCoord2f(0.20F * (nbSprite + 1), 0.20F * (position + 1));
-		glVertex2i(+50, +50);
-		glTexCoord2f(0.20F * nbSprite, 0.20F * (position + 1));
-		glVertex2i(-50, +50);
+		glTexCoord2f(0,0);
+		glVertex2i(-63, -99);
+		glTexCoord2f(1, 0);
+		glVertex2i(+63, -99);
+		glTexCoord2f(1, 1);
+		glVertex2i(+63, +99);
+		glTexCoord2f(0, 1);
+		glVertex2i(-63, +99);
 		glEnd();
 
 		glPopMatrix(); // pop off the rotation and transformation
@@ -315,7 +315,7 @@ public class Personnage {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		RessourcesFactory.getImage(TypeImage.PERSONNAGE).bind();
+		RessourcesFactory.getImageDaronne(joueur.nbSprite, joueur.position).bind();
 
 		glPushMatrix();
 
@@ -324,14 +324,14 @@ public class Personnage {
 		glRotatef((float) angle, 0, 0, 1); // now rotate
 
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.20F * nbSprite, 0.20F * position);
-		glVertex2i(-50, -50);
-		glTexCoord2f(0.20F * (nbSprite + 1), 0.20F * position);
-		glVertex2i(+50, -50);
-		glTexCoord2f(0.20F * (nbSprite + 1), 0.20F * (position + 1));
-		glVertex2i(+50, +50);
-		glTexCoord2f(0.20F * nbSprite, 0.20F * (position + 1));
-		glVertex2i(-50, +50);
+		glTexCoord2f(0,0);
+		glVertex2i(-63, -99);
+		glTexCoord2f(1, 0);
+		glVertex2i(+63, -99);
+		glTexCoord2f(1, 1);
+		glVertex2i(+63, +99);
+		glTexCoord2f(0, 1);
+		glVertex2i(-63, +99);
 		glEnd();
 
 		glPopMatrix(); // pop off the rotation and transformation

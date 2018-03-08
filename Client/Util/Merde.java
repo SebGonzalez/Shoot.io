@@ -61,13 +61,13 @@ public class Merde {
 		
 		Personnage p = DisplayTaMere.personnage;
 		if(this.getX() > p.getX())
-			xEcran = (int) (Display.getWidth() / 2 + (this.getX() - p.getX())) - 25;
+			xEcran = (int) (Display.getWidth() / 2 + (this.getX() - p.getX())) - width/2;
 		else
-			xEcran = (int) (Display.getWidth() / 2 - (p.getX()-this.getX()))  - 25;
-		if(this.getY() > y)
-			yEcran = (int) (Display.getHeight() / 2 + (this.getY() - p.getY())) - 25;
+			xEcran = (int) (Display.getWidth() / 2 - (p.getX()-this.getX()))  - width/2;
+		if(this.getY() > p.getY())
+			yEcran = (int) (Display.getHeight() / 2 + (this.getY() - p.getY())) - width/2;
 		else
-			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-this.getY())) - 25;
+			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-this.getY())) - width/2;
 
 		glColor3f(1f, 1f, 1f); // reset color
 		glEnable(GL_BLEND);
@@ -79,11 +79,11 @@ public class Merde {
 		glTexCoord2f(0.0F, 0.0F);
 		glVertex2i(xEcran, yEcran);
 		glTexCoord2f(1F, 0);
-		glVertex2i(xEcran + 100, yEcran);
+		glVertex2i(xEcran + width, yEcran);
 		glTexCoord2f(1, 1);
-		glVertex2i(xEcran + 100, yEcran + 50);
+		glVertex2i(xEcran + width, yEcran + width);
 		glTexCoord2f(0, 1);
-		glVertex2i(xEcran, yEcran + 50);
+		glVertex2i(xEcran, yEcran + width);
 		glEnd();
 
 		glDisable(GL_BLEND);

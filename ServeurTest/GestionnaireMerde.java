@@ -18,15 +18,14 @@ public class GestionnaireMerde {
 		listeMerdeAjoute = new ArrayList<>();
 		r = new Random();
 		for(int i=0; i<100; i++) {
-			Merde m = new Merde(r.nextInt(5000), r.nextInt(500), 15);
+			Merde m = new Merde(r.nextInt(5000), r.nextInt(5000), 35);
 			listeMerde.add(m);
-			listeMerdeAjoute.add(m);
 		}
 	}
 	
 	public void genererMerde() {
 		if(listeMerde.size() < 100) {
-			Merde m = new Merde(r.nextInt(5000), r.nextInt(500), 15);
+			Merde m = new Merde(r.nextInt(5000), r.nextInt(500), 35);
 			listeMerde.add(m);
 			listeMerdeAjoute.add(m);
 		}
@@ -44,10 +43,10 @@ public class GestionnaireMerde {
 	}
 	
 	public String envoieAll() {
-		String message = "";
-		for(int i=0; i<5; i++) {
-			message += "MA/"+listeMerde.get(i).getX()+"/"+listeMerde.get(i).getY()+"/"+listeMerde.get(i).getWidth()+";";
+		String message = "MA/" + listeMerde.size() + "/";
+		for(int i=0; i<100; i++) {
+			message += listeMerde.get(i).getX()+"/"+listeMerde.get(i).getY()+"/";
 		}
-		return message;
+		return message + ";";
 	}
 }

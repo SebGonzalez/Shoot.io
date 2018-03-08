@@ -21,7 +21,9 @@ public class GestionnaireMerde {
 	
 	public void drawMerde() {
 		for(Merde m : listeMerde) {
+			//System.out.println(DisplayTaMere.personnage.getX() + " " + m.getX() + (DisplayTaMere.personnage.getX() - m.getX()));
 			if(Math.abs(DisplayTaMere.personnage.getX() - m.getX()) < (Display.getWidth()/2 + 250) && Math.abs(DisplayTaMere.personnage.getY() - m.getY()) < (Display.getHeight()/2 + 250)) {
+				//System.out.println("Merde "  + " , x : " + m.getX() + " , y : " + m.getY());
 				m.draw();
 			}
 		}

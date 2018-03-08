@@ -12,7 +12,7 @@ public class Emission implements Runnable {
 	int compteur = 0;
 
 	public Emission(int wait) {
-		this.wait = 0;
+		this.wait = wait;
 	}
 
 	public void run() {
@@ -24,6 +24,14 @@ public class Emission implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			String joueurTue = "";
+			Iterator<String> it2 = ServeurTest.gestionnaireJoueur.listeJoueurSuppr.iterator();
+			while (it2.hasNext()) {
+				String nom = it2.next();
+				joueurTue += "S/" + nom + ";";
+				System.out.println("S/" + nom + ";");
+			}
 
 			String message;
 			Iterator<Personnage> it = ServeurTest.gestionnaireJoueur.listeJoueur.keySet().iterator();
@@ -31,28 +39,26 @@ public class Emission implements Runnable {
 				Personnage cle = it.next(); // tu peux typer plus finement ici
 				message = ServeurTest.gestionnaireJoueur.envoiePos(cle.getNom());
 
-				Iterator<String> it2 = ServeurTest.gestionnaireJoueur.listeJoueurSuppr.iterator();
-				while (it2.hasNext()) {
-					String nom = it2.next();
-					message += "S/" + nom + ";";
-				}
 				if (ServeurTest.gestionnaireJoueur.listeJoueur.get(cle) != null) {
 					try {
-						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeInt(message.length());
-						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).write(message.getBytes());
-						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).flush();
+						if(!joueurTue.equals("")) ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes("I" + joueurTue + "\n");
+						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes(message + "\n");
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						try {
+							ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).close();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 
 				}
-				compteur++;
 			}
 			ServeurTest.gestionnaireJoueur.listeJoueurSuppr.clear();
-			if (compteur > 0)
-				ServeurTest.compteurEmission++;
-			compteur = 0;
+
 			// System.out.println("Emission : " + ServeurTest.compteurEmission + ",
 			// Reception : " + ServeurTest.compteurReception);
 		}

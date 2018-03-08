@@ -21,20 +21,13 @@ public class Reception implements Runnable {
 
 		while (true) {
 			try {
-				int length = in.readInt();
-				if (length > 0) {
-					byte[] message = new byte[length];
-				    in.readFully(message, 0, message.length); // read the message
-				    
-				    String messageS = new String(message);
 
-					ServeurTest.gestionnaireJoueur.updateJoueur(messageS);
-					ServeurTest.compteurReception++;
-				}
-				else {
-					deconnexion();
-					break;
-				}
+				String messageS = in.readLine();
+				//System.out.println("Message : " + messageS);
+
+				ServeurTest.gestionnaireJoueur.updateJoueur(messageS);
+				ServeurTest.compteurReception++;
+
 			} catch (IOException e) {
 
 				System.out.println(e.toString());
@@ -42,6 +35,7 @@ public class Reception implements Runnable {
 				break;
 			}
 		}
+
 	}
 
 	public void deconnexion() {

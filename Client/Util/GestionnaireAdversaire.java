@@ -7,6 +7,8 @@ import java.util.Random;
 
 import org.lwjgl.opengl.Display;
 
+import Client.IHM.DisplayTaMere;
+
 public class GestionnaireAdversaire {
 	private List<Personnage> listeAdversaire;
 	//private List<Personnage> listeAdversaireDessine;
@@ -46,17 +48,43 @@ public class GestionnaireAdversaire {
 		reception = null;
 	}
 	
-	
-	public void updateAdversaireServeur(double delta) {
+	public void updateDonneCritique(String reception) {
+		System.out.println("Et c'est le critique : " + reception.length() + " " + reception);
 		String messageSplit[] = reception.split(";");
 		for(String s : messageSplit) {
 			String messageSplit2[] = s.split("/");
 			if(messageSplit2[0].equals("S")) { //suppresion
 				remove(messageSplit2[1]);
 			}
+			else if (messageSplit2[0].equals("A")) {
+				DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3])));
+			} else if (messageSplit2[0].equals("MA")) {
+				for(int i=2; i<Integer.parseInt(messageSplit2[1]); i+=2)
+					DisplayTaMere.gestionnaireMerde.addMerde(Integer.parseInt(messageSplit2[i]), Integer.parseInt(messageSplit2[i+1]), 35);
+			}
+			else if(messageSplit2[0].equals("D")) {
+				System.out.println("AHHHHHHHHHH");
+				System.exit(0);
+			}
+		}
+	}
+	
+	public void updateAdversaireServeur(double delta) {
+		String messageSplit[] = reception.split(";");
+		for(String s : messageSplit) {
+			String messageSplit2[] = s.split("/");
+			if(messageSplit2[0].equals("S")) { //suppresion
+				System.out.println("Suppression de : " + messageSplit2[1]);
+				remove(messageSplit2[1]);
+			}
 			else if(messageSplit2[0].equals("U")) //update
 				setInfoAdversaire(messageSplit2[1], Double.parseDouble(messageSplit2[2]),  Double.parseDouble(messageSplit2[3]), Double.parseDouble(messageSplit2[4]), Double.parseDouble(messageSplit2[5]),
 						Double.parseDouble(messageSplit2[6]), Integer.parseInt(messageSplit2[7]), Double.parseDouble(messageSplit2[8]), Double.parseDouble(messageSplit2[9]), Integer.parseInt(messageSplit2[10]), delta);
+			else if (messageSplit2[0].equals("A")) {
+				DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3])));
+			} else if (messageSplit2[0].equals("MA")) {
+				DisplayTaMere.gestionnaireMerde.addMerde(Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[3]));
+			}
 			else if(messageSplit2[0].equals("D")) {
 				System.out.println("AHHHHHHHHHH");
 				System.exit(0);
@@ -74,7 +102,6 @@ public class GestionnaireAdversaire {
 		for(Iterator<Personnage> it = listeAdversaire.iterator(); it.hasNext();) {
 			Personnage p = it.next();
 			if(p.getNom().equals(nom)) {
-				System.out.println("remove : " + nom);
 				it.remove();
 			}
 		}

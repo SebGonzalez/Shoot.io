@@ -161,7 +161,7 @@ public class Arme {
 		//System.out.println(this.getX() + " " + this.getY());
 		for(Iterator<Personnage> it = DisplayTaMere.gestionnaireAdversaire.getListeAdversaire().iterator(); it.hasNext();) {
 			Personnage p = it.next();
-			Rectangle adversaire = new Rectangle((int)p.getX()-50, (int)p.getY()-50, 100, 100);
+			Rectangle adversaire = new Rectangle((int)p.getX()-63, (int)p.getY()-99, 63*2, 99*2);
 			//System.out.println(p.getX() + " " + p.getY());
 			if(adversaire.intersects(armeJoueur)) {
 				DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
