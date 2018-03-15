@@ -207,7 +207,7 @@ public class Personnage {
 			move(largeurMap, hauteurMap, delta * 0.1);
 
 			cumulDelta += delta;
-			if (cumulDelta > 60) {
+			if (cumulDelta > 100) {
 				nbSprite++;
 				cumulDelta = 0;
 			}
