@@ -4,5 +4,6 @@ public enum TypeImage {
 	PERSONNAGE,
 	ARME,
 	STAT,
-	MERDE;
+	MERDE,
+	JOUER;
 }

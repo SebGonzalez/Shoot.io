@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -18,16 +19,20 @@ import java.io.IOException;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.tests.TestUtils;
 
 import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.ComponentListener;
+import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.TypeImage;
 
 public class OpenGlButton implements Component {
 
-	private Texture texture;
-	private Texture textureHover;
+	private int texture;
+	private int textureHover;
 	private int x;
 	private int y;
 	private int width;
@@ -38,12 +43,8 @@ public class OpenGlButton implements Component {
 	}
 	
 	public OpenGlButton(String cheminTexture, String cheminTextureHover) {
-		try {
-			this.texture = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminTexture));
-			this.textureHover = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminTextureHover));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.texture = RessourcesFactory.loadTexture(cheminTexture);
+		this.textureHover = RessourcesFactory.loadTexture(cheminTextureHover);
 	}
 	
 	public void setBounds(int x, int y, int width, int height) {
@@ -74,10 +75,14 @@ public class OpenGlButton implements Component {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		if(!isMouseEntered())
-			texture.bind();
-		else
-			textureHover.bind();
+		if(!isMouseEntered()) {
+			//RessourcesFactory.getImage(TypeImage.STAT).bind();
+			glBindTexture(GL_TEXTURE_2D, texture);
+		}
+		else {
+			//RessourcesFactory.getImage(TypeImage.STAT).bind();
+			glBindTexture(GL_TEXTURE_2D, textureHover);
+		}
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0F, 0.0F);
 		glVertex2i(x, y);
@@ -95,7 +100,7 @@ public class OpenGlButton implements Component {
 
 	@Override
 	public boolean isMouseEntered() {
-		if(Mouse.getX() >= x && Mouse.getX() <= x+width && Mouse.getY() > y && Mouse.getY() < y+height)
+		if (Mouse.getX() >= x && Mouse.getX() <= x + width && (Display.getHeight() - Mouse.getY()) > y && (Display.getHeight() - Mouse.getY()) < y+height)
 			return true;
 		return false;
 	}

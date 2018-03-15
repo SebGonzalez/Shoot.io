@@ -11,23 +11,28 @@ public class ComponentAnimator implements Component {
 	private TypeAnimation typeAnimation;
 	private int xBase;
 	private int yBase;
-	private int translateX;
-	private int translateY;
+	private int animatorX;
+	private int animatorY;
 	private int duree;
 	private boolean autoSuppression;
+	private int radius;
 	
 	private double tempsPasse;
 	private long lastFrame;
 	
-	public ComponentAnimator(Component c, TypeAnimation typeAnimation, int translateX, int translateY, int duree) {
+	public ComponentAnimator(Component c, TypeAnimation typeAnimation, int animatorX, int animatorY, int duree) {
 		this.c = c;
 		this.xBase = c.getX();
 		this.yBase = c.getY();
 		this.typeAnimation = typeAnimation;
-		this.translateX = translateX;
-		this.translateY = translateY;
+		this.animatorX = animatorX;
+		this.animatorY = animatorY;
 		this.duree = duree;
 		lastFrame = getTime();
+	}
+	
+	public ComponentAnimator(Component c, TypeAnimation typeAnimation, int radius, int duree) {
+		this(c, typeAnimation, radius, radius, duree);
 	}
 	
 	@Override
@@ -44,30 +49,69 @@ public class ComponentAnimator implements Component {
 
 	@Override
 	public void update() {
+		switch(typeAnimation){
+		 case TRANSLATE:
+			 updateTranslate();
+			 break;
+		 case ROTATE:
+			 System.out.println("NON IMPLEMENTE");
+			 break;
+		 case SCALE:
+			 updateScale();
+			 break;
+		}
+	}
+	
+	private void updateScale() {
 		if(tempsPasse < duree) {
 			double delta = getDelta();
 			tempsPasse += delta;
-			int newX = c.getX() + (int)(delta*translateX/duree);
-			int newY = c.getY() + (int)(delta*translateY/duree);
-			if(xBase+translateX > xBase)
-				if(newX > xBase+translateX) newX = xBase+translateX;
-			else if(xBase+translateX < xBase)
-				if(newX < xBase+translateX) newX = xBase+translateX;
-			if(yBase+translateY > xBase)
-				if(newY > yBase+translateY) newY = yBase+translateY;
-			else if(yBase+translateY < yBase)
-				if(newY < yBase+translateY) newY = yBase+translateY;
+			int newX = (int)(delta*animatorX/duree);
+			int newY = (int)(delta*animatorY/duree);
+			if(xBase+animatorX > xBase)
+				if(newX > xBase+animatorX) newX = xBase+animatorX;
+			else if(xBase+animatorX < xBase)
+				if(newX < xBase+animatorX) newX = xBase+animatorX;
+			if(yBase+animatorY > xBase)
+				if(newY > yBase+animatorY) newY = yBase+animatorY;
+			else if(yBase+animatorY < yBase)
+				if(newY < yBase+animatorY) newY = yBase+animatorY;
 			
-			c.setBounds(newX, newY, c.getWidth(), c.getHeight());
+			c.setBounds(c.getX() - newX, c.getY() - newY, c.getWidth() + newX, c.getHeight() + newY);
 			//System.out.println(newX + " " + newY);
 		}
 		else {
-			c.setBounds(xBase+translateX, yBase+translateY, c.getWidth(), c.getHeight());
+			c.setBounds(xBase-animatorX, yBase-animatorY, c.getWidth()+animatorX, c.getHeight()+animatorY);
 			//System.out.println(xBase + " " + translateX + " " + (xBase+translateX) + " "+ c.getX());
 			autoSuppression = true;
 		}
 	}
 
+	private void updateTranslate() {
+		if(tempsPasse < duree) {
+			double delta = getDelta();
+			tempsPasse += delta;
+			int newX = c.getX() + (int)(delta*animatorX/duree);
+			int newY = c.getY() + (int)(delta*animatorY/duree);
+			if(xBase+animatorX > xBase)
+				if(newX > xBase+animatorX) newX = xBase+animatorX;
+			else if(xBase+animatorX < xBase)
+				if(newX < xBase+animatorX) newX = xBase+animatorX;
+			if(yBase+animatorY > xBase)
+				if(newY > yBase+animatorY) newY = yBase+animatorY;
+			else if(yBase+animatorY < yBase)
+				if(newY < yBase+animatorY) newY = yBase+animatorY;
+			
+			c.setBounds(newX, newY, c.getWidth(), c.getHeight());
+			//System.out.println(newX + " " + newY);
+		}
+		else {
+			c.setBounds(xBase+animatorX, yBase+animatorY, c.getWidth(), c.getHeight());
+			//System.out.println(xBase + " " + translateX + " " + (xBase+translateX) + " "+ c.getX());
+			autoSuppression = true;
+		}
+	}
+	
 	@Override
 	public void render() {
 		

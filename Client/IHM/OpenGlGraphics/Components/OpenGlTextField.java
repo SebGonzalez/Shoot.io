@@ -14,6 +14,7 @@ import java.awt.Font;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
@@ -22,7 +23,7 @@ import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.ComponentListener;
 
 public class OpenGlTextField implements Component {
-
+	
 	private String texte = "";
 	private boolean cursor = true;
 	private boolean focus = false;
@@ -83,9 +84,9 @@ public class OpenGlTextField implements Component {
 		//if(!charge) t.start();
 		if (Mouse.isButtonDown(0) && isMouseEntered()) {
 			focus = true;
-		} else if (Mouse.isButtonDown(0) && !isMouseEntered())
+		} else if (Mouse.isButtonDown(0) && !isMouseEntered()) {
 			focus = false;
-
+		}
 		cumulDelta += getDelta();
 
 		if (cumulDelta > 700) {
@@ -132,7 +133,11 @@ public class OpenGlTextField implements Component {
 
 	@Override
 	public boolean isMouseEntered() {
-		if (Mouse.getX() >= x && Mouse.getX() <= x + width && Mouse.getY() > y && Mouse.getY() < y + height)
+		/*
+		System.out.println("mouse : " + Mouse.getX() + ", " + (Display.getHeight() - Mouse.getY()));
+		System.out.println("textField : {" + x + ", " + (x+width) + "}, {"  + y + ", " + (y+height) + "}");
+		*/
+		if (Mouse.getX() >= x && Mouse.getX() <= x + width && (Display.getHeight() - Mouse.getY()) > y && (Display.getHeight() - Mouse.getY()) < y+height)
 			return true;
 		return false;
 	}
@@ -185,5 +190,4 @@ public class OpenGlTextField implements Component {
 	public boolean autoSupression() {
 		return false;
 	}
-
 }

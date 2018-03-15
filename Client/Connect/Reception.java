@@ -30,6 +30,7 @@ public class Reception implements Runnable {
 
 				e.printStackTrace();
 				deconnexion();
+				break;
 			}
 		}
 	}
@@ -42,7 +43,7 @@ public class Reception implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.exit(0);
+		
 	}
 
 }

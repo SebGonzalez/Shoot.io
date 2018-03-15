@@ -4,7 +4,9 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -26,7 +28,10 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
+import com.github.davidmoten.lwjgl.Entity;
+
 import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.Sprite;
 import Client.RessourceFactory.TypeImage;
 
 public class Personnage {
@@ -47,11 +52,15 @@ public class Personnage {
 
 	private Arme arme;
 
-	public Personnage(String nom) {
+	private Stats stats = new Stats();
+	Sprite s;
+
+	public Personnage(String nom, Sprite s) {
 		this.nom = nom;
 		x = 2000;
 		y = 2000;
 		setArme();
+		this.s = s;
 	}
 	
 	public Personnage(String nom, double x, double y) {
@@ -60,7 +69,8 @@ public class Personnage {
 		this.y = y;
 		setArme();
 	}
-	public Personnage(String nom, double x, double y, TrueTypeFont font) {
+	public Personnage(String nom, double x, double y, TrueTypeFont font, Sprite s) {
+		this.s = s;
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
@@ -265,38 +275,8 @@ public class Personnage {
 
 	// lwjgl
 	public void drawPersonnage() {
-		glColor3f(1f, 1f, 1f); // reset color
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		RessourcesFactory.getImageDaronne(nbSprite, position).bind();
-
-		glPushMatrix();
-
-		glTranslated(Display.getWidth() / 2, Display.getHeight() / 2, 0.0d);
-
-		glRotatef((float) angle, 0, 0, 1); // now rotate
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0,0);
-		glVertex2i(-63, -99);
-		glTexCoord2f(1, 0);
-		glVertex2i(+63, -99);
-		glTexCoord2f(1, 1);
-		glVertex2i(+63, +99);
-		glTexCoord2f(0, 1);
-		glVertex2i(-63, +99);
-		glEnd();
-
-		glPopMatrix(); // pop off the rotation and transformation
-		glDisable(GL_BLEND);
-		
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		font.drawString(Display.getWidth()/2, Display.getHeight()/2+60, nom, Color.black); // x, y, string to draw, color
-		glDisable(GL_BLEND);
-
-		arme.draw(this);
+		glColor3f(1f, 1f, 1f);
+		s.draw(Display.getWidth()/2-63, Display.getHeight()/2-99, 126, 198);
 	}
 	
 	public void drawPersonnageX(Personnage joueur) {
@@ -311,11 +291,13 @@ public class Personnage {
 		else
 			yEcran = (int) (Display.getHeight() / 2 - (joueur.getY()-this.getY()));
 		
-		glColor3f(1f, 1f, 1f); // reset color
+		glEnable(GL_TEXTURE_2D);
+		glColor3f(1f, 1f, 1f); //reset color
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		RessourcesFactory.getImageDaronne(joueur.nbSprite, joueur.position).bind();
+		
+		glBindTexture(GL_TEXTURE_2D, RessourcesFactory.getImageDaronne(joueur.nbSprite, joueur.position));
 
 		glPushMatrix();
 
@@ -336,7 +318,12 @@ public class Personnage {
 
 		glPopMatrix(); // pop off the rotation and transformation
 		glDisable(GL_BLEND);
+		glDisable(GL_TEXTURE_2D);
 
 		arme.drawX(joueur);
+	}
+	
+	public Stats getStats() {
+		return stats;
 	}
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import Client.IHM.DisplayTaMere;
 import Client.Util.Merde;
 import Client.Util.Personnage;
+import Client.Util.State;
 
 public class Emission implements Runnable {
 
@@ -48,6 +49,7 @@ public class Emission implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				deconnexion();
+				break;
 			}
 		}
 	}
@@ -60,6 +62,6 @@ public class Emission implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.exit(0);
+		DisplayTaMere.changer = true;
 	}
 }

@@ -6,7 +6,7 @@ import java.util.Random;
 import Client.Util.Personnage;
 
 public class GestionnaireMerde {
-	public static final int MAX_MERDE = 100;
+	public static final int MAX_MERDE = 50;
 	
 	public ArrayList<Merde> listeMerde;
 	public ArrayList<Integer> listeMerdeModifie;

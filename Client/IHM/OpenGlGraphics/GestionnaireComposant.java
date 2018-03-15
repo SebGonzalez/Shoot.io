@@ -6,17 +6,22 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import Client.IHM.OpenGlGraphics.Components.DrawableComponent;
+
 public class GestionnaireComposant {
 	private ComponentListener listener;
 	private List<Component> listComponent;
+	private DrawableComponent drawableComponent;
 	
-	public GestionnaireComposant() {
+	public GestionnaireComposant(DrawableComponent drawableComponent) {
 		listComponent = new ArrayList<>();
+		this.drawableComponent = drawableComponent;
 	}
 	
-	public GestionnaireComposant(ComponentListener listener) {
+	public GestionnaireComposant(ComponentListener listener, DrawableComponent drawableComponent) {
 		listComponent = new ArrayList<>();
 		this.listener = listener;
+		this.drawableComponent = drawableComponent;
 	}
 	
 	public List<Component> getComponent() {
@@ -41,6 +46,7 @@ public class GestionnaireComposant {
 		clearBufferText();
 		/*for(Component c : listComponent)
 			c.update();*/
+		drawableComponent.paintComponent(); 
 		Iterator<Component> componentIterator = listComponent.iterator();
 		while (componentIterator.hasNext()) {
 			Component c = componentIterator.next();

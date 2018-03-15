@@ -4,7 +4,9 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -185,11 +187,13 @@ public class Arme {
 		else
 			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-y)) - 25;
 
-		glColor3f(1f, 1f, 1f); // reset color
+		glEnable(GL_TEXTURE_2D);
+		glColor3f(1f, 1f, 1f); //reset color
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		RessourcesFactory.getImage(TypeImage.ARME).bind();
+		glBindTexture(GL_TEXTURE_2D, RessourcesFactory.getIntImage(TypeImage.ARME));
+
 
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0F, 0.0F);
@@ -203,6 +207,7 @@ public class Arme {
 		glEnd();
 
 		glDisable(GL_BLEND);
+		glDisable(GL_TEXTURE_2D);
 	}
 	
 	public void drawX(Personnage p) {
@@ -224,7 +229,9 @@ public class Arme {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		RessourcesFactory.getImage(TypeImage.ARME).bind();
+		glBindTexture(GL_TEXTURE_2D, RessourcesFactory.getIntImage(TypeImage.ARME));
+
+		//RessourcesFactory.getImage(TypeImage.ARME).bind();
 
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0F, 0.0F);
