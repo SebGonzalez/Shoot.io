@@ -38,7 +38,7 @@ public class OpenGlTextField implements Component {
 
 	TrueTypeFont font;
 	Thread t;
-
+	
 	public OpenGlTextField() {
 		lastFrame = getTime();
 
@@ -71,9 +71,9 @@ public class OpenGlTextField implements Component {
 	@Override
 	public int getY() {return y;}
 	@Override
-	public int getWidth() {return 0;}
+	public int getWidth() {return width;}
 	@Override
-	public int getHeight() {return 0;}
+	public int getHeight() {return height;}
 	
 	public String getText() {
 		return texte;
@@ -111,7 +111,7 @@ public class OpenGlTextField implements Component {
 		glBegin(GL_QUADS);
 		glColor3f(1.0F, 1.0F, 1.0F);
 		glVertex2i(x + 1, y + 1);
-		glVertex2i(x + 1 + width - 1, y + 1);
+		glVertex2i(x + 1 + width - 2, y + 1);
 		glVertex2i(x + 1 + width - 2, y + 1 + height - 2);
 		glVertex2i(x + 1, y + 1 + height - 2);
 		glEnd();
@@ -130,7 +130,7 @@ public class OpenGlTextField implements Component {
 		font.drawString(x, y, texte, Color.black); // x, y, string to draw, color
 		glDisable(GL_BLEND);
 	}
-
+	
 	@Override
 	public boolean isMouseEntered() {
 		/*

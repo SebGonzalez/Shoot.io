@@ -1,26 +1,5 @@
 package Client.IHM;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2i;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -47,6 +26,7 @@ import Client.IHM.OpenGlGraphics.Components.DrawableComponent;
 import Client.IHM.OpenGlGraphics.Components.OpenGlButton;
 import Client.IHM.OpenGlGraphics.Components.OpenGlImage;
 import Client.IHM.OpenGlGraphics.Components.OpenGlLabel;
+import Client.IHM.OpenGlGraphics.Components.OpenGlPanel;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -59,6 +39,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.Sprite;
 import Client.RessourceFactory.TypeImage;
 import Client.Util.Personnage;
 
@@ -68,7 +49,7 @@ import Client.Util.Personnage;
  * @author Ludovic GIBAULT
  *
  */
-public class DeathScreen implements ComponentListener, DrawableComponent {
+public class DeathScreen implements ComponentListener, DrawableComponent, OpenGlPanel {
 	
 	
 	/**
@@ -102,14 +83,18 @@ public class DeathScreen implements ComponentListener, DrawableComponent {
 	 */
 	private OpenGlButton continueButton; 
 	
-	static OpenGlImage imageStat1;
+	
+	private Client.RessourceFactory.TextureLoader loader;
+	
+	private Personnage personnage;
 	
 	
 	/**
 	 * Constructeur sans argument de l'ecran de mort.
 	 */
-	public DeathScreen(Personnage personnage) {
-		try {
+	public DeathScreen(GestionnaireComposant gestionnaire, Client.RessourceFactory.TextureLoader textureLoader) {
+		loader = textureLoader;
+		/*try {
 			Display.setDisplayMode(new DisplayMode(1200, 600));
 			Display.setTitle("Ta Mere");
             Display.setInitialBackground(1.0F, 1.0F, 1.0F);
@@ -124,60 +109,14 @@ public class DeathScreen implements ComponentListener, DrawableComponent {
     	glLoadIdentity(); // Resets any previous projection matrices
     	glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
     	glMatrixMode(GL_MODELVIEW);
+    	*/
+		
+  //  	personnage = new Personnage("Philippos", new Sprite(new Client.RessourceFactory.TextureLoader(), "Client/IHM/Images/Daronne/daronne_0_0.png"));
+		
     	
     	RessourcesFactory.loadImage();
-    	gestionnaireComposant = new GestionnaireComposant(this, this);
-    	
-    	imageStat1 = new OpenGlImage(TypeImage.STAT);
-		imageStat1.setBounds(20, 20, 200, 30);
-		gestionnaireComposant.addComponent(imageStat1);
-		ComponentAnimator c = new ComponentAnimator(imageStat1, TypeAnimation.SCALE, 10, 10, 10);
-		gestionnaireComposant.addComponent(c);
-    	
-
-    	/* **** lvl **** */
-    	
-    	lvlLabel = new OpenGlLabel("Niveau : " + personnage.getStats().lvl);
-    	lvlLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*0+50, 150, 50);
-    	gestionnaireComposant.addComponent(lvlLabel);
-    	
-    	/* **** FIN : lvl **** */
-    	    	
-    	/* **** nbTues **** */
-    	
-    	nbKillsLabel = new OpenGlLabel("Tues : " + personnage.getStats().nbKills);
-    	nbKillsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*1+50, 150, 50);
-    	gestionnaireComposant.addComponent(nbKillsLabel);
-    	
-    	/* **** FIN : nbTues **** */
-    	
-    	/* **** nbLancers **** */
-    	
-    	nbThrowsLabel = new OpenGlLabel("Lancers : " + personnage.getStats().nbThrows);
-    	nbThrowsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*2+50, 150, 50);
-    	gestionnaireComposant.addComponent(nbThrowsLabel);
-    	
-    	/* **** FIN : nbLancers **** */
-
-    	/* **** nbHits **** */
-    	
-    	nbHitsLabel = new OpenGlLabel("Touchers : " + personnage.getStats().nbHits);
-    	nbHitsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*3+50, 150, 50);
-    	gestionnaireComposant.addComponent(nbHitsLabel);
-    	
-    	/* **** FIN : nbHits **** */
-    	
-    	
-    	/* bouton Continuer */
-    	
-    	continueButton = new OpenGlButton("/Client/IHM/Images/play.png", "/Client/IHM/Images/play_hover.png");
-    	continueButton.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*4+50, 150, 50);
-    	gestionnaireComposant.addComponent(continueButton);
-    	    	
-    	/* FIN : bouton Continuer */
-
-    	
-    	
+    	gestionnaireComposant = gestionnaire;
+   
 	}
 	
 
@@ -200,9 +139,8 @@ public class DeathScreen implements ComponentListener, DrawableComponent {
 	
 	
 	public static void main(String[] args) {
-		Personnage perso = new Personnage("Philippos");
-		DeathScreen display = new DeathScreen(perso);
-		display.start();
+	//	DeathScreen display = new DeathScreen();
+	//	display.start();
 	}
 
 	@Override
@@ -213,82 +151,13 @@ public class DeathScreen implements ComponentListener, DrawableComponent {
 	 
 	@Override
 	public void paintComponent() {	
-		//glClear(GL_COLOR_BUFFER_BIT);
-
+		//Ajouter les trucs
 		glEnable(GL_TEXTURE_2D);
 		glColor3f(1f, 1f, 1f); //reset color
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
-		//glPushMatrix();
-		
-		RessourcesFactory.getImage(TypeImage.STAT).bind(); //VCOMME CA CA MARCHE MAIS C'EST CHELOU
-		glBindTexture(GL_TEXTURE_2D, RessourcesFactory.getIntImage(TypeImage.JOUER));
-		
-		glBegin(GL_QUADS);
-		
-		glTexCoord2f(0, 0);
-		glVertex2i(10, 10);
-		glTexCoord2f(1, 0);
-		glVertex2i(250, 10);
-		glTexCoord2f(1, 1);
-		glVertex2i(250, 55);
-		glTexCoord2f(0, 1);
-		glVertex2i(10, 55);
-		glEnd();
-		
-		//glBindTexture(GL_TEXTURE_2D, 0);
-		//glPopMatrix();
 
-		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
-		
-		
-		/*try {
-			InputStream in = new FileInputStream("src/Client/IHM/Images/play.png");
-		   PNGDecoder decoder = new PNGDecoder(in);
-		 
-		   System.out.println("width="+decoder.getWidth());
-		   System.out.println("height="+decoder.getHeight());
-		 
-		   ByteBuffer buf = ByteBuffer.allocateDirect(4*decoder.getWidth()*decoder.getHeight());
-		   decoder.decode(buf, decoder.getWidth()*4, Format.RGBA);
-		   buf.flip();
-		   GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buf);
-
-		  GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D,
-				     0,
-				     0,
-				     0,
-				     240,
-				     45,
-				     GL12.GL_BGRA,
-				     GL12.GL_UNSIGNED_INT_8_8_8_8_REV,
-				     buf);
-				   GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0);
-				
-		   
-				   glBegin(GL_QUADS);
-					glTexCoord2f(0, 0);
-					glVertex2i(300, 300);
-					glTexCoord2f(1, 0);
-					glVertex2i(350, 300);
-					glTexCoord2f(1, 1);
-					glVertex2i(350, 350);
-					glTexCoord2f(0, 1);
-					glVertex2i(300, 350);
-					glEnd();
-			
-			
-		   
-			in.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		glBindTexture(GL_TEXTURE_2D, 0); //IMPORTANT
 		
 		DrawTool.drawLine(Color.orange, 0,0,Display.getWidth(), Display.getHeight());
 		DrawTool.drawLine(Color.orange, Display.getWidth(), 0, 0, Display.getHeight());
@@ -300,4 +169,54 @@ public class DeathScreen implements ComponentListener, DrawableComponent {
 		DrawTool.drawFilledTriangle(Color.red, Display.getWidth(), 0, Display.getWidth()- 100, 0, Display.getWidth() -300, Display.getHeight() - 300);
 		
 		}
+
+
+	@Override
+	public void displayComponent() {
+	    	
+
+	/* **** lvl **** */
+	
+	lvlLabel = new OpenGlLabel("Niveau : " + personnage.getStats().lvl);
+	lvlLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*0+50, 150, 50);
+	gestionnaireComposant.addComponent(lvlLabel);
+	
+	/* **** FIN : lvl **** */
+	    	
+	/* **** nbTues **** */
+	
+	nbKillsLabel = new OpenGlLabel("Tues : " + personnage.getStats().nbKills);
+	nbKillsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*1+50, 150, 50);
+	gestionnaireComposant.addComponent(nbKillsLabel);
+	
+	/* **** FIN : nbTues **** */
+	
+	/* **** nbLancers **** */
+	
+	nbThrowsLabel = new OpenGlLabel("Lancers : " + personnage.getStats().nbThrows);
+	nbThrowsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*2+50, 150, 50);
+	gestionnaireComposant.addComponent(nbThrowsLabel);
+	
+	/* **** FIN : nbLancers **** */
+
+	/* **** nbHits **** */
+	
+	nbHitsLabel = new OpenGlLabel("Touchers : " + personnage.getStats().nbHits);
+	nbHitsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*3+50, 150, 50);
+	gestionnaireComposant.addComponent(nbHitsLabel);
+	
+	/* **** FIN : nbHits **** */
+
+	OpenGlImage image = new OpenGlImage(loader, "Client/IHM/Images/arme.jpg");
+	image.setBounds(150, 150, 250, 150);
+	gestionnaireComposant.addComponent(image);
+	
+	/* bouton Continuer */
+	
+	continueButton = new OpenGlButton("Client/IHM/Images/play.png", "Client/IHM/Images/play_hover.png");
+	continueButton.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*4+50, 150, 50);
+	gestionnaireComposant.addComponent(continueButton);
+	    	
+	/* FIN : bouton Continuer */
+	}
 }

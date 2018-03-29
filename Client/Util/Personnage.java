@@ -1,6 +1,7 @@
 package Client.Util;
 
 import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Graphics;
 
@@ -288,10 +289,14 @@ public class Personnage {
 	// lwjgl
 	public void drawPersonnage() {
 		glColor3f(1f, 1f, 1f);
-		textureDaronne[position][nbSprite].draw(Display.getWidth()/2-63, Display.getHeight()/2-99, 126, 198);
-		vieVide.draw(Display.getWidth()/2-75, Display.getHeight()/2-99 - 55, 150, 90);
+		glPushMatrix();
+		glTranslated(Display.getWidth() / 2, Display.getHeight() / 2, 0.0d);
+		glRotatef( (float)angle, 0, 0, 1 ); // now rotate
+		textureDaronne[position][nbSprite].draw(-63, -99, 126, 198);
+		glPopMatrix(); // pop off the rotation and transformation
+		vieVide.draw(Display.getWidth()/2-75, Display.getHeight()/2+99 + 10, 150, 90);
 		int widthVie = caracteristique.getSante()*150/100;
-		viePlein.draw(Display.getWidth()/2-75, Display.getHeight()/2-99 - 55, widthVie,90);
+		viePlein.draw(Display.getWidth()/2-75, Display.getHeight()/2+99 + 10, widthVie,90);
 		arme.draw(this);
 		caracteristique.draw();
 	}

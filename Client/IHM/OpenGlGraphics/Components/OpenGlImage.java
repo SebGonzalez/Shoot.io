@@ -24,6 +24,8 @@ import org.lwjgl.opengl.Display;
 import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.ComponentListener;
 import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.Sprite;
+import Client.RessourceFactory.TextureLoader;
 import Client.RessourceFactory.TypeImage;
 
 public class OpenGlImage implements Component {
@@ -32,10 +34,10 @@ public class OpenGlImage implements Component {
 	private int y;
 	private int width;
 	private int height;
-	private TypeImage image;
+	private Sprite image;
 	
-	public OpenGlImage(TypeImage image) {
-		this.image = image;
+	public OpenGlImage(TextureLoader loader, String cheminImage) {
+		image = new Sprite(loader, cheminImage);
 	}
 	
 	@Override
@@ -61,27 +63,8 @@ public class OpenGlImage implements Component {
 
 	@Override
 	public void render() {
-		glColor3f(1f, 1f, 1f); // reset color
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		RessourcesFactory.getImage(image).bind();
-
-		glPushMatrix();
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0, 0);
-		glVertex2i(x, y);
-		glTexCoord2f(1, 0);
-		glVertex2i(x+width, y);
-		glTexCoord2f(1, 1);
-		glVertex2i(x+width, y+height);
-		glTexCoord2f(0, 1);
-		glVertex2i(x, y+height);
-		glEnd();
-
-		glPopMatrix(); // pop off the rotation and transformation
-		glDisable(GL_BLEND);
+		glColor3f(1f, 1f, 1f);
+		image.draw(x, y, width, height);
 	}
 
 	@Override

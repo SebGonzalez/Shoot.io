@@ -78,52 +78,62 @@ public class CaracteristiqueJoueur {
 		DisplayTaMere.gestionnaireComposant.addComponent(statVitesseTir);
 	}
 
+	public int getNiveau() {
+		return niveau;
+	}
+	
 	public int getDegat() {
 		return degat;
 	}
 
-	public void setDegat(int degat) {
-		this.degat = degat;
+	public void setDegat() {
+		this.degat += 10;
+		this.niveau--;
 	}
 
 	public int getRecup() {
 		return recup;
 	}
 
-	public void setRecup(int recup) {
-		this.recup = recup;
+	public void setRecup() {
+		this.recup++;
+		this.niveau--;
 	}
 
 	public int getRegen() {
 		return regen;
 	}
 
-	public void setRegen(int regen) {
-		this.regen = regen;
+	public void setRegen() {
+		this.regen++;
+		this.niveau--;
 	}
 
 	public int getSante() {
 		return sante;
 	}
 
-	public void setSante(int sante) {
-		this.sante = sante;
+	public void setSante() {
+		this.sante += 10;
+		this.niveau--;
 	}
 
 	public int getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(int speed) {
-		this.speed = speed;
+	public void setSpeed() {
+		this.speed += 1;
+		this.niveau--;
 	}
 
 	public int getVitesseTir() {
 		return vitesseTir;
 	}
 
-	public void setVitesseTir(int vitesseTir) {
-		this.vitesseTir = vitesseTir;
+	public void setVitesseTir() {
+		this.vitesseTir += 1;
+		this.niveau--;
 	}
 	
 	public void addMerdeRamasse() {
@@ -134,6 +144,30 @@ public class CaracteristiqueJoueur {
 		}
 	}
 	
+	public OpenGlButton getStatDegat() {
+		return statDegat;
+	}
+
+	public OpenGlButton getStatRecup() {
+		return statRecup;
+	}
+
+	public OpenGlButton getStatRegen() {
+		return statRegen;
+	}
+
+	public OpenGlButton getStatSante() {
+		return statSante;
+	}
+
+	public OpenGlButton getStatSpeed() {
+		return statSpeed;
+	}
+
+	public OpenGlButton getStatVitesseTir() {
+		return statVitesseTir;
+	}
+
 	public void draw() {
 		expVide.draw(15, Display.getHeight()-5-12, Display.getWidth() - 30, 5);
 		int widthExp = nbMerde*(Display.getWidth() - 30)/10;

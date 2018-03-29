@@ -17,6 +17,7 @@ import org.lwjgl.opengl.Display;
 
 import Client.IHM.DisplayTaMere;
 import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.Sprite;
 import Client.RessourceFactory.TypeImage;
 
 public class Merde {
@@ -24,6 +25,7 @@ public class Merde {
 	private int x;
 	private int y;
 	private int width;
+	private Sprite image;
 	
 	public Merde(int id, int x, int y, int width) {
 		this.id = id;
@@ -65,6 +67,9 @@ public class Merde {
 	}
 	
 	public void draw() {
+		glColor3f(1f, 1f, 1f);
+		if(image == null) 
+			image = new Sprite(DisplayTaMere.textureLoader, "Client/IHM/Images/merde.png");
 		int xEcran;
 		int yEcran;
 		
@@ -78,23 +83,6 @@ public class Merde {
 		else
 			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-this.getY())) - width/2;
 
-		glColor3f(1f, 1f, 1f); // reset color
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		RessourcesFactory.getImage(TypeImage.MERDE).bind();
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0F, 0.0F);
-		glVertex2i(xEcran, yEcran);
-		glTexCoord2f(1F, 0);
-		glVertex2i(xEcran + width, yEcran);
-		glTexCoord2f(1, 1);
-		glVertex2i(xEcran + width, yEcran + width);
-		glTexCoord2f(0, 1);
-		glVertex2i(xEcran, yEcran + width);
-		glEnd();
-
-		glDisable(GL_BLEND);
+		image.draw(xEcran, yEcran, width, width);
 	}
 }
