@@ -15,24 +15,19 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2i;
 
-import java.io.IOException;
-
-import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.tests.TestUtils;
 
+import Client.IHM.DisplayTaMere;
 import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.ComponentListener;
 import Client.RessourceFactory.RessourcesFactory;
-import Client.RessourceFactory.TypeImage;
+import Client.RessourceFactory.Sprite;
 
 public class OpenGlButton implements Component {
 
-	private int texture;
-	private int textureHover;
+	private Sprite texture;
+	private Sprite textureHover;
 	private int x;
 	private int y;
 	private int width;
@@ -43,8 +38,8 @@ public class OpenGlButton implements Component {
 	}
 	
 	public OpenGlButton(String cheminTexture, String cheminTextureHover) {
-		this.texture = RessourcesFactory.loadTexture(cheminTexture);
-		this.textureHover = RessourcesFactory.loadTexture(cheminTextureHover);
+		this.texture = new Sprite(DisplayTaMere.textureLoader, cheminTexture);
+		this.textureHover = new Sprite(DisplayTaMere.textureLoader, cheminTextureHover);
 	}
 	
 	public void setBounds(int x, int y, int width, int height) {
@@ -70,32 +65,13 @@ public class OpenGlButton implements Component {
 
 	@Override
 	public void render() {
-		glEnable(GL_TEXTURE_2D);
-		glColor3f(1f, 1f, 1f); //reset color
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
+		glColor3f(1f, 1f, 1f);
 		if(!isMouseEntered()) {
-			//RessourcesFactory.getImage(TypeImage.STAT).bind();
-			glBindTexture(GL_TEXTURE_2D, texture);
+			texture.draw(x, y, width, height);
 		}
 		else {
-			//RessourcesFactory.getImage(TypeImage.STAT).bind();
-			glBindTexture(GL_TEXTURE_2D, textureHover);
+			textureHover.draw(x, y, width, height);
 		}
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0F, 0.0F);
-		glVertex2i(x, y);
-		glTexCoord2f(1.0F,0.0F);
-		glVertex2i(x+width, y);
-		glTexCoord2f(1.0F, 1.0F);
-		glVertex2i(x+width, y+height);
-		glTexCoord2f(0.0F, 1.0F);
-		glVertex2i(x, y+height);
-		glEnd();
-		
-		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	@Override

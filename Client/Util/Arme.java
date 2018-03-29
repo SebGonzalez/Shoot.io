@@ -22,6 +22,7 @@ import org.lwjgl.opengl.Display;
 
 import Client.IHM.DisplayTaMere;
 import Client.RessourceFactory.RessourcesFactory;
+import Client.RessourceFactory.Sprite;
 import Client.RessourceFactory.TypeImage;
 
 public class Arme {
@@ -40,6 +41,7 @@ public class Arme {
 
 	private long cumulDelta = 0;
 	private EtatArme etatArme;
+	private Sprite textureArme;
 
 	public Arme(double x, double y) {
 		this.x = x;
@@ -47,8 +49,7 @@ public class Arme {
 
 		etatArme = EtatArme.PORTER;
 		decalage = -100;
-		// this.xEcran = Display.getWidth()/2 - 100 - 50;
-		// this.yEcran = Display.getHeight()/2-25;
+		textureArme = new Sprite(DisplayTaMere.textureLoader, "Client/IHM/Images/arme.jpg");
 	}
 
 	public double getX() {
@@ -187,27 +188,7 @@ public class Arme {
 		else
 			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-y)) - 25;
 
-		glEnable(GL_TEXTURE_2D);
-		glColor3f(1f, 1f, 1f); //reset color
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glBindTexture(GL_TEXTURE_2D, RessourcesFactory.getIntImage(TypeImage.ARME));
-
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0F, 0.0F);
-		glVertex2i(xEcran, yEcran);
-		glTexCoord2f(1F, 0);
-		glVertex2i(xEcran + 100, yEcran);
-		glTexCoord2f(1, 1);
-		glVertex2i(xEcran + 100, yEcran + 50);
-		glTexCoord2f(0, 1);
-		glVertex2i(xEcran, yEcran + 50);
-		glEnd();
-
-		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
+		textureArme.draw(xEcran, yEcran, 100, 50);
 	}
 	
 	public void drawX(Personnage p) {
@@ -225,25 +206,6 @@ public class Arme {
 		else
 			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-this.getY())) - 25;
 
-		glColor3f(1f, 1f, 1f); // reset color
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glBindTexture(GL_TEXTURE_2D, RessourcesFactory.getIntImage(TypeImage.ARME));
-
-		//RessourcesFactory.getImage(TypeImage.ARME).bind();
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0F, 0.0F);
-		glVertex2i(xEcran, yEcran);
-		glTexCoord2f(1F, 0);
-		glVertex2i(xEcran + 100, yEcran);
-		glTexCoord2f(1, 1);
-		glVertex2i(xEcran + 100, yEcran + 50);
-		glTexCoord2f(0, 1);
-		glVertex2i(xEcran, yEcran + 50);
-		glEnd();
-
-		glDisable(GL_BLEND);
+		textureArme.draw(xEcran, yEcran, 100, 50);
 	}
 }

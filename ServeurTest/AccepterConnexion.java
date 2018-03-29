@@ -3,8 +3,6 @@ package ServeurTest;
 import java.io.*;
 import java.net.*;
 
-import Client.Util.Personnage;
-
 public class AccepterConnexion implements Runnable {
 
 	private ServerSocket socketserver = null;
@@ -32,14 +30,14 @@ public class AccepterConnexion implements Runnable {
 				String login = in.readLine();
 
 				String[] loginSplit = login.split("/");
-				System.out.println("login : " + login);
+				//System.out.println("login : " + login);
 				
 				String messageInitial = ServeurTest.gestionnaireJoueur.envoiePosInitiale();
 				ServeurTest.gestionnaireJoueur.addJoueur(new Personnage(loginSplit[0], Double.parseDouble(loginSplit[1]), Double.parseDouble(loginSplit[2])), out);
 
 				
 				messageInitial += ServeurTest.gestionnaireMerde.envoieAll();
-				System.out.println("oui :  " + messageInitial.length() + " " + messageInitial);
+				//System.out.println("oui :  " + messageInitial.length() + " " + messageInitial);
 
 				out.writeBytes("I" + messageInitial + "\n");
 				//out.flush();

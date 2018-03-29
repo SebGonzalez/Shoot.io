@@ -36,6 +36,7 @@ public class Emission implements Runnable {
 				message += "K/" + pTue.getNom() + ";";
 			}
 			for(Merde m : DisplayTaMere.gestionnaireMerde.getListeMerdeGraille()) {
+				System.out.println("IDDD : " + m.getId());
 				message += "M/" + m.getId() + ";"; 
 			}
 			

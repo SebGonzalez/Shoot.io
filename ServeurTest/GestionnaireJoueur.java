@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import Client.Util.Personnage;
-
 public class GestionnaireJoueur {
 	public ConcurrentHashMap<Personnage, DataOutputStream> listeJoueur;
 	public ArrayList<String> listeJoueurSuppr;
@@ -68,6 +66,7 @@ public class GestionnaireJoueur {
 				remove(messageSplit2[1]);
 			}
 			else if(messageSplit2[0].equals("M")) {
+				System.out.println("IDDDD : " + messageSplit2[1]);
 				ServeurTest.gestionnaireMerde.genererMerde(Integer.parseInt(messageSplit2[1]));
 			}
 		}

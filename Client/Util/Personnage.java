@@ -1,40 +1,29 @@
 package Client.Util;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glVertex2i;
 
-import java.awt.Font;
 import java.awt.Graphics;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
-import com.github.davidmoten.lwjgl.Entity;
-
-import Client.RessourceFactory.RessourcesFactory;
+import Client.IHM.DisplayTaMere;
 import Client.RessourceFactory.Sprite;
-import Client.RessourceFactory.TypeImage;
+import Client.RessourceFactory.TextureLoader;
 
 public class Personnage {
+	private static final String cheminImageDaronne = "Client/IHM/Images/Daronne/daronne_";
+	private static final String cheminImageVieVide = "Client/IHM/Images/vieVide.png";
+	private static final String cheminImageViePlein = "Client/IHM/Images/viePlein.png";
+	
+	static final int NB_POSITION = 4;
+	static final int NB_SPRITE = 3;
+	private Sprite[][] textureDaronne = new Sprite[NB_POSITION][NB_SPRITE];
+	private Sprite vieVide;
+	private Sprite viePlein;
+	private CaracteristiqueJoueur caracteristique;
+	
 	private static double VITESSE = 2;
 
 	private TrueTypeFont font;
@@ -53,14 +42,16 @@ public class Personnage {
 	private Arme arme;
 
 	private Stats stats = new Stats();
-	Sprite s;
 
-	public Personnage(String nom, Sprite s) {
+	public Personnage(String nom) {
 		this.nom = nom;
 		x = 2000;
 		y = 2000;
 		setArme();
-		this.s = s;
+		loadSprite(DisplayTaMere.textureLoader);
+		vieVide = new Sprite(DisplayTaMere.textureLoader, cheminImageVieVide);
+		viePlein = new Sprite(DisplayTaMere.textureLoader, cheminImageViePlein);
+		caracteristique = new CaracteristiqueJoueur();
 	}
 	
 	public Personnage(String nom, double x, double y) {
@@ -68,14 +59,31 @@ public class Personnage {
 		this.x = x;
 		this.y = y;
 		setArme();
+		loadSprite(DisplayTaMere.textureLoader);
+		vieVide = new Sprite(DisplayTaMere.textureLoader, cheminImageVieVide);
+		viePlein = new Sprite(DisplayTaMere.textureLoader, cheminImageViePlein);
+		caracteristique = new CaracteristiqueJoueur();
 	}
-	public Personnage(String nom, double x, double y, TrueTypeFont font, Sprite s) {
-		this.s = s;
+	public Personnage(String nom, double x, double y, TrueTypeFont font) {
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
 		this.font = font;
 		setArme();
+		loadSprite(DisplayTaMere.textureLoader);
+		vieVide = new Sprite(DisplayTaMere.textureLoader, cheminImageVieVide);
+		viePlein = new Sprite(DisplayTaMere.textureLoader, cheminImageViePlein);
+		caracteristique = new CaracteristiqueJoueur();
+	}
+	
+	public void loadSprite(TextureLoader textureLoader) {
+		for(int i=0; i<NB_POSITION; i++) {
+			for(int y=0; y<NB_SPRITE; y++) {
+				String chemin = cheminImageDaronne + i + "_" + y + ".png";
+				System.out.println(i + " " + y + " " + chemin);
+				textureDaronne[i][y] = new Sprite(textureLoader, chemin);
+			}
+		}
 	}
 	
 	public String getNom() {
@@ -140,6 +148,10 @@ public class Personnage {
 
 	public void setArme(Arme arme) {
 		this.arme = arme;
+	}
+
+	public CaracteristiqueJoueur getCaracteristique() {
+		return caracteristique;
 	}
 
 	// swing
@@ -276,7 +288,12 @@ public class Personnage {
 	// lwjgl
 	public void drawPersonnage() {
 		glColor3f(1f, 1f, 1f);
-		s.draw(Display.getWidth()/2-63, Display.getHeight()/2-99, 126, 198);
+		textureDaronne[position][nbSprite].draw(Display.getWidth()/2-63, Display.getHeight()/2-99, 126, 198);
+		vieVide.draw(Display.getWidth()/2-75, Display.getHeight()/2-99 - 55, 150, 90);
+		int widthVie = caracteristique.getSante()*150/100;
+		viePlein.draw(Display.getWidth()/2-75, Display.getHeight()/2-99 - 55, widthVie,90);
+		arme.draw(this);
+		caracteristique.draw();
 	}
 	
 	public void drawPersonnageX(Personnage joueur) {
@@ -291,35 +308,9 @@ public class Personnage {
 		else
 			yEcran = (int) (Display.getHeight() / 2 - (joueur.getY()-this.getY()));
 		
-		glEnable(GL_TEXTURE_2D);
-		glColor3f(1f, 1f, 1f); //reset color
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		
-		glBindTexture(GL_TEXTURE_2D, RessourcesFactory.getImageDaronne(joueur.nbSprite, joueur.position));
-
-		glPushMatrix();
-
-		glTranslated(xEcran, yEcran, 0.0d);
-
-		glRotatef((float) angle, 0, 0, 1); // now rotate
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0,0);
-		glVertex2i(-63, -99);
-		glTexCoord2f(1, 0);
-		glVertex2i(+63, -99);
-		glTexCoord2f(1, 1);
-		glVertex2i(+63, +99);
-		glTexCoord2f(0, 1);
-		glVertex2i(-63, +99);
-		glEnd();
-
-		glPopMatrix(); // pop off the rotation and transformation
-		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
-
+		glColor3f(1f, 1f, 1f);
+		textureDaronne[position][nbSprite].draw(xEcran, yEcran, 126, 198);
 		arme.drawX(joueur);
 	}
 	

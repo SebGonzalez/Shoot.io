@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 
-import Client.Util.Personnage;
-
 public class Emission implements Runnable {
 
 	int wait;
@@ -30,7 +28,6 @@ public class Emission implements Runnable {
 			while (it2.hasNext()) {
 				String nom = it2.next();
 				joueurTue += "S/" + nom + ";";
-				System.out.println("S/" + nom + ";");
 			}
 			joueurTue += ServeurTest.gestionnaireMerde.envoieInfo();
 

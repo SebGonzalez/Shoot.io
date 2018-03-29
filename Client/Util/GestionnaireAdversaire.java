@@ -64,6 +64,7 @@ public class GestionnaireAdversaire {
 				System.out.println("SIIIIZE : " + DisplayTaMere.gestionnaireMerde.listeMerde.size());
 			}
 			else if(messageSplit2[0].equals("M")) {
+				System.out.println("IDD 2 = " + messageSplit2[1]);
 				DisplayTaMere.gestionnaireMerde.updateMerde(Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[2]), Integer.parseInt(messageSplit2[3]));
 			}
 			else if(messageSplit2[0].equals("D")) {

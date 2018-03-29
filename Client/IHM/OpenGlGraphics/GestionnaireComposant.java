@@ -11,15 +11,18 @@ import Client.IHM.OpenGlGraphics.Components.DrawableComponent;
 public class GestionnaireComposant {
 	private ComponentListener listener;
 	private List<Component> listComponent;
+	private List<Component> listComponentTmp;
 	private DrawableComponent drawableComponent;
 	
 	public GestionnaireComposant(DrawableComponent drawableComponent) {
 		listComponent = new ArrayList<>();
+		listComponentTmp = new ArrayList<>();
 		this.drawableComponent = drawableComponent;
 	}
 	
 	public GestionnaireComposant(ComponentListener listener, DrawableComponent drawableComponent) {
 		listComponent = new ArrayList<>();
+		listComponentTmp = new ArrayList<>();
 		this.listener = listener;
 		this.drawableComponent = drawableComponent;
 	}
@@ -29,7 +32,7 @@ public class GestionnaireComposant {
 	}
 	
 	public void addComponent(Component c) {
-		listComponent.add(c);
+		listComponentTmp.add(c);
 	}
 	
 	public void render() {
@@ -53,6 +56,9 @@ public class GestionnaireComposant {
 			c.update();
 			if(c.autoSupression()) componentIterator.remove();
 		}
+		
+		listComponent.addAll(listComponentTmp);
+		listComponentTmp.clear();
 	}
 	
 	public void doAction() {
@@ -69,11 +75,11 @@ public class GestionnaireComposant {
 	public void clear() {
 		//listComponent.clear();
 		listComponent = new ArrayList<>();
-		Iterator<Component> componentIterator = listComponent.iterator();
+		/*Iterator<Component> componentIterator = listComponent.iterator();
 		while (componentIterator.hasNext()) {
 			componentIterator.next();
 			componentIterator.remove();
-		}
+		}*/
 	}
 	
 	public void clearBufferText() {

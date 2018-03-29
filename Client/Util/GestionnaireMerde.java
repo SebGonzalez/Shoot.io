@@ -28,8 +28,8 @@ public class GestionnaireMerde {
 	}
 
 	public void addMerde(int x, int y, int width) {
-		System.out.println("Ajout merde : " + listeMerde.size());
-		listeMerde.add(new Merde(listeMerde.size(), x, y, width));
+		System.out.println("Ajout merde : " + (listeMerde.size() + listeMerdeTmp.size()));
+		listeMerdeTmp.add(new Merde(listeMerde.size() + listeMerdeTmp.size(), x, y, width));
 	}
 	
 	public void updateMerde(int id, int x, int y) {
@@ -47,6 +47,9 @@ public class GestionnaireMerde {
 				m.draw();
 			}
 		}
+		
+		listeMerde.addAll(listeMerdeTmp);
+		listeMerdeTmp.clear();
 	}
 	
 	public void collision() {
@@ -60,6 +63,7 @@ public class GestionnaireMerde {
 
 			if(rectJoueur.intersects(rectMerde)) {
 				listeMerdeGraille.add(m);
+				DisplayTaMere.personnage.getCaracteristique().addMerdeRamasse();
 			}
 		}
 	}

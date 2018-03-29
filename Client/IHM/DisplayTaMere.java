@@ -74,7 +74,7 @@ public class DisplayTaMere implements ComponentListener, DrawableComponent {
 	/** The height of the game display area */
 	private final int height = 600;
 	private static final String IMAGE_HOME = "Client/IHM/Images/";
-	TextureLoader textureLoader;
+	public static TextureLoader textureLoader;
 	
 	public DisplayTaMere() {
 		try {
@@ -231,7 +231,7 @@ public class DisplayTaMere implements ComponentListener, DrawableComponent {
 			state = State.INTRO;
 			
 			Sprite s = getSprite("Daronne/daronne_0_0.png");
-			personnage = new Personnage(pseudo.getText(), 2000,2000,font, s);
+			personnage = new Personnage(pseudo.getText(), 2000,2000,font);
 			Client client = new Client(personnage);
 			personnage.setArme();
 
@@ -262,7 +262,7 @@ public class DisplayTaMere implements ComponentListener, DrawableComponent {
 		pseudo.setBounds(Display.getWidth()/2 - 320, Display.getHeight()/2-22, 300, 45);
 		gestionnaireComposant.addComponent(pseudo);
     	
-		start = new OpenGlButton("/Client/IHM/Images/play.png", "/Client/IHM/Images/play_hover.png");
+		start = new OpenGlButton("Client/IHM/Images/play.png", "Client/IHM/Images/play_hover.png");
 		start.setBounds(Display.getWidth()/2 + 20, Display.getHeight()/2-22, 240, 45);
 		gestionnaireComposant.addComponent(start);
 		
