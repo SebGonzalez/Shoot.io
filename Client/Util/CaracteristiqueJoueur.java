@@ -150,6 +150,10 @@ public class CaracteristiqueJoueur {
 		return sante;
 	}
 
+	public void setSante(int vie) {
+		this.sante = vie;
+	}
+	
 	public void setSante() {
 		this.sante += 10;
 		this.niveau--;

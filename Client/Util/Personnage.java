@@ -236,12 +236,12 @@ public class Personnage {
 				nbSprite = 0;
 			
 			if (Mouse.isButtonDown(0)) {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, true,false, x, y); // il y a un clique gauche
+				arme.updateArme(delta * 0.1, xVector, yVector, position, true,false, x, y, caracteristique.getDegat()); // il y a un clique gauche
 			} else if(Mouse.isButtonDown(1)) {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, false,true, x, y); // il y a un clique droit
+				arme.updateArme(delta * 0.1, xVector, yVector, position, false,true, x, y, caracteristique.getDegat()); // il y a un clique droit
 			}
 			else {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, false, false, x, y); // pas de clique
+				arme.updateArme(delta * 0.1, xVector, yVector, position, false, false, x, y, caracteristique.getDegat()); // pas de clique
 			}
 		} else {
 			nbSprite = 0;

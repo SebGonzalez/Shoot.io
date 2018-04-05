@@ -115,6 +115,10 @@ public class Personnage {
 	public void setArme(Arme arme) {
 		this.arme = arme;
 	}
+	
+	public CaracteristiqueJoueur getCaracteristique() {
+		return caracteristique;
+	}
 
 	// swing
 	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap, int largeurFenetre,

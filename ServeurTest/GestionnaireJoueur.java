@@ -11,10 +11,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class GestionnaireJoueur {
 	public ConcurrentHashMap<Personnage, DataOutputStream> listeJoueur;
 	public ArrayList<String> listeJoueurSuppr;
+	public ArrayList<Personnage> listeJoueurUpdate;
 
 	public GestionnaireJoueur() {
 		listeJoueur = new ConcurrentHashMap<Personnage, DataOutputStream>();
 		listeJoueurSuppr = new ArrayList();
+		listeJoueurUpdate = new ArrayList<>();
 	}
 
 	public void addJoueur(Personnage p, DataOutputStream pw) {
@@ -46,11 +48,16 @@ public class GestionnaireJoueur {
 		for (int i = 0; i < messageSplit.length; i++) {
 			String messageSplit2[] = messageSplit[i].split("/");
 
-			if (messageSplit2[0].equals("U")) {
+			if (messageSplit2[0].equals("U") || messageSplit2[0].equals("S")) {
 				Iterator<Personnage> it = listeJoueur.keySet().iterator();
 				while (it.hasNext()) {
 					Personnage cle = it.next();
 					if (cle.getNom().equals(messageSplit2[1])) {
+						if(messageSplit2[0].equals("S")) {
+							cle.getCaracteristique().setSante(Integer.parseInt(messageSplit2[1]));
+							listeJoueurUpdate.add(cle);
+							break;
+						}
 						cle.setX(Double.parseDouble(messageSplit2[2]));
 						cle.setY(Double.parseDouble(messageSplit2[3]));
 						cle.setxVector(Double.parseDouble(messageSplit2[4]));
@@ -60,6 +67,7 @@ public class GestionnaireJoueur {
 						cle.getArme().setX(Double.parseDouble(messageSplit2[8]));
 						cle.getArme().setY(Double.parseDouble(messageSplit2[9]));
 						cle.getArme().setDecalageX(Integer.parseInt(messageSplit2[10]));
+						break;
 					}
 				}
 			} else if (messageSplit2[0].equals("K")) {

@@ -13,11 +13,13 @@ public class GestionnaireAdversaire {
 	private List<Personnage> listeAdversaire;
 	//private List<Personnage> listeAdversaireDessine;
 	private ArrayList<Personnage> listeAdversaireTue;
+	private ArrayList<Personnage> listeAdversaireUpdate;
 	private String reception;
 	
 	public GestionnaireAdversaire() {
 		listeAdversaire = new ArrayList<>();
 		listeAdversaireTue = new ArrayList<>();
+		listeAdversaireUpdate = new ArrayList<>();
 		//listeAdversaireDessine = new ArrayList<>();
 		
 		Random r = new Random();
@@ -34,6 +36,10 @@ public class GestionnaireAdversaire {
 	
 	public void addAversaireTue(Personnage p) {
 		listeAdversaireTue.add(p);
+	}
+	
+	public void addAversaireUpdate(Personnage p) {
+		listeAdversaireUpdate.add(p);
 	}
 	
 	public void setReception(String message) {
@@ -55,6 +61,13 @@ public class GestionnaireAdversaire {
 			String messageSplit2[] = s.split("/");
 			if(messageSplit2[0].equals("S")) { //suppresion
 				remove(messageSplit2[1]);
+			}
+			else if(messageSplit2[0].equals("V")) { //suppresion
+				if(messageSplit2[0].equals(DisplayTaMere.personnage.getNom()))
+					DisplayTaMere.personnage.getCaracteristique().setSante(Integer.parseInt(messageSplit2[2]));
+				else {
+					updateSante(messageSplit2[1], Integer.parseInt(messageSplit2[2]));
+				}
 			}
 			else if (messageSplit2[0].equals("A")) {
 				DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3])));
@@ -111,6 +124,15 @@ public class GestionnaireAdversaire {
 		}
 	}
 	
+	public void updateSante(String nom, int vie) {
+		for(Iterator<Personnage> it = listeAdversaire.iterator(); it.hasNext();) {
+			Personnage p = it.next();
+			if(p.getNom().equals(nom)) {
+				p.getCaracteristique().setSante(vie);
+			}
+		}
+	}
+	
 	public void setInfoAdversaire(String nom, double x, double y, double xVector, double yVector, double angle, int position, double xArme, double yArme, int decalageArme, double delta) {
 		boolean trouve = false;
 		for(Personnage p : listeAdversaire) {
@@ -129,6 +151,9 @@ public class GestionnaireAdversaire {
 	}
 	public List<Personnage> getListeAdversaireTue() {
 		return listeAdversaireTue;
+	}
+	public List<Personnage> getListeAdversaireUpdate() {
+		return listeAdversaireUpdate;
 	}
 
 	public void draw(Personnage joueur) {

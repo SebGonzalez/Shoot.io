@@ -35,11 +35,16 @@ public class Emission implements Runnable {
 				System.out.println("KO");
 				message += "K/" + pTue.getNom() + ";";
 			}
+			for (Personnage pUpdate : DisplayTaMere.gestionnaireAdversaire.getListeAdversaireUpdate()) {
+				System.out.println("U");
+				message += "S/" + pUpdate.getNom() + "/" + pUpdate.getCaracteristique().getSante() + ";";
+			}
 			for(Merde m : DisplayTaMere.gestionnaireMerde.getListeMerdeGraille()) {
 				message += "M/" + m.getId() + ";"; 
 			}
 			
 			DisplayTaMere.gestionnaireAdversaire.getListeAdversaireTue().clear();
+			DisplayTaMere.gestionnaireAdversaire.getListeAdversaireUpdate().clear();
 			DisplayTaMere.gestionnaireMerde.getListeMerdeGraille().clear();
 
 			try {

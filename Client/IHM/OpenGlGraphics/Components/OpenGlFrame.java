@@ -21,7 +21,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 public class OpenGlFrame {
 	/** The width of the game display area */
-	private final int width = 1440;
+	private final int width = 900;
 	/** The height of the game display area */
 	private final int height = 600;
 

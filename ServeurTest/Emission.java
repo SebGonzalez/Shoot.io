@@ -24,6 +24,11 @@ public class Emission implements Runnable {
 			}
 			
 			String joueurTue = "";
+			Iterator<Personnage> it3 = ServeurTest.gestionnaireJoueur.listeJoueurUpdate.iterator();
+			while (it3.hasNext()) {
+				Personnage p = it3.next();
+				joueurTue += "V/" + p.getNom() + "/" + p.getCaracteristique().getSante() + ";";
+			}
 			Iterator<String> it2 = ServeurTest.gestionnaireJoueur.listeJoueurSuppr.iterator();
 			while (it2.hasNext()) {
 				String nom = it2.next();

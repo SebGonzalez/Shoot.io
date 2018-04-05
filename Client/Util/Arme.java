@@ -78,7 +78,7 @@ public class Arme {
 		this.jeter = jeter;
 	}
 
-	public void updateArme(double delta, double xVector, double yVector,int direction, boolean jeter, boolean recuperer, double xPerso, double yPerso) {
+	public void updateArme(double delta, double xVector, double yVector,int direction, boolean jeter, boolean recuperer, double xPerso, double yPerso, int degat) {
 		if(jeter && etatArme != EtatArme.JETER) {
 			xVectorJeter = xVector;
 			yVectorJeter = yVector;
@@ -96,7 +96,7 @@ public class Arme {
 
 		if (etatArme == EtatArme.PORTER) {
 			setDecalage(direction);
-			movePorter(delta);
+			movePorter(delta, xPerso, yPerso);
 		} else if (etatArme == EtatArme.JETER) {
 			moveJeter(delta);
 		}
@@ -104,7 +104,7 @@ public class Arme {
 			moveRecuperer(delta, xPerso, yPerso);
 		}
 		//System.out.println(etatArme);
-		collision();
+		collision(degat);
 	}
 	
 	
@@ -122,12 +122,12 @@ public class Arme {
 		this.decalage = value;
 	}
 
-	public void movePorter(double delta) {
+	public void movePorter(double delta, double xPerso, double yPerso) {
 		double deplacementX = xVector * delta * 2;
 		double deplacementY = -(yVector * delta * 2);
 		//System.out.println("Arme : " + deplacementX + " " + deplacementY + " " + delta);
-		x += deplacementX;
-		y += deplacementY;
+		x = xPerso;
+		y = yPerso;
 	}
 
 	public void moveJeter(double delta) {
@@ -159,7 +159,7 @@ public class Arme {
 		//cumulDelta += delta;
 	}
 	
-	public void collision() {
+	public void collision(int degat) {
 		Rectangle armeJoueur = new Rectangle((int)this.getX()+decalage-50, (int)y-25, 100, 50);
 		//System.out.println(this.getX() + " " + this.getY());
 		for(Iterator<Personnage> it = DisplayTaMere.gestionnaireAdversaire.getListeAdversaire().iterator(); it.hasNext();) {
@@ -167,9 +167,14 @@ public class Arme {
 			Rectangle adversaire = new Rectangle((int)p.getX()-63, (int)p.getY()-99, 63*2, 99*2);
 			//System.out.println(p.getX() + " " + p.getY());
 			if(adversaire.intersects(armeJoueur)) {
-				DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
-				System.out.println("eeeeeeeee");
-				it.remove();
+				if(p.getCaracteristique().getSante() - degat < 0) {
+					DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
+					it.remove();
+				}
+				else {
+					p.getCaracteristique().setSante(p.getCaracteristique().getSante()-degat);
+					DisplayTaMere.gestionnaireAdversaire.addAversaireUpdate(p);
+				}
 			}
 		}
 	}
