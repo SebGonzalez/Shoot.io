@@ -27,10 +27,10 @@ public class OpenGlLabel implements Component {
 		font = new TrueTypeFont(awtFont, false); // base Font, anti-aliasing true/false
 	}
 	
-	public OpenGlLabel(String texte, int size) {
+	public OpenGlLabel(String texte, int sizeFont) {
 		this.texte = texte;
 		
-		Font awtFont = new Font("Times New Roman", Font.ITALIC, size); //name, style (PLAIN, BOLD, or ITALIC), size
+		Font awtFont = new Font("Times New Roman", Font.ITALIC, sizeFont); //name, style (PLAIN, BOLD, or ITALIC), size
 		font = new TrueTypeFont(awtFont, false); // base Font, anti-aliasing true/false
 	}
 	
@@ -48,6 +48,14 @@ public class OpenGlLabel implements Component {
 	public int getWidth() {return 0;}
 	@Override
 	public int getHeight() {return 0;}
+
+	public String getTexte() {
+		return texte;
+	}
+
+	public void setTexte(String texte) {
+		this.texte = texte;
+	}
 
 	@Override
 	public void update() {

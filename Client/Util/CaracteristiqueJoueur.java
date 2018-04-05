@@ -7,6 +7,7 @@ import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.Animator.PoolComponentAnimator;
 import Client.IHM.OpenGlGraphics.Animator.TypeAnimation;
 import Client.IHM.OpenGlGraphics.Components.OpenGlButton;
+import Client.IHM.OpenGlGraphics.Components.OpenGlLabel;
 import Client.RessourceFactory.Sprite;
 
 public class CaracteristiqueJoueur {
@@ -27,12 +28,19 @@ public class CaracteristiqueJoueur {
 	private OpenGlButton statSante;
 	private OpenGlButton statSpeed;
 	private OpenGlButton statVitesseTir;
+	
+	private OpenGlLabel labelDegat;
+	private OpenGlLabel labelRecup;
+	private OpenGlLabel labelRegen;
+	private OpenGlLabel labelSante;
+	private OpenGlLabel labelSpeed;
+	private OpenGlLabel labelVitesseTir;
 
 	public int degat;
 	public int recup;
 	public int regen;
 	public int sante;
-	public int speed;
+	public float speed;
 	public int vitesseTir;
 	
 	public int nbMerde;
@@ -44,7 +52,7 @@ public class CaracteristiqueJoueur {
 		degat = 100;
 		recup = 1;
 		regen = 1;
-		speed = 1;
+		speed = 2.0F;
 		vitesseTir = 1;
 		
 		caractAffiche = false;
@@ -53,6 +61,7 @@ public class CaracteristiqueJoueur {
 		
 		expVide = new Sprite(DisplayTaMere.textureLoader, cheminImageExpVide); 
 		expPlein = new Sprite(DisplayTaMere.textureLoader, cheminImageExpPlein); 
+		
 		statDegat = new OpenGlButton(cheminImageStatDegat);
 		statDegat.setBounds(-300, Display.getHeight()-190, 290, 20);
 		DisplayTaMere.gestionnaireComposant.addComponent(statDegat);
@@ -76,6 +85,31 @@ public class CaracteristiqueJoueur {
 		statVitesseTir = new OpenGlButton(cheminImageStatVitesseTir);
 		statVitesseTir.setBounds(-300, Display.getHeight()-40, 290, 20);
 		DisplayTaMere.gestionnaireComposant.addComponent(statVitesseTir);
+		
+		labelDegat = new OpenGlLabel("Dégat : " + degat);
+		labelDegat.setBounds(10, 10, 0, 0);
+		DisplayTaMere.gestionnaireComposant.addComponent(labelDegat);
+		
+		labelRecup = new OpenGlLabel("Récupération arme : " + recup);
+		labelRecup.setBounds(10, 30, 0, 0);
+		DisplayTaMere.gestionnaireComposant.addComponent(labelRecup);
+
+		labelRegen = new OpenGlLabel("Régénrération vie : " + regen);
+		labelRegen.setBounds(10, 50, 0, 0);
+		DisplayTaMere.gestionnaireComposant.addComponent(labelRegen);
+
+		labelSante = new OpenGlLabel("Santé max : " + sante);
+		labelSante.setBounds(10, 70, 0, 0);
+		DisplayTaMere.gestionnaireComposant.addComponent(labelSante);
+		
+		labelSpeed = new OpenGlLabel("Vitesse mouvement : " + speed);
+		labelSpeed.setBounds(10, 90, 0, 0);
+		DisplayTaMere.gestionnaireComposant.addComponent(labelSpeed);
+		
+		labelVitesseTir = new OpenGlLabel("Vitesse tir arme : " + vitesseTir);
+		labelVitesseTir.setBounds(10, 110, 0, 0);
+		DisplayTaMere.gestionnaireComposant.addComponent(labelVitesseTir);
+		
 	}
 
 	public int getNiveau() {
@@ -89,6 +123,7 @@ public class CaracteristiqueJoueur {
 	public void setDegat() {
 		this.degat += 10;
 		this.niveau--;
+		labelDegat.setTexte("Degat : " + degat);
 	}
 
 	public int getRecup() {
@@ -98,6 +133,7 @@ public class CaracteristiqueJoueur {
 	public void setRecup() {
 		this.recup++;
 		this.niveau--;
+		labelRecup.setTexte("Récupération arme : " + recup);
 	}
 
 	public int getRegen() {
@@ -107,6 +143,7 @@ public class CaracteristiqueJoueur {
 	public void setRegen() {
 		this.regen++;
 		this.niveau--;
+		labelRegen.setTexte("Régénrération vie : " + regen);
 	}
 
 	public int getSante() {
@@ -116,15 +153,17 @@ public class CaracteristiqueJoueur {
 	public void setSante() {
 		this.sante += 10;
 		this.niveau--;
+		labelSante.setTexte("Santé max : " + sante);
 	}
 
-	public int getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 
 	public void setSpeed() {
-		this.speed += 1;
+		this.speed += 0.1F;
 		this.niveau--;
+		labelSpeed.setTexte("Vitesse mouvement : " + speed);
 	}
 
 	public int getVitesseTir() {
@@ -134,6 +173,7 @@ public class CaracteristiqueJoueur {
 	public void setVitesseTir() {
 		this.vitesseTir += 1;
 		this.niveau--;
+		labelVitesseTir.setTexte("Vitesse tir arme : " + vitesseTir);
 	}
 	
 	public void addMerdeRamasse() {
@@ -179,5 +219,8 @@ public class CaracteristiqueJoueur {
 			nbMerde = 0;
 			caractAffiche = true;
 		}
+		
+		//cadre d'info
+		
 	}
 }

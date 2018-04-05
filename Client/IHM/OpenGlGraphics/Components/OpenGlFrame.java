@@ -21,7 +21,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 public class OpenGlFrame {
 	/** The width of the game display area */
-	private final int width = 1200;
+	private final int width = 1440;
 	/** The height of the game display area */
 	private final int height = 600;
 
@@ -34,7 +34,7 @@ public class OpenGlFrame {
 			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.setTitle("Test");
 			Display.setInitialBackground(1.0F, 1.0F, 1.0F);
-			// Display.setFullscreen(fullscreen);
+			//Display.setFullscreen(true);
 			Display.create();
 
 			initializeOpenGL();
@@ -42,6 +42,7 @@ public class OpenGlFrame {
 			System.err.println("Display wasn't initialized correctly.");
 			System.exit(1);
 		}
+		System.out.println("" + Display.getWidth() + " " + Display.getHeight());
 	}
 
 	private void initializeOpenGL() {

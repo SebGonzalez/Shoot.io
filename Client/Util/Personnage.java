@@ -24,8 +24,6 @@ public class Personnage {
 	private Sprite vieVide;
 	private Sprite viePlein;
 	private CaracteristiqueJoueur caracteristique;
-	
-	private static double VITESSE = 2;
 
 	private TrueTypeFont font;
 	private String nom;
@@ -202,8 +200,8 @@ public class Personnage {
 
 	public void move(int largeurMap, int hauteurMap, double delta) {
 
-		double deplacementX = xVector * delta * VITESSE;
-		double deplacementY = -(yVector * delta * VITESSE);
+		double deplacementX = xVector * delta * caracteristique.getSpeed();
+		double deplacementY = -(yVector * delta * caracteristique.getSpeed());
 	//	System.out.println("Personnage : " + deplacementX + " " + deplacementY + " " + delta);
 
 		//System.out.println(nom + " : " + deplacementX);
@@ -267,8 +265,8 @@ public class Personnage {
 		}
 		else {
 			if(!Double.isNaN(this.xVector) && !Double.isNaN(this.yVector)) {
-				this.x += this.xVector * (delta*0.1) * VITESSE;
-				this.y += -(this.yVector * (delta*0.1) * VITESSE);
+				this.x += this.xVector * (delta*0.1) * caracteristique.getSpeed();
+				this.y += -(this.yVector * (delta*0.1) * caracteristique.getSpeed());
 			}
 		}
 	}

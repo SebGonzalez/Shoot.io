@@ -15,6 +15,7 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2i;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -32,6 +33,7 @@ public class OpenGlButton implements Component {
 	private int y;
 	private int width;
 	private int height;
+	private boolean activate = false;
 	
 	public OpenGlButton(String cheminTexture) {
 		this(cheminTexture, cheminTexture);
@@ -83,8 +85,24 @@ public class OpenGlButton implements Component {
 
 	@Override
 	public void doAction(ComponentListener listener) {
+		
+		if(Mouse.isButtonDown(0) && isMouseEntered()) {
+	        if (Mouse.getEventButton() == 0) {
+	        		activate = true;
+	        }
+	    } else if(activate){
+	        if (Mouse.getEventButton() == 0 && isMouseEntered()) {
+	        	activate = false;
+	            listener.actionPerformed(this);
+	        }
+		    else {
+		    	activate = false;
+		    }
+	    }
+		
+		/*
 		while (Mouse.next()){
-		    if (Mouse.isButtonDown(0) && isMouseEntered()) {
+			if (Mouse.isButtonDown(0) && isMouseEntered()) {
 		        if (Mouse.getEventButton() == 0) {
 		        		//cancel
 		        }
@@ -94,6 +112,7 @@ public class OpenGlButton implements Component {
 		        }
 		    }
 		}
+		*/
 	}
 
 	@Override

@@ -100,7 +100,7 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 		CaracteristiqueJoueur ca = DisplayTaMere.personnage.getCaracteristique();
 		if(c == ca.getStatDegat()) {
 			ca.setDegat();
-			if(ca.getNiveau() <= 1) {
+			if(ca.getNiveau() < 1) {
 				PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {ca.getStatDegat(), ca.getStatRecup(), ca.getStatRegen(), ca.getStatSante(), ca.getStatSpeed(), ca.getStatVitesseTir()}, TypeAnimation.TRANSLATE, -310, 0, 1000);
 				DisplayTaMere.gestionnaireComposant.addComponent(animator);
 				ca.caractAffiche = false;
@@ -108,7 +108,7 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 		}
 		else if(c == ca.getStatRecup()) {
 			ca.setRecup();
-			if(ca.getNiveau() <= 1) {
+			if(ca.getNiveau() < 1) {
 				PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {ca.getStatDegat(), ca.getStatRecup(), ca.getStatRegen(), ca.getStatSante(), ca.getStatSpeed(), ca.getStatVitesseTir()}, TypeAnimation.TRANSLATE, -310, 0, 1000);
 				DisplayTaMere.gestionnaireComposant.addComponent(animator);
 				ca.caractAffiche = false;
@@ -116,7 +116,7 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 		}
 		else if(c == ca.getStatRegen()) {
 			ca.setRegen();
-			if(ca.getNiveau() <= 1) {
+			if(ca.getNiveau() < 1) {
 				PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {ca.getStatDegat(), ca.getStatRecup(), ca.getStatRegen(), ca.getStatSante(), ca.getStatSpeed(), ca.getStatVitesseTir()}, TypeAnimation.TRANSLATE, -310, 0, 1000);
 				DisplayTaMere.gestionnaireComposant.addComponent(animator);
 				ca.caractAffiche = false;
@@ -124,7 +124,7 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 		}
 		else if(c == ca.getStatSante()) {
 			ca.setSante();
-			if(ca.getNiveau() <= 1) {
+			if(ca.getNiveau() < 1) {
 				PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {ca.getStatDegat(), ca.getStatRecup(), ca.getStatRegen(), ca.getStatSante(), ca.getStatSpeed(), ca.getStatVitesseTir()}, TypeAnimation.TRANSLATE, -310, 0, 1000);
 				DisplayTaMere.gestionnaireComposant.addComponent(animator);
 				ca.caractAffiche = false;
@@ -132,7 +132,7 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 		}
 		else if(c == ca.getStatSpeed()) {
 			ca.setSpeed();
-			if(ca.getNiveau() <= 1) {
+			if(ca.getNiveau() < 1) {
 				PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {ca.getStatDegat(), ca.getStatRecup(), ca.getStatRegen(), ca.getStatSante(), ca.getStatSpeed(), ca.getStatVitesseTir()}, TypeAnimation.TRANSLATE, -310, 0, 1000);
 				DisplayTaMere.gestionnaireComposant.addComponent(animator);
 				ca.caractAffiche = false;
@@ -140,7 +140,7 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 		}
 		else if(c == ca.getStatVitesseTir()) {
 			ca.setVitesseTir();
-			if(ca.getNiveau() <= 1) {
+			if(ca.getNiveau() < 1) {
 				PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {ca.getStatDegat(), ca.getStatRecup(), ca.getStatRegen(), ca.getStatSante(), ca.getStatSpeed(), ca.getStatVitesseTir()}, TypeAnimation.TRANSLATE, -310, 0, 1000);
 				DisplayTaMere.gestionnaireComposant.addComponent(animator);
 				ca.caractAffiche = false;
