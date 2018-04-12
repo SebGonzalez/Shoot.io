@@ -38,8 +38,11 @@ public class CaracteristiqueJoueur {
 
 	public int degat;
 	public int recup;
-	public int regen;
-	public int sante;
+	public float regen;
+	public float sante;
+	public float santeDifferenceClient;
+	public int santeDifferenceAdversaire;
+	public int santeMax;
 	public float speed;
 	public int vitesseTir;
 	
@@ -47,8 +50,9 @@ public class CaracteristiqueJoueur {
 	public int niveau;
 	public boolean caractAffiche;
 	
-	public CaracteristiqueJoueur() {
-		sante = 100;
+	public CaracteristiqueJoueur(boolean joueurCourant) {
+		sante = 120;
+		santeMax = 120;
 		degat = 100;
 		recup = 1;
 		regen = 1;
@@ -58,6 +62,8 @@ public class CaracteristiqueJoueur {
 		caractAffiche = false;
 		niveau = 0;
 		nbMerde = 0;
+		
+		if(!joueurCourant) return;
 		
 		expVide = new Sprite(DisplayTaMere.textureLoader, cheminImageExpVide); 
 		expPlein = new Sprite(DisplayTaMere.textureLoader, cheminImageExpPlein); 
@@ -98,7 +104,7 @@ public class CaracteristiqueJoueur {
 		labelRegen.setBounds(10, 50, 0, 0);
 		DisplayTaMere.gestionnaireComposant.addComponent(labelRegen);
 
-		labelSante = new OpenGlLabel("Santé max : " + sante);
+		labelSante = new OpenGlLabel("Santé max : " + santeMax);
 		labelSante.setBounds(10, 70, 0, 0);
 		DisplayTaMere.gestionnaireComposant.addComponent(labelSante);
 		
@@ -136,28 +142,42 @@ public class CaracteristiqueJoueur {
 		labelRecup.setTexte("Récupération arme : " + recup);
 	}
 
-	public int getRegen() {
+	public float getRegen() {
 		return regen;
 	}
 
 	public void setRegen() {
-		this.regen++;
+		this.regen+=0.2;
 		this.niveau--;
 		labelRegen.setTexte("Régénrération vie : " + regen);
 	}
 
-	public int getSante() {
+	public float getSante() {
 		return sante;
 	}
+	
+	public int getSanteMax() {
+		return santeMax;
+	}
 
-	public void setSante(int vie) {
-		this.sante = vie;
+	public float getSanteDifference() {
+		return santeDifferenceClient;
 	}
 	
-	public void setSante() {
+	public void addSanteDifference(int sante) {
+		this.santeDifferenceClient += sante;
+	}
+	
+	public void setSanteMax() {
+		this.santeMax += 10;
 		this.sante += 10;
+		this.santeDifferenceClient += 10;
 		this.niveau--;
-		labelSante.setTexte("Santé max : " + sante);
+		labelSante.setTexte("Santé max : " + santeMax);
+	}
+	
+	public void setSante(float vie) {
+		this.sante = vie;
 	}
 
 	public float getSpeed() {
@@ -182,9 +202,10 @@ public class CaracteristiqueJoueur {
 	
 	public void addMerdeRamasse() {
 		nbMerde++;
-		if(nbMerde >= 2) {
+		if(nbMerde >= 10) {
 			nbMerde = 0;
 			niveau++;
+			DisplayTaMere.personnage.getStats().lvl++;
 		}
 	}
 	
@@ -222,9 +243,24 @@ public class CaracteristiqueJoueur {
 			DisplayTaMere.gestionnaireComposant.addComponent(animator);
 			nbMerde = 0;
 			caractAffiche = true;
-		}
-		
+		}	
+	}
+	
+	public void update(double delta) {
 		//cadre d'info
-		
+				if(sante < santeMax) {
+					sante += delta*regen;
+					santeDifferenceClient += delta*regen;
+					System.out.println("Ajout : " + delta*regen + " , " + santeDifferenceClient);
+					if(sante > santeMax) {
+						santeDifferenceClient -= sante-santeMax;
+						sante = santeMax;
+					}
+				}
+	}
+
+	public boolean isOnOneOfTheStats() {
+		return statDegat.isMouseEntered() || statRecup.isMouseEntered() || statRegen.isMouseEntered() || statSante.isMouseEntered() ||
+				statSante.isMouseEntered() || statSpeed.isMouseEntered() || statVitesseTir.isMouseEntered();
 	}
 }

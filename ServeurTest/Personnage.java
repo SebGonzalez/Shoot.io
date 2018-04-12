@@ -5,17 +5,9 @@ import org.newdawn.slick.TrueTypeFont;
 import Client.Util.CaracteristiqueJoueur;
 
 public class Personnage {
-	private static final String cheminImageDaronne = "Client/IHM/Images/Daronne/daronne_";
-	private static final String cheminImageVieVide = "Client/IHM/Images/vieVide.png";
-	private static final String cheminImageViePlein = "Client/IHM/Images/viePlein.png";
-	
-	static final int NB_POSITION = 4;
-	static final int NB_SPRITE = 3;
+
 	private CaracteristiqueJoueur caracteristique;
 	
-	private static double VITESSE = 2;
-
-	private TrueTypeFont font;
 	private String nom;
 	private double x;
 	private double y;
@@ -25,8 +17,10 @@ public class Personnage {
 
 	private int nbSprite = 0;
 	private int position = 0; // 0 droite, 1 gauche, 2 haut, 3 bas
-	private float cumulDelta = 0;
 	private double angle = 0;
+	
+	private int idSkin;
+	private int idWeapon;
 
 	private Arme arme;
 
@@ -35,21 +29,17 @@ public class Personnage {
 		x = 2000;
 		y = 2000;
 		setArme();
-		caracteristique = new CaracteristiqueJoueur();
+		caracteristique = new CaracteristiqueJoueur(false);
 	}
 	
-	public Personnage(String nom, double x, double y) {
+	public Personnage(String nom, double x, double y, int idSkin, int idWeapon) {
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
+		this.idSkin = idSkin;
+		this.idWeapon = idWeapon;
 		setArme();
-	}
-	public Personnage(String nom, double x, double y, TrueTypeFont font) {
-		this.nom = nom;
-		this.x = x;
-		this.y = y;
-		this.font = font;
-		setArme();
+		caracteristique = new CaracteristiqueJoueur(false);
 	}
 	
 	public String getNom() {
@@ -116,21 +106,23 @@ public class Personnage {
 		this.arme = arme;
 	}
 	
-	public CaracteristiqueJoueur getCaracteristique() {
-		return caracteristique;
+	public int getIdSkin() {
+		return idSkin;
 	}
 
-	// swing
-	public void setVecteur(int xSouris, int ySouris, int largeurMap, int hauteurMap, int largeurFenetre,
-			int hauteurFenetre) {
+	public void setIdSkin(int idSkin) {
+		this.idSkin = idSkin;
+	}
 
-		xVector = xSouris - (largeurFenetre / 2);
-		yVector = ySouris - (hauteurFenetre / 2);
+	public int getIdWeapon() {
+		return idWeapon;
+	}
 
-		double longueur = Math.sqrt(xVector * xVector + yVector * yVector);
+	public void setIdWeapon(int idWeapon) {
+		this.idWeapon = idWeapon;
+	}
 
-		xVector /= longueur;
-		yVector /= longueur;
-
+	public CaracteristiqueJoueur getCaracteristique() {
+		return caracteristique;
 	}
 }

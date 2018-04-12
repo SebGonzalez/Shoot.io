@@ -35,6 +35,7 @@ public class OpenGlTextField implements Component {
 
 	private long lastFrame;
 	private long cumulDelta;
+	boolean visible = true;
 
 	TrueTypeFont font;
 	Thread t;
@@ -77,6 +78,20 @@ public class OpenGlTextField implements Component {
 	
 	public String getText() {
 		return texte;
+	}
+	
+	@Override
+	public boolean getVisible() {
+		return visible;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	public void setTexte(String texte) {
+		this.texte = texte;
 	}
 
 	@Override

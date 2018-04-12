@@ -19,7 +19,7 @@ public class Personnage {
 	private static final String cheminImageViePlein = "Client/IHM/Images/viePlein.png";
 	
 	static final int NB_POSITION = 4;
-	static final int NB_SPRITE = 3;
+	static final int NB_SPRITE = 4; //DE 3 A 4
 	private Sprite[][] textureDaronne = new Sprite[NB_POSITION][NB_SPRITE];
 	private Sprite vieVide;
 	private Sprite viePlein;
@@ -37,8 +37,11 @@ public class Personnage {
 	private int position = 0; // 0 droite, 1 gauche, 2 haut, 3 bas
 	private float cumulDelta = 0;
 	private double angle = 0;
+	private int idSkin;
+	private int idWeapon;
 
 	private Arme arme;
+	private boolean spriteLoaded = false;
 
 	private Stats stats = new Stats();
 
@@ -47,42 +50,45 @@ public class Personnage {
 		x = 2000;
 		y = 2000;
 		setArme();
-		loadSprite(DisplayTaMere.textureLoader);
 		vieVide = new Sprite(DisplayTaMere.textureLoader, cheminImageVieVide);
 		viePlein = new Sprite(DisplayTaMere.textureLoader, cheminImageViePlein);
-		caracteristique = new CaracteristiqueJoueur();
+		caracteristique = new CaracteristiqueJoueur(false);
 	}
 	
-	public Personnage(String nom, double x, double y) {
+	public Personnage(String nom, double x, double y, int idSkin, int idWeapon, boolean joueurCourant) {
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
+		this.idSkin = idSkin;
+		this.idWeapon = idWeapon;
 		setArme();
-		loadSprite(DisplayTaMere.textureLoader);
 		vieVide = new Sprite(DisplayTaMere.textureLoader, cheminImageVieVide);
 		viePlein = new Sprite(DisplayTaMere.textureLoader, cheminImageViePlein);
-		caracteristique = new CaracteristiqueJoueur();
+		caracteristique = new CaracteristiqueJoueur(joueurCourant);
 	}
-	public Personnage(String nom, double x, double y, TrueTypeFont font) {
+	public Personnage(String nom, double x, double y, int idSkin, int idWeapon, TrueTypeFont font, boolean joueurCourant) {
 		this.nom = nom;
 		this.x = x;
 		this.y = y;
+		this.idSkin = idSkin;
+		this.idWeapon = idWeapon;
 		this.font = font;
 		setArme();
-		loadSprite(DisplayTaMere.textureLoader);
 		vieVide = new Sprite(DisplayTaMere.textureLoader, cheminImageVieVide);
 		viePlein = new Sprite(DisplayTaMere.textureLoader, cheminImageViePlein);
-		caracteristique = new CaracteristiqueJoueur();
+		caracteristique = new CaracteristiqueJoueur(joueurCourant);
 	}
 	
 	public void loadSprite(TextureLoader textureLoader) {
+		System.out.println("Id skin : " + idSkin);
 		for(int i=0; i<NB_POSITION; i++) {
 			for(int y=0; y<NB_SPRITE; y++) {
-				String chemin = cheminImageDaronne + i + "_" + y + ".png";
+				String chemin = cheminImageDaronne + i + "_" + y + "_" + idSkin + ".png";
 				System.out.println(i + " " + y + " " + chemin);
 				textureDaronne[i][y] = new Sprite(textureLoader, chemin);
 			}
 		}
+		spriteLoaded = true;
 	}
 	
 	public String getNom() {
@@ -147,6 +153,14 @@ public class Personnage {
 
 	public void setArme(Arme arme) {
 		this.arme = arme;
+	}
+
+	public int getIdSkin() {
+		return idSkin;
+	}
+
+	public int getIdWeapon() {
+		return idWeapon;
 	}
 
 	public CaracteristiqueJoueur getCaracteristique() {
@@ -235,19 +249,24 @@ public class Personnage {
 			if (nbSprite > 2)
 				nbSprite = 0;
 			
-			if (Mouse.isButtonDown(0)) {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, true,false, x, y, caracteristique.getDegat()); // il y a un clique gauche
-			} else if(Mouse.isButtonDown(1)) {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, false,true, x, y, caracteristique.getDegat()); // il y a un clique droit
-			}
-			else {
-				arme.updateArme(delta * 0.1, xVector, yVector, position, false, false, x, y, caracteristique.getDegat()); // pas de clique
-			}
 		} else {
 			nbSprite = 0;
 			xVector = 0;
 			yVector = 0;
+			
 		}
+		
+		if (Mouse.isButtonDown(0) && !DisplayTaMere.personnage.getCaracteristique().isOnOneOfTheStats()) {
+			arme.updateArme(delta * 0.1, xVector, yVector, position, true,false, x, y, caracteristique.getDegat()); // il y a un clique gauche
+			nbSprite = 3;
+			
+		} else if(Mouse.isButtonDown(1)) {
+			arme.updateArme(delta * 0.1, xVector, yVector, position, false,true, x, y, caracteristique.getDegat()); // il y a un clique droit
+		}
+		else {
+			arme.updateArme(delta * 0.1, xVector, yVector, position, false, false, x, y, caracteristique.getDegat()); // pas de clique
+		}
+		caracteristique.update(delta*0.01);
 	}
 	
 	public void updatePersonnageX(double x, double y, double xVector, double yVector, double angle, int position, double xArme, double yArme, int decalageArme, boolean updateServeur, double delta) {
@@ -262,6 +281,8 @@ public class Personnage {
 			arme.setX(xArme);
 			arme.setY(yArme);
 			arme.setDecalageX(decalageArme);
+			//caracteristique.setSante(caracteristique.getSante() + sante);
+			//System.out.println("SANTE = " + sante);
 		}
 		else {
 			if(!Double.isNaN(this.xVector) && !Double.isNaN(this.yVector)) {
@@ -286,35 +307,57 @@ public class Personnage {
 
 	// lwjgl
 	public void drawPersonnage() {
+		if(!spriteLoaded) loadSprite(DisplayTaMere.textureLoader);
 		glColor3f(1f, 1f, 1f);
 		glPushMatrix();
 		glTranslated(Display.getWidth() / 2, Display.getHeight() / 2, 0.0d);
 		glRotatef( (float)angle, 0, 0, 1 ); // now rotate
+		//arme.draw(this);
 		textureDaronne[position][nbSprite].draw(-63, -99, 126, 198);
+		
 		glPopMatrix(); // pop off the rotation and transformation
 		vieVide.draw(Display.getWidth()/2-75, Display.getHeight()/2+99 + 10, 150, 90);
-		int widthVie = caracteristique.getSante()*150/100;
+		int widthVie = (int)caracteristique.getSante()*150/caracteristique.getSanteMax();
+		//System.out.println(caracteristique.getSante() + " " + caracteristique.getSanteMax());
 		viePlein.draw(Display.getWidth()/2-75, Display.getHeight()/2+99 + 10, widthVie,90);
+		
+		glPushMatrix();
+		glTranslated(Display.getWidth() / 2, Display.getHeight() / 2, 0.0d);
+		if(arme.getEtatArme() == EtatArme.PORTER) glRotatef( (float)angle, 0, 0, 1 ); // now rotate
+		if(arme.getEtatArme() == EtatArme.JETER) {
+			//rotationner arme
+		}
 		arme.draw(this);
+		
+		glPopMatrix(); // pop off the rotation and transformation
+		
 		caracteristique.draw();
 	}
 	
 	public void drawPersonnageX(Personnage joueur) {
+		if(!spriteLoaded) loadSprite(DisplayTaMere.textureLoader);
 		int xEcran;
 		int yEcran;
 		if(this.getX() > joueur.x)
-			xEcran = (int) (Display.getWidth() / 2 + (this.getX() - joueur.x));
+			xEcran = (int) (Display.getWidth() / 2 + (this.getX() - joueur.x)) -63;
 		else
-			xEcran = (int) (Display.getWidth() / 2 - (joueur.x-this.getX()));
+			xEcran = (int) (Display.getWidth() / 2 - (joueur.x-this.getX())) -63;
 		if(this.getY() > y)
-			yEcran = (int) (Display.getHeight() / 2 + (this.getY() - joueur.getY()));
+			yEcran = (int) (Display.getHeight() / 2 + (this.getY() - joueur.getY()))-99;
 		else
-			yEcran = (int) (Display.getHeight() / 2 - (joueur.getY()-this.getY()));
+			yEcran = (int) (Display.getHeight() / 2 - (joueur.getY()-this.getY()))-99;
 		
 		
 		glColor3f(1f, 1f, 1f);
-		textureDaronne[position][nbSprite].draw(xEcran, yEcran, 126, 198);
-		arme.drawX(joueur);
+		glPushMatrix();
+		glTranslated(xEcran, yEcran, 0.0d);
+		glRotatef( (float)angle, 0, 0, 1 ); // now rotate
+		textureDaronne[position][nbSprite].draw(0, 0, 126, 198);
+		arme.drawX(joueur, x, y);
+		vieVide.draw(-75 + 63, +198 + 10, 150, 90);
+		int widthVie = (int)caracteristique.getSante()*150/caracteristique.getSanteMax();
+		viePlein.draw(-75 + 63, +198 + 10, widthVie,90);
+		glPopMatrix(); // pop off the rotation and transformation
 	}
 	
 	public Stats getStats() {

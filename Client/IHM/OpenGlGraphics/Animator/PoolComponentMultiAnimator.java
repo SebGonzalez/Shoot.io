@@ -174,4 +174,8 @@ public class PoolComponentMultiAnimator implements Component {
 	public int getWidth() {return 0;}
 	@Override
 	public int getHeight() {return 0;}
+	@Override
+	public boolean getVisible() {return true;}
+	@Override
+	public void setVisible(boolean visible) {}
 }

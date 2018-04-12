@@ -31,6 +31,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
 
 import Client.Connect.Client;
+import Client.Connect.DataBase;
 import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.ComponentListener;
 import Client.IHM.OpenGlGraphics.GestionnaireComposant;
@@ -41,6 +42,7 @@ import Client.IHM.OpenGlGraphics.Components.OpenGlButton;
 import Client.IHM.OpenGlGraphics.Components.OpenGlFrame;
 import Client.IHM.OpenGlGraphics.Components.OpenGlImage;
 import Client.IHM.OpenGlGraphics.Components.OpenGlLabel;
+import Client.IHM.OpenGlGraphics.Components.OpenGlPanel;
 import Client.IHM.OpenGlGraphics.Components.OpenGlTextField;
 import Client.RessourceFactory.RessourcesFactory;
 import Client.RessourceFactory.Sprite;
@@ -59,13 +61,12 @@ public class DisplayTaMere extends OpenGlFrame implements ComponentListener, Dra
 
 	public static TextureLoader textureLoader = new TextureLoader();
 
-	public static GestionnaireAdversaire gestionnaireAdversaire = new GestionnaireAdversaire();
-	public static GestionnaireMerde gestionnaireMerde = new GestionnaireMerde();
+	public static DataBase dataBase = new DataBase();
+	public static GestionnaireAdversaire gestionnaireAdversaire;
+	public static GestionnaireMerde gestionnaireMerde;
 	public static Personnage personnage;
 	public static Map map = new Map(5000, 5000);
 	public static GestionnaireComposant gestionnaireComposant;
-	private OpenGlButton start;
-	private OpenGlTextField pseudo;
 
 	static TrueTypeFont font;
 
@@ -78,6 +79,7 @@ public class DisplayTaMere extends OpenGlFrame implements ComponentListener, Dra
 		font = new TrueTypeFont(awtFont, false);
 		gestionnaireComposant = new GestionnaireComposant(this, this);
 
+		//personnage = new Personnage("yolo"); // A ENLEVER
 		setPanel(new AccueilPanel(this));
 		// loadMenu();
 	}
@@ -97,6 +99,11 @@ public class DisplayTaMere extends OpenGlFrame implements ComponentListener, Dra
 
 		glBindTexture(GL_TEXTURE_2D, 0); //IMPORTANT
 		getPanel().paintComponent();
+		
+		if(changer) {
+			setPanel(new DeathScreen(this));
+			changer = false;
+		}
 	}
 	
 	public static void main(String args[]) {

@@ -17,6 +17,7 @@ public class OpenGlLabel implements Component {
 	private int x;
 	private int y;
 	private String texte;
+	boolean visible = true;
 	
 	TrueTypeFont font;
 	
@@ -55,6 +56,16 @@ public class OpenGlLabel implements Component {
 
 	public void setTexte(String texte) {
 		this.texte = texte;
+	}
+	
+	@Override
+	public boolean getVisible() {
+		return visible;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	@Override

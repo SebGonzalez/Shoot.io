@@ -63,14 +63,16 @@ public class GestionnaireAdversaire {
 				remove(messageSplit2[1]);
 			}
 			else if(messageSplit2[0].equals("V")) { //suppresion
-				if(messageSplit2[0].equals(DisplayTaMere.personnage.getNom()))
-					DisplayTaMere.personnage.getCaracteristique().setSante(Integer.parseInt(messageSplit2[2]));
+				if(messageSplit2[1].equals(DisplayTaMere.personnage.getNom())) {
+					DisplayTaMere.personnage.getCaracteristique().setSante(DisplayTaMere.personnage.getCaracteristique().getSante() - Integer.parseInt(messageSplit2[2]));
+				}
 				else {
-					updateSante(messageSplit2[1], Integer.parseInt(messageSplit2[2]));
+					updateSante(messageSplit2[1], Integer.parseInt(messageSplit2[2]), Float.parseFloat(messageSplit2[3]));
 				}
 			}
 			else if (messageSplit2[0].equals("A")) {
-				DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3])));
+				if(!messageSplit2[1].equals(DisplayTaMere.personnage.getNom())) 
+					DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3]), Integer.parseInt(messageSplit2[4]), Integer.parseInt(messageSplit2[5]), false));
 			} else if (messageSplit2[0].equals("MA")) {
 				for(int i=2; i<Integer.parseInt(messageSplit2[1])*2 + 2; i+=2)
 					DisplayTaMere.gestionnaireMerde.addMerde(Integer.parseInt(messageSplit2[i]), Integer.parseInt(messageSplit2[i+1]), 35);
@@ -88,6 +90,7 @@ public class GestionnaireAdversaire {
 	
 	public void updateAdversaireServeur(double delta) {
 		String messageSplit[] = reception.split(";");
+		//System.out.println(reception);
 		for(String s : messageSplit) {
 			String messageSplit2[] = s.split("/");
 			if(messageSplit2[0].equals("S")) { //suppresion
@@ -96,9 +99,9 @@ public class GestionnaireAdversaire {
 			}
 			else if(messageSplit2[0].equals("U")) //update
 				setInfoAdversaire(messageSplit2[1], Double.parseDouble(messageSplit2[2]),  Double.parseDouble(messageSplit2[3]), Double.parseDouble(messageSplit2[4]), Double.parseDouble(messageSplit2[5]),
-						Double.parseDouble(messageSplit2[6]), Integer.parseInt(messageSplit2[7]), Double.parseDouble(messageSplit2[8]), Double.parseDouble(messageSplit2[9]), Integer.parseInt(messageSplit2[10]), delta);
+						Double.parseDouble(messageSplit2[6]), Integer.parseInt(messageSplit2[7]), Double.parseDouble(messageSplit2[8]), Double.parseDouble(messageSplit2[9]), Integer.parseInt(messageSplit2[10]),delta);
 			else if (messageSplit2[0].equals("A")) {
-				DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3])));
+				DisplayTaMere.gestionnaireAdversaire.addAversaire(new Personnage(messageSplit2[1], Double.parseDouble(messageSplit2[2]), Double.parseDouble(messageSplit2[3]), Integer.parseInt(messageSplit2[4]), Integer.parseInt(messageSplit2[5]), false));
 			} else if (messageSplit2[0].equals("MA")) {
 				DisplayTaMere.gestionnaireMerde.addMerde(Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[1]), Integer.parseInt(messageSplit2[3]));
 			}
@@ -124,11 +127,12 @@ public class GestionnaireAdversaire {
 		}
 	}
 	
-	public void updateSante(String nom, int vie) {
+	public void updateSante(String nom, int vie, float vie2) {
 		for(Iterator<Personnage> it = listeAdversaire.iterator(); it.hasNext();) {
 			Personnage p = it.next();
 			if(p.getNom().equals(nom)) {
-				p.getCaracteristique().setSante(vie);
+				p.getCaracteristique().setSante(p.getCaracteristique().getSante() - vie + vie2);
+				System.out.println("Vie : " + p.getCaracteristique().getSante() );
 			}
 		}
 	}
@@ -143,7 +147,7 @@ public class GestionnaireAdversaire {
 			}
 		}
 		if(!trouve)
-			addAversaire(new Personnage(nom, x, y));
+			addAversaire(new Personnage(nom, x, y, 9, 10, false));
 	}
 	
 	public List<Personnage> getListeAdversaire() {

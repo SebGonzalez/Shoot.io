@@ -30,14 +30,19 @@ public class Emission implements Runnable {
 			}
 			message = "U/" + p.getNom() + "/" + p.getX() + "/" + p.getY() + "/" + p.getxVector() + "/" + p.getyVector()
 					+ "/" + p.getAngle() + "/" + p.getPosition() + "/" + p.getArme().getX() + "/" + p.getArme().getY()
-					+ "/" + p.getArme().getDecalage() + ";";
+					+ "/" + p.getArme().getDecalage() + "/" + p.getCaracteristique().getSanteDifference() + ";";
+			//if( p.getCaracteristique().getSanteDifference() > 0)
+				//System.out.println("Envoie : " + p.getCaracteristique().getSanteDifference());
+			
 			for (Personnage pTue : DisplayTaMere.gestionnaireAdversaire.getListeAdversaireTue()) {
 				System.out.println("KO");
 				message += "K/" + pTue.getNom() + ";";
 			}
 			for (Personnage pUpdate : DisplayTaMere.gestionnaireAdversaire.getListeAdversaireUpdate()) {
 				System.out.println("U");
-				message += "S/" + pUpdate.getNom() + "/" + pUpdate.getCaracteristique().getSante() + ";";
+				message += "S/" + pUpdate.getNom() + "/" + pUpdate.getCaracteristique().santeDifferenceAdversaire + ";";
+				 pUpdate.getCaracteristique().santeDifferenceAdversaire = 0;
+				 System.out.println(message);
 			}
 			for(Merde m : DisplayTaMere.gestionnaireMerde.getListeMerdeGraille()) {
 				message += "M/" + m.getId() + ";"; 
@@ -46,10 +51,11 @@ public class Emission implements Runnable {
 			DisplayTaMere.gestionnaireAdversaire.getListeAdversaireTue().clear();
 			DisplayTaMere.gestionnaireAdversaire.getListeAdversaireUpdate().clear();
 			DisplayTaMere.gestionnaireMerde.getListeMerdeGraille().clear();
+			p.getCaracteristique().santeDifferenceClient = 0;
 
 			try {
 				out.writeBytes(message + "\n");
-				//out.flush();
+				out.flush();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

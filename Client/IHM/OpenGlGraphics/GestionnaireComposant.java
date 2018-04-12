@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.management.ListenerNotFoundException;
+
 import org.lwjgl.input.Keyboard;
 
 import Client.IHM.OpenGlGraphics.Components.DrawableComponent;
+import Client.IHM.OpenGlGraphics.Components.OpenGlAlertBox;
 
 public class GestionnaireComposant {
 	private ComponentListener listener;
@@ -36,12 +39,11 @@ public class GestionnaireComposant {
 	}
 	
 	public void render() {
-		/*for(Component c : listComponent)
-			c.render();*/
 		Iterator<Component> componentIterator = listComponent.iterator();
 		while (componentIterator.hasNext()) {
 			Component c = componentIterator.next();
-			c.render();
+			if(c.getVisible())
+				c.render();
 		}
 	}
 	
@@ -53,7 +55,8 @@ public class GestionnaireComposant {
 		Iterator<Component> componentIterator = listComponent.iterator();
 		while (componentIterator.hasNext()) {
 			Component c = componentIterator.next();
-			c.update();
+			if(c.getVisible())
+				c.update();
 			if(c.autoSupression()) componentIterator.remove();
 		}
 		
@@ -68,7 +71,8 @@ public class GestionnaireComposant {
 		Iterator<Component> componentIterator = listComponent.iterator();
 		while (componentIterator.hasNext()) {
 			Component c = componentIterator.next();
-			c.doAction(listener);
+			if(c.getVisible())
+				c.doAction(listener);
 		}
 	}
 	
@@ -90,5 +94,11 @@ public class GestionnaireComposant {
 		while (Keyboard.next()) {
 			//on vide le buffer
 		}
+	}
+
+	public void removeComponent(Component component) {
+		listComponentTmp.addAll(listComponent);
+		listComponent.clear();
+		listComponentTmp.remove(component);
 	}
 }

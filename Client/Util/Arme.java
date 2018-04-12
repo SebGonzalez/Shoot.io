@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2i;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.lwjgl.opengl.Display;
@@ -29,9 +30,14 @@ public class Arme {
 
 	private static double VITESSE = 4;
 
+	private static int width = 500/8;
+	private static int height = 765/8;
+	
+	
 	private double x;
 	private double y;
-	private int decalage;
+	private int decalageX;
+	private int decalageY;
 
 	private boolean jeter = false;
 	private double xVector;
@@ -42,14 +48,19 @@ public class Arme {
 	private long cumulDelta = 0;
 	private EtatArme etatArme;
 	private Sprite textureArme;
+	
+	private ArrayList<String> joueurTouche;
 
 	public Arme(double x, double y) {
 		this.x = x;
 		this.y = y;
 
 		etatArme = EtatArme.PORTER;
-		decalage = -100;
-		textureArme = new Sprite(DisplayTaMere.textureLoader, "Client/IHM/Images/arme.jpg");
+		decalageX = -100;
+		decalageY = -140;
+		textureArme = new Sprite(DisplayTaMere.textureLoader, "Client/IHM/Images/Armes/poele.png");
+		
+		joueurTouche = new ArrayList<>();
 	}
 
 	public double getX() {
@@ -77,7 +88,11 @@ public class Arme {
 	public void setJeter(boolean jeter) {
 		this.jeter = jeter;
 	}
-
+	
+	public EtatArme getEtatArme() {
+		return etatArme;
+	}
+		
 	public void updateArme(double delta, double xVector, double yVector,int direction, boolean jeter, boolean recuperer, double xPerso, double yPerso, int degat) {
 		if(jeter && etatArme != EtatArme.JETER) {
 			xVectorJeter = xVector;
@@ -101,6 +116,7 @@ public class Arme {
 			moveJeter(delta);
 		}
 		else if(etatArme == EtatArme.RECUPERER) {
+			setDecalage(direction);
 			moveRecuperer(delta, xPerso, yPerso);
 		}
 		//System.out.println(etatArme);
@@ -109,22 +125,36 @@ public class Arme {
 	
 	
 	public int getDecalage() {
-		return decalage;
+		return decalageX;
 	}
 
 	public void setDecalage(int position) { // 0 droite, 1 gauche, 2 haut, 3 bas
-		if(position == 0)
-			decalage = 100;
-		else if(position == 1)
-			decalage = -100;
+		if(position == 0) {
+			decalageX = -40;
+		}
+		else if(position == 1) {
+			decalageX = 70;
+		}
+		else if(position == 2) {
+			decalageX = 70;
+		}
+		else if(position == 3) {
+			decalageX = -40;
+		}
 	}
+	
 	public void setDecalageX(int value) {
-		this.decalage = value;
+		this.decalageX = value;
 	}
+	
+	public void setDecalageY(int value) {
+		this.decalageY = value;
+	}
+	
 
 	public void movePorter(double delta, double xPerso, double yPerso) {
-		double deplacementX = xVector * delta * 2;
-		double deplacementY = -(yVector * delta * 2);
+		//double deplacementX = xVector * delta * 2;
+		//double deplacementY = -(yVector * delta * 2);
 		//System.out.println("Arme : " + deplacementX + " " + deplacementY + " " + delta);
 		x = xPerso;
 		y = yPerso;
@@ -136,7 +166,9 @@ public class Arme {
 		cumulDelta += delta;
 		if (cumulDelta > 50) {
 			cumulDelta = 0;
+			DisplayTaMere.personnage.getStats().nbThrows++;
 			etatArme = EtatArme.LACHER;
+			joueurTouche.clear();
 		}
 	}
 	
@@ -151,33 +183,43 @@ public class Arme {
 		x = x + xVectorRecuperer * delta * VITESSE*2;
 		y = y + yVectorRecuperer * delta * VITESSE*2;
 		
-		//System.out.println(x + " : " + xPerso + " " + y + " : " + yPerso);
-		if(Math.abs(x-xPerso)< 1 && Math.abs(y-yPerso) < 1) {
+		System.out.println("x : " + Math.abs(x-xPerso)  + " : " + Math.abs(y-yPerso));
+		if(Math.abs(x-xPerso) < 2 && Math.abs(y-yPerso) < 2) {
+			x = xPerso;
+			y = yPerso;
 			etatArme = EtatArme.PORTER;
-
 		}
 		//cumulDelta += delta;
 	}
 	
 	public void collision(int degat) {
-		Rectangle armeJoueur = new Rectangle((int)this.getX()+decalage-50, (int)y-25, 100, 50);
+		Rectangle armeJoueur = new Rectangle((int)this.getX()+decalageX-width/2, (int)y+decalageY-height/2, width, height);
 		//System.out.println(this.getX() + " " + this.getY());
 		for(Iterator<Personnage> it = DisplayTaMere.gestionnaireAdversaire.getListeAdversaire().iterator(); it.hasNext();) {
 			Personnage p = it.next();
 			Rectangle adversaire = new Rectangle((int)p.getX()-63, (int)p.getY()-99, 63*2, 99*2);
 			//System.out.println(p.getX() + " " + p.getY());
 			if(adversaire.intersects(armeJoueur)) {
-				if(p.getCaracteristique().getSante() - degat < 0) {
-					DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
-					it.remove();
+				if(!joueurTouche.contains(p.getNom())) {
+					DisplayTaMere.personnage.getStats().nbHits++;
+					if(p.getCaracteristique().getSante() - degat <= 0) {
+						System.out.println("iiiiii " + p.getCaracteristique().getSante() + " " + degat + " " + (p.getCaracteristique().getSante() - degat));
+						DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
+						it.remove();
+						DisplayTaMere.personnage.getStats().nbKills++;
+					}
+					else {
+						System.out.println("eeeee " + p.getCaracteristique().getSante() + " " + degat + " " + p.getNom());
+						p.getCaracteristique().santeDifferenceAdversaire = degat;
+						DisplayTaMere.gestionnaireAdversaire.addAversaireUpdate(p);
+					}
+					joueurTouche.add(p.getNom());
 				}
-				else {
-					p.getCaracteristique().setSante(p.getCaracteristique().getSante()-degat);
-					DisplayTaMere.gestionnaireAdversaire.addAversaireUpdate(p);
-				}
+				else System.out.println("DEJA TOUCHEEEEEEEEEEEEEEE");
 			}
 		}
 	}
+
 
 	public void draw(Personnage p) {
 		//System.out.println(p.getX() + " : " + this.x);
@@ -185,32 +227,33 @@ public class Arme {
 		int xEcran;
 		int yEcran;
 		if(p.getX() < x)
-			xEcran = (int) (Display.getWidth() / 2 + (x - p.getX())) + decalage - 50;
+			xEcran = (int) ((x - p.getX())) + decalageX - 50;
 		else
-			xEcran = (int) (Display.getWidth() / 2 - (p.getX()-x)) + decalage - 50;
+			xEcran = (int) (-(p.getX()-x)) + decalageX - 50;
 		if(p.getY() < y)
-			yEcran = (int) (Display.getHeight() / 2 + (y - p.getY())) - 25;
+			yEcran = (int) ((y-p.getY())) + decalageY - 25;
 		else
-			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-y)) - 25;
+			yEcran = (int) (-(p.getY()-y)) + decalageY - 25;
 
-		textureArme.draw(xEcran, yEcran, 100, 50);
+		textureArme.draw(xEcran, yEcran, width, height);
 	}
 	
-	public void drawX(Personnage p) {
+	public void drawX(Personnage p, double xJoueur, double yJoueur) {
 		//System.out.println(p.getX() + " : " + this.x);
 		
-		int xEcran;
-		int yEcran;
+		int xEcran = 0;
+		int yEcran = 0;
 		
-		if(this.getX() > p.getX())
-			xEcran = (int) (Display.getWidth() / 2 + (this.getX() - p.getX())) + decalage - 50;
-		else
-			xEcran = (int) (Display.getWidth() / 2 - (p.getX()-this.getX())) + decalage - 50;
-		if(this.getY() > y)
-			yEcran = (int) (Display.getHeight() / 2 + (this.getY() - p.getY())) - 25;
-		else
-			yEcran = (int) (Display.getHeight() / 2 - (p.getY()-this.getY())) - 25;
+		//System.out.println(x + " " + p.getX());
+		if(x == xJoueur) {
+			xEcran = - 50 + decalageX + width;
+			yEcran = - 25 + decalageY + height;
+		}
+		else {
+			xEcran = (int) (x - xJoueur);
+			yEcran = (int) (y - yJoueur);
+		}
 
-		textureArme.draw(xEcran, yEcran, 100, 50);
+		textureArme.draw(xEcran, yEcran, width, height);
 	}
 }

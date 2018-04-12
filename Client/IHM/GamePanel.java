@@ -1,6 +1,7 @@
 package Client.IHM;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.ComponentListener;
@@ -8,6 +9,7 @@ import Client.IHM.OpenGlGraphics.GestionnaireComposant;
 import Client.IHM.OpenGlGraphics.Animator.PoolComponentAnimator;
 import Client.IHM.OpenGlGraphics.Animator.PoolComponentMultiAnimator;
 import Client.IHM.OpenGlGraphics.Animator.TypeAnimation;
+import Client.IHM.OpenGlGraphics.Components.MiniMap;
 import Client.IHM.OpenGlGraphics.Components.OpenGlFrame;
 import Client.IHM.OpenGlGraphics.Components.OpenGlImage;
 import Client.IHM.OpenGlGraphics.Components.OpenGlPanel;
@@ -48,6 +50,10 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 		personnage = DisplayTaMere.personnage;
 		gestionnaireAdversaire = DisplayTaMere.gestionnaireAdversaire;
 		OpenGlFrame.lastFrame = OpenGlFrame.getTime();
+		
+		MiniMap miniMap = new MiniMap();
+		miniMap.setBounds(Display.getWidth()-300-Display.getWidth()/100*2, Display.getWidth()/100*2, 300, 300);
+		gestionnaireComposant.addComponent(miniMap);
 	}
 	
 	@Override
@@ -81,11 +87,11 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 
 			gestionnaireMerde.collision();
 			gestionnaireMerde.drawMerde();
-
-			personnage.drawPersonnage();
 			
 			gestionnaireAdversaire.updateAdversaire(delta);
 			gestionnaireAdversaire.draw(personnage);
+
+			personnage.drawPersonnage();
 
 			personnage.updatePersonnage(Mouse.getX(), Mouse.getY(), map.getLargeur(), map.getLongueur(), delta);
 			// System.out.println(gestionnaireComposant.getComponent().size() + " " + imageStat1.getX() + " " + imageStat1.getY());
@@ -123,7 +129,7 @@ public class GamePanel implements ComponentListener, OpenGlPanel {
 			}
 		}
 		else if(c == ca.getStatSante()) {
-			ca.setSante();
+			ca.setSanteMax();
 			if(ca.getNiveau() < 1) {
 				PoolComponentAnimator animator = new PoolComponentAnimator(new Component[] {ca.getStatDegat(), ca.getStatRecup(), ca.getStatRegen(), ca.getStatSante(), ca.getStatSpeed(), ca.getStatVitesseTir()}, TypeAnimation.TRANSLATE, -310, 0, 1000);
 				DisplayTaMere.gestionnaireComposant.addComponent(animator);

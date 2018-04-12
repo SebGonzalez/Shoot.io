@@ -16,14 +16,16 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import Client.Util.DrawTool;
-
+import Client.Connect.DataBase;
 import Client.IHM.OpenGlGraphics.Component;
 import Client.IHM.OpenGlGraphics.ComponentListener;
 import Client.IHM.OpenGlGraphics.GestionnaireComposant;
 import Client.IHM.OpenGlGraphics.Animator.ComponentAnimator;
 import Client.IHM.OpenGlGraphics.Animator.TypeAnimation;
+import Client.IHM.OpenGlGraphics.Components.OpenGlAlertBox;
 import Client.IHM.OpenGlGraphics.Components.DrawableComponent;
 import Client.IHM.OpenGlGraphics.Components.OpenGlButton;
+import Client.IHM.OpenGlGraphics.Components.OpenGlFrame;
 import Client.IHM.OpenGlGraphics.Components.OpenGlImage;
 import Client.IHM.OpenGlGraphics.Components.OpenGlLabel;
 import Client.IHM.OpenGlGraphics.Components.OpenGlPanel;
@@ -50,50 +52,50 @@ import Client.Util.Personnage;
  *
  */
 public class DeathScreen implements ComponentListener, DrawableComponent, OpenGlPanel {
-	
-	
+
+	private OpenGlFrame frame;
+
 	/**
 	 * GestionnaireComposant qui va, comme son nom l'indique, gerer les composants de l'ecran de mort.
 	 */
 	public static GestionnaireComposant gestionnaireComposant;
-	
+
 	/**
 	 * Label affichant le niveau atteint durant la partie.
 	 */
 	private OpenGlLabel lvlLabel;
-	
+
 	/**
 	 * Label affichant le nombre de tues effectues durant la partie.
 	 */
 	private OpenGlLabel nbKillsLabel;
-	
-	
+
 	/**
 	 * Label affichant le nombre de tirs effectues durant la partie.
 	 */
-	private OpenGlLabel nbThrowsLabel; 
-	
+	private OpenGlLabel nbThrowsLabel;
+
 	/**
 	 * Label affichant le nombre de touchers effectues durant la partie.
 	 */
 	private OpenGlLabel nbHitsLabel;
-	
+
 	/**
 	 * Bouton continuer qui permet au joueur de relancer une partie.
 	 */
-	private OpenGlButton continueButton; 
-	
-	
+	private OpenGlButton continueButton;
+
 	private Client.RessourceFactory.TextureLoader loader;
-	
+
 	private Personnage personnage;
-	
-	
+
 	/**
 	 * Constructeur sans argument de l'ecran de mort.
 	 */
-	public DeathScreen(GestionnaireComposant gestionnaire, Client.RessourceFactory.TextureLoader textureLoader) {
-		loader = textureLoader;
+	public DeathScreen(OpenGlFrame frame) {
+		this.frame = frame;
+		loader = DisplayTaMere.textureLoader;
+		gestionnaireComposant = DisplayTaMere.gestionnaireComposant;
 		/*try {
 			Display.setDisplayMode(new DisplayMode(1200, 600));
 			Display.setTitle("Ta Mere");
@@ -112,46 +114,89 @@ public class DeathScreen implements ComponentListener, DrawableComponent, OpenGl
     	*/
 		
   //  	personnage = new Personnage("Philippos", new Sprite(new Client.RessourceFactory.TextureLoader(), "Client/IHM/Images/Daronne/daronne_0_0.png"));
-		
+		    	
+    	personnage = DisplayTaMere.personnage;
+
+    	int posXLabels = Display.getWidth()/100*75;
     	
-    	RessourcesFactory.loadImage();
-    	gestionnaireComposant = gestionnaire;
-   
-	}
-	
+    	
+		int largeurBackground = 0, hauteurBackground = 0;
+    	
+    	while (hauteurBackground < Display.getHeight()) {
+			while (largeurBackground < Display.getWidth()) {
+				OpenGlImage background = new OpenGlImage(loader, "Client/IHM/Images/ground.png");
+				background.setBounds(largeurBackground, hauteurBackground, 512 / 8, 512 / 8);
+				largeurBackground += 512 / 8;
+				gestionnaireComposant.addComponent(background);
+			}
+			hauteurBackground += 512 / 8;
+			largeurBackground = 0;
+		}
+    	
+    	OpenGlImage planTravail = new OpenGlImage(loader, "Client/IHM/Images/Plan_de_travail.png");
+    	planTravail.setBounds(Display.getWidth()/2-250/2-40, Display.getHeight()/2-711/2, 500/2, 1422/2);
+    	gestionnaireComposant.addComponent(planTravail);
+    	
+    	/* **** lvl **** */
+    	
+    	lvlLabel = new OpenGlLabel("Niveau : " + personnage.getStats().lvl);
+    	lvlLabel.setBounds(posXLabels, Display.getHeight()*25/100, 150, 50);
+    	gestionnaireComposant.addComponent(lvlLabel);
+    	
+    	/* **** FIN : lvl **** */
+    	    	
+    	/* **** nbTues **** */
+    	
+    	nbKillsLabel = new OpenGlLabel("Tues : " + personnage.getStats().nbKills);
+    	nbKillsLabel.setBounds(posXLabels, Display.getHeight()*35/100, 150, 50);
+    	gestionnaireComposant.addComponent(nbKillsLabel);
+    	
+    	/* **** FIN : nbTues **** */
+    	
+    	/* **** nbLancers **** */
+    	
+    	nbThrowsLabel = new OpenGlLabel("Lancers : " + personnage.getStats().nbThrows);
+    	nbThrowsLabel.setBounds(posXLabels, Display.getHeight()*45/100, 150, 50);
+    	gestionnaireComposant.addComponent(nbThrowsLabel);
+    	
+    	/* **** FIN : nbLancers **** */
 
-	public void start() {
-		while (!Display.isCloseRequested()) {
-    		glClear(GL_COLOR_BUFFER_BIT);  // Clear the 2D contents of the window.
-    		
-    		
-    		gestionnaireComposant.render();
-    		gestionnaireComposant.update();
-    		gestionnaireComposant.doAction();
-        	Display.update(); // Refresh the display and poll input.
-        	Display.sync(60); // Wait until 16.67 milliseconds have passed. (Maintain 60 frames-per-second)
-        }
+    	/* **** nbHits **** */
+    	
+    	nbHitsLabel = new OpenGlLabel("Touchers : " + personnage.getStats().nbHits);
+    	nbHitsLabel.setBounds(posXLabels, Display.getHeight()*55/100, 150, 50);
+    	gestionnaireComposant.addComponent(nbHitsLabel);
+    	
+    	/* **** FIN : nbHits **** */
 
-		
-        Display.destroy();
-        System.exit(0);
-	}
-	
-	
-	public static void main(String[] args) {
-	//	DeathScreen display = new DeathScreen();
-	//	display.start();
-	}
+  
+    	OpenGlImage image = new OpenGlImage(loader, "Client/IHM/Images/Daronne/tamer_morte.png");
+    	image.setBounds(Display.getWidth()/8, Display.getHeight()/10, 201, 500);
+    	gestionnaireComposant.addComponent(image);
+    
+    	
+    	/* bouton Continuer */
+    	
+    	continueButton = new OpenGlButton("Client/IHM/Images/Couteau-rejouer.png", "Client/IHM/Images/Couteau-rejouer-hover.png");
+    	continueButton.setBounds(posXLabels, Display.getHeight()*68/100, 128, 21);
+    	gestionnaireComposant.addComponent(continueButton);
+    	    	
+    	/* FIN : bouton Continuer */
+    	
+    	System.out.println(DisplayTaMere.dataBase.isConnected);
+  	}
 
 	@Override
 	public void actionPerformed(Component c) {
-		// TODO Auto-generated method stub
+		if(c == continueButton) {
+			frame.setPanel(new AccueilPanel(frame));
+		}
 		
 	}
 	 
 	@Override
 	public void paintComponent() {	
-		//Ajouter les trucs
+		/*
 		glEnable(GL_TEXTURE_2D);
 		glColor3f(1f, 1f, 1f); //reset color
 		glEnable(GL_BLEND);
@@ -167,56 +212,14 @@ public class DeathScreen implements ComponentListener, DrawableComponent, OpenGl
 		
 		DrawTool.drawFilledTriangle(Color.red, 0, 0, 100, 0, 300, 300);
 		DrawTool.drawFilledTriangle(Color.red, Display.getWidth(), 0, Display.getWidth()- 100, 0, Display.getWidth() -300, Display.getHeight() - 300);
-		
+		*/
 		}
 
 
 	@Override
 	public void displayComponent() {
-	    	
-
-	/* **** lvl **** */
-	
-	lvlLabel = new OpenGlLabel("Niveau : " + personnage.getStats().lvl);
-	lvlLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*0+50, 150, 50);
-	gestionnaireComposant.addComponent(lvlLabel);
-	
-	/* **** FIN : lvl **** */
-	    	
-	/* **** nbTues **** */
-	
-	nbKillsLabel = new OpenGlLabel("Tues : " + personnage.getStats().nbKills);
-	nbKillsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*1+50, 150, 50);
-	gestionnaireComposant.addComponent(nbKillsLabel);
-	
-	/* **** FIN : nbTues **** */
-	
-	/* **** nbLancers **** */
-	
-	nbThrowsLabel = new OpenGlLabel("Lancers : " + personnage.getStats().nbThrows);
-	nbThrowsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*2+50, 150, 50);
-	gestionnaireComposant.addComponent(nbThrowsLabel);
-	
-	/* **** FIN : nbLancers **** */
-
-	/* **** nbHits **** */
-	
-	nbHitsLabel = new OpenGlLabel("Touchers : " + personnage.getStats().nbHits);
-	nbHitsLabel.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*3+50, 150, 50);
-	gestionnaireComposant.addComponent(nbHitsLabel);
-	
-	/* **** FIN : nbHits **** */
-
-	OpenGlImage image = new OpenGlImage(loader, "Client/IHM/Images/arme.jpg");
-	image.setBounds(150, 150, 250, 150);
-	gestionnaireComposant.addComponent(image);
-	
-	/* bouton Continuer */
-	
-	continueButton = new OpenGlButton("Client/IHM/Images/play.png", "Client/IHM/Images/play_hover.png");
-	continueButton.setBounds(Display.getWidth()/2-75, Display.getHeight()/5*4+50, 150, 50);
-	gestionnaireComposant.addComponent(continueButton);
-	    	
-	/* FIN : bouton Continuer */
+		gestionnaireComposant.render();
+		gestionnaireComposant.update();
+		gestionnaireComposant.doAction();
 	}
 }

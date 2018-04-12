@@ -34,6 +34,7 @@ public class OpenGlButton implements Component {
 	private int width;
 	private int height;
 	private boolean activate = false;
+	private boolean visible = true;
 	
 	public OpenGlButton(String cheminTexture) {
 		this(cheminTexture, cheminTexture);
@@ -64,9 +65,10 @@ public class OpenGlButton implements Component {
 	public void update() {
 		
 	}
-
+	
 	@Override
 	public void render() {
+		if(!visible) return;
 		glColor3f(1f, 1f, 1f);
 		if(!isMouseEntered()) {
 			texture.draw(x, y, width, height);
@@ -85,7 +87,7 @@ public class OpenGlButton implements Component {
 
 	@Override
 	public void doAction(ComponentListener listener) {
-		
+		if(!visible) return;
 		if(Mouse.isButtonDown(0) && isMouseEntered()) {
 	        if (Mouse.getEventButton() == 0) {
 	        		activate = true;
@@ -123,6 +125,16 @@ public class OpenGlButton implements Component {
 	@Override
 	public boolean autoSupression() {
 		return false;
+	}
+	
+	@Override
+	public boolean getVisible() {
+		return visible;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 }

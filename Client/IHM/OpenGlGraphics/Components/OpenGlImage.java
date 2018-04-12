@@ -35,6 +35,7 @@ public class OpenGlImage implements Component {
 	private int width;
 	private int height;
 	private Sprite image;
+	boolean visible = true;
 	
 	public OpenGlImage(TextureLoader loader, String cheminImage) {
 		image = new Sprite(loader, cheminImage);
@@ -56,6 +57,16 @@ public class OpenGlImage implements Component {
 	public int getWidth() {return width;}
 	@Override
 	public int getHeight() {return height;}
+	
+	@Override
+	public boolean getVisible() {
+		return visible;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 
 	@Override
 	public void update() {

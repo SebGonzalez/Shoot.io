@@ -23,10 +23,11 @@ public class Client {
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 
-			String message = p.getNom() + "/" + p.getX() + "/" + p.getY();
+			String message = p.getNom() + "/" + p.getX() + "/" + p.getY() + "/" + p.getIdSkin() + "/" + p.getIdWeapon();
+			System.out.println("Message d'envoie : " + message);
 
 			out.writeBytes(message + "\n");
-			//out.flush();
+			out.flush();
 
 			Thread t4 = new Thread(new Emission(out, p));
 			t4.start();

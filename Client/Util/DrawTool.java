@@ -137,13 +137,14 @@ public class DrawTool {
 	 * Dessine un cercle REMPLI de la couleur donnee de centre {x1, y1} et de rayon radius
 	 * 
 	 */
-	public static void drawFilledCircle(double x, double y, double radius){
+	public static void drawFilledCircle(Color color, double x, double y, double radius){
 		int i;
 		int triangleAmount = 75;
 		
 		double twicePi = 2.0f * Math.PI;
 		
 		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(color.r, color.g, color.b);
 			glVertex2d(x, y); 
 			for(i = 0; i <= triangleAmount;i++) { 
 				glVertex2d(
@@ -158,13 +159,14 @@ public class DrawTool {
 	 * 
 	 * Dessine un cercle VIDE de la couleur donnee de centre {x1, y1} et de rayon radius
 	 */
-	public static void drawCircle(double x, double y, double radius){
+	public static void drawCircle(Color color, double x, double y, double radius){
 		int i;
 		int lineAmount = 50; 
 		
 		double twicePi = 2.0f * Math.PI;
 		
 		glBegin(GL_LINE_LOOP);
+		glColor3f(color.r, color.g, color.b);
 			for(i = 0; i <= lineAmount;i++) { 
 				glVertex2d(
 				    x + (radius * Math.cos(i *  twicePi / lineAmount)), 

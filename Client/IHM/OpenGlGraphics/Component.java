@@ -12,4 +12,6 @@ public interface Component {
 	public void doAction(ComponentListener listener);
 	public boolean isFocused();
 	public boolean autoSupression();
+	public boolean getVisible();
+	public void setVisible(boolean visible);
 }

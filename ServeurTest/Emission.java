@@ -1,4 +1,4 @@
-package ServeurTest;
+ package ServeurTest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,10 +24,18 @@ public class Emission implements Runnable {
 			}
 			
 			String joueurTue = "";
+			Iterator<Personnage> it4 = ServeurTest.gestionnaireJoueur.listeJoueurAdd.iterator();
+			while (it4.hasNext()) {
+				Personnage p = it4.next();
+				joueurTue += "A/" + p.getNom() + "/" + p.getX() + "/" + p.getY() + "/" + p.getIdSkin() + "/" + p.getIdWeapon() + ";";
+			}
 			Iterator<Personnage> it3 = ServeurTest.gestionnaireJoueur.listeJoueurUpdate.iterator();
 			while (it3.hasNext()) {
 				Personnage p = it3.next();
-				joueurTue += "V/" + p.getNom() + "/" + p.getCaracteristique().getSante() + ";";
+				joueurTue += "V/" + p.getNom() + "/" + p.getCaracteristique().santeDifferenceAdversaire + "/" +  p.getCaracteristique().santeDifferenceClient + ";";
+				System.out.println("Envoie : " + joueurTue);
+				p.getCaracteristique().santeDifferenceAdversaire = 0;
+				p.getCaracteristique().santeDifferenceClient = 0;
 			}
 			Iterator<String> it2 = ServeurTest.gestionnaireJoueur.listeJoueurSuppr.iterator();
 			while (it2.hasNext()) {
@@ -46,7 +54,7 @@ public class Emission implements Runnable {
 					try {
 						if(!joueurTue.equals("")) ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes("I" + joueurTue + "\n");
 						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes(message + "\n");
-						
+						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).flush();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -62,6 +70,8 @@ public class Emission implements Runnable {
 				}
 			}
 			ServeurTest.gestionnaireJoueur.listeJoueurSuppr.clear();
+			ServeurTest.gestionnaireJoueur.listeJoueurAdd.clear();
+			ServeurTest.gestionnaireJoueur.listeJoueurUpdate.clear();
 			ServeurTest.gestionnaireMerde.listeMerdeModifie.clear();
 
 			// System.out.println("Emission : " + ServeurTest.compteurEmission + ",

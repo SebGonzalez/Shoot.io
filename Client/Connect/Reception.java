@@ -21,10 +21,8 @@ public class Reception implements Runnable {
 			try {
 
 				String messageS = in.readLine();
-				if(messageS.length() > 1 && messageS.charAt(0) == 'I') {
-					System.out.println("Avant critique : " + messageS);
+				if(messageS.length() > 1 && messageS.charAt(0) == 'I')
 					DisplayTaMere.gestionnaireAdversaire.updateDonneCritique(messageS.substring(1));
-				}
 
 				DisplayTaMere.gestionnaireAdversaire.setReception(messageS);
 

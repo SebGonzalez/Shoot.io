@@ -27,13 +27,11 @@ public class GestionnaireMerde {
 		listeMerde.get(id).setX(r.nextInt(5000));
 		listeMerde.get(id).setY(r.nextInt(5000));
 		listeMerdeModifie.add(id);
-		System.out.println("OIOIOI : " + id);
 	}
 	
 	public String envoieInfo() {
 		String message = "";
 		for(int m : listeMerdeModifie) {
-			System.out.println("IDDD : " + m);
 			message += "M/"+ m + "/" + listeMerde.get(m).getX()+"/"+listeMerde.get(m).getY() + ";";
 		}
 		return message;

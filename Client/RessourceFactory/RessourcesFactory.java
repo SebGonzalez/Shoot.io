@@ -39,30 +39,6 @@ public class RessourcesFactory {
 	
 
 	public static void loadImage() {
-		
-		try {
-			
-			for(int i=0; i<NB_POSITION; i++) {
-				for(int y=0; y<NB_SPRITE; y++) {
-					String chemin = cheminImageDaronne + i + "_" + y + ".png";
-					System.out.println(i + " " + y + " " + chemin);
-					textureDaronne[i][y] = loadTexture(chemin);
-				}
-			}
-			
-			textureMerde = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminImageMerde));
-			
-			//texturePersonnage = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminImagePersonnage));
-			//textureArme = TextureLoader.getTexture("JPG", Class.class.getResourceAsStream(cheminImageArme));
-			textureStat = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream(cheminImageStat));
-			
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-
 		intTextureArme = loadTexture(cheminImageArme);
 		//intTexturePersonnage = loadTexture(cheminImagePersonnage);
 		intTextureStat = loadTexture(cheminImageStat);

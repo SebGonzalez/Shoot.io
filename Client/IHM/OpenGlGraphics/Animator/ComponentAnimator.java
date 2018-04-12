@@ -146,4 +146,13 @@ public class ComponentAnimator implements Component {
 	public boolean autoSupression() {
 		return autoSuppression;
 	}
+	
+	@Override
+	public boolean getVisible() {
+		return true;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+	}
 }

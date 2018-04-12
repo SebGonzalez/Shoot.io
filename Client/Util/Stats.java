@@ -16,7 +16,7 @@ public class Stats {
 	public int nbKills;
 	
 	/**
-	 * Nombre de lvl
+	 * lvl atteint
 	 */
 	public int lvl;
 	

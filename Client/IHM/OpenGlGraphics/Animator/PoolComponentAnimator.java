@@ -44,6 +44,7 @@ public class PoolComponentAnimator implements Component {
 				int newX = c[i].getX() + (int)(delta*translateX/duree);
 				int newY = c[i].getY() + (int)(delta*translateY/duree);
 				
+				
 				if(xBase[i]+translateX > xBase[i])
 					if(newX > xBase[i]+translateX) newX = xBase[i]+translateX;
 				else if(xBase[i]+translateX < xBase[i])
@@ -111,4 +112,8 @@ public class PoolComponentAnimator implements Component {
 	public int getWidth() {return 0;}
 	@Override
 	public int getHeight() {return 0;}
+	@Override
+	public boolean getVisible() {return true;}
+	@Override
+	public void setVisible(boolean visible) {}
 }

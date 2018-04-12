@@ -27,6 +27,7 @@ import Client.IHM.OpenGlGraphics.GestionnaireComposant;
 import Client.IHM.OpenGlGraphics.Animator.PoolComponentAnimator;
 import Client.IHM.OpenGlGraphics.Animator.TypeAnimation;
 import Client.IHM.OpenGlGraphics.Components.DrawableComponent;
+import Client.IHM.OpenGlGraphics.Components.OpenGlAlertBox;
 import Client.IHM.OpenGlGraphics.Components.OpenGlButton;
 import Client.IHM.OpenGlGraphics.Components.OpenGlFrame;
 import Client.IHM.OpenGlGraphics.Components.OpenGlImage;
@@ -37,6 +38,8 @@ import Client.RessourceFactory.RessourcesFactory;
 import Client.RessourceFactory.Sprite;
 import Client.RessourceFactory.TextureLoader;
 import Client.Util.DrawTool;
+import Client.Util.GestionnaireAdversaire;
+import Client.Util.GestionnaireMerde;
 import Client.Util.Personnage;
 import Client.Util.State;
 
@@ -51,8 +54,8 @@ public class AccueilPanel implements ComponentListener, OpenGlPanel {
 	/**
 	 * Bouton continuer qui permet au joueur de relancer une partie.
 	 */
-	private OpenGlButton playButton;
-
+	private OpenGlButton goToConnectionButton;
+	
 	private TextureLoader loader;
 
 	/* *** Connexion *** */
@@ -65,13 +68,18 @@ public class AccueilPanel implements ComponentListener, OpenGlPanel {
 	/* *** FIN : Connexion *** */
 
 	/* *** Jouer sans connexion *** */
+	private OpenGlButton playAsGuest;
 	private OpenGlButton start;
 	private OpenGlLabel pseudoLabel;
 	private OpenGlTextField pseudoTextField;
 	/* *** FIN : Jouer sans connexion *** */
+	
+	//Affichage déjà connecté
+	private OpenGlLabel pseudoLabelConnecte;
+	private OpenGlButton replayButton; 
+	private OpenGlButton deconnexion; 
 
 	private OpenGlButton inscription;
-	private OpenGlButton playAsGuest;
 	
 
 	public AccueilPanel(OpenGlFrame frame) {
@@ -87,10 +95,9 @@ public class AccueilPanel implements ComponentListener, OpenGlPanel {
 
 	@Override
 	public void actionPerformed(Component c) {
-		System.out.println("lo");
-		if (c == playButton) {
+		if (c == goToConnectionButton) {
 
-			Component comp[] = { playAsGuest, inscription, usernameLabel, usernameTextField, pwdLabel, pwdTextField, connectionButton, playButton };
+			Component comp[] = { playAsGuest, inscription, usernameLabel, usernameTextField, pwdLabel, pwdTextField, connectionButton, goToConnectionButton };
 			PoolComponentAnimator animation = new PoolComponentAnimator(comp, TypeAnimation.TRANSLATE, Display.getWidth(), 0, 750);
 			gestionnaireComposant.addComponent(animation);
 
@@ -105,22 +112,68 @@ public class AccueilPanel implements ComponentListener, OpenGlPanel {
 				}
 		}
 		else if(c == playAsGuest) {
-			Component comp[] = { playAsGuest, inscription, start, pseudoLabel, pseudoTextField, playButton};
+			Component comp[] = { playAsGuest, inscription, start, pseudoLabel, pseudoTextField, goToConnectionButton};
 			PoolComponentAnimator animation2 = new PoolComponentAnimator(comp, TypeAnimation.TRANSLATE, -Display.getWidth(), 0, 750);
 			gestionnaireComposant.addComponent(animation2);
 		}
 		else if (c == start) {
 			gestionnaireComposant.clear();
-			DisplayTaMere.personnage = new Personnage(pseudoTextField.getText(), 2000, 2000);
+			DisplayTaMere.gestionnaireAdversaire = new GestionnaireAdversaire();
+			DisplayTaMere.gestionnaireMerde = new GestionnaireMerde();
+			DisplayTaMere.personnage = new Personnage(pseudoTextField.getText(), 2000, 2000, DisplayTaMere.dataBase.getSkinId(), DisplayTaMere.dataBase.getWeaponId(), true);
 			Client client = new Client(DisplayTaMere.personnage);
+			DisplayTaMere.dataBase.pseudo = pseudoTextField.getText();
 			DisplayTaMere.personnage.setArme();
 			frame.setPanel(new GamePanel(frame));
+		}
+		else if(c == connectionButton) {
+			if(usernameTextField.getText().equals("")) {
+				OpenGlAlertBox alertBox = new OpenGlAlertBox("Veuillez entrer un pseudo !");
+				alertBox.setBounds(Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 150, 300, 300);
+				gestionnaireComposant.addComponent(alertBox);
+			}
+			else if(pwdTextField.getText().equals("")) {
+				OpenGlAlertBox alertBox = new OpenGlAlertBox("Veuillez entrer un mot de passe !");
+				alertBox.setBounds(Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 150, 300, 300);
+				gestionnaireComposant.addComponent(alertBox);
+			}
+			else {
+				DisplayTaMere.dataBase.getConnexion();
+				DisplayTaMere.dataBase.connect(usernameTextField.getText(), pwdTextField.getText());
+				gestionnaireComposant.clear();
+				DisplayTaMere.gestionnaireAdversaire = new GestionnaireAdversaire();
+				DisplayTaMere.gestionnaireMerde = new GestionnaireMerde();
+				DisplayTaMere.personnage = new Personnage(usernameTextField.getText(), 2000, 2000, DisplayTaMere.dataBase.getSkinId(), DisplayTaMere.dataBase.getWeaponId(), true);
+				System.out.println(usernameTextField.getText());
+				Client client = new Client(DisplayTaMere.personnage);
+				DisplayTaMere.personnage.setArme();
+				frame.setPanel(new GamePanel(frame));
+			}
+		}
+		else if(c == replayButton) {
+			DisplayTaMere.dataBase.getSkin();
+			DisplayTaMere.dataBase.getWeapon();
+			DisplayTaMere.gestionnaireAdversaire = new GestionnaireAdversaire();
+			DisplayTaMere.gestionnaireMerde = new GestionnaireMerde();
+			DisplayTaMere.personnage = new Personnage(DisplayTaMere.dataBase.pseudo, 2000, 2000,DisplayTaMere.dataBase.getSkinId(), DisplayTaMere.dataBase.getWeaponId(), true);
+			DisplayTaMere.personnage.setArme();
+			gestionnaireComposant.clear();
+			Client client = new Client(DisplayTaMere.personnage);
+			frame.setPanel(new GamePanel(frame));
+		}
+		else if(c == deconnexion) {
+			inscription.setVisible(true);
+			playAsGuest.setVisible(true);
+			goToConnectionButton.setVisible(true);
+			pseudoLabelConnecte.setVisible(false);
+			deconnexion.setVisible(false);
+			replayButton.setVisible(false);
+			
+			DisplayTaMere.dataBase.closeConnection();
 		}
 	}
 
 	public void initAccueil() {
-		
-		
 		int largeurBackground = 0, hauteurBackground = Display.getHeight() / 3;
 
 		while (hauteurBackground < Display.getHeight()) {
@@ -154,41 +207,41 @@ public class AccueilPanel implements ComponentListener, OpenGlPanel {
 		
 		
 
-		OpenGlImage imageGrosseGauche = new OpenGlImage(loader, "Client/IHM/Images/Daronne/daronne_0_0.png");
+		OpenGlImage imageGrosseGauche = new OpenGlImage(loader, "Client/IHM/Images/Daronne/daronne_0_0_9.png");
 		imageGrosseGauche.setBounds(20, Display.getHeight() / 4, 63 * 2, 99 * 2);
 		gestionnaireComposant.addComponent(imageGrosseGauche);
 
-		OpenGlImage imageGrosseDroite = new OpenGlImage(loader, "Client/IHM/Images/Daronne/daronne_1_0.png");
+		OpenGlImage imageGrosseDroite = new OpenGlImage(loader, "Client/IHM/Images/Daronne/daronne_1_0_9.png");
 		imageGrosseDroite.setBounds(Display.getWidth() - 63 * 2 - 20, Display.getHeight() / 4, 63 * 2, 99 * 2);
 		gestionnaireComposant.addComponent(imageGrosseDroite);
 
-		OpenGlImage image = new OpenGlImage(loader, "Client/IHM/Images/fenetre.png");
-		image.setBounds(Display.getWidth() / 4 - 32, Display.getHeight() / 5, 32 * 2, 32 * 2);
-		gestionnaireComposant.addComponent(image);
+		OpenGlImage fenetreGauche = new OpenGlImage(loader, "Client/IHM/Images/fenetre.png");
+		fenetreGauche.setBounds(Display.getWidth() / 4 - 32, Display.getHeight() / 5, 32 * 2, 32 * 2);
+		gestionnaireComposant.addComponent(fenetreGauche);
 
-		OpenGlImage image3 = new OpenGlImage(loader, "Client/IHM/Images/fenetre.png");
-		image3.setBounds(Display.getWidth() / 4 * 3 - 32, Display.getHeight() / 5, 32 * 2, 32 * 2);
-		gestionnaireComposant.addComponent(image3);
+		OpenGlImage fenetreDroite = new OpenGlImage(loader, "Client/IHM/Images/fenetre.png");
+		fenetreDroite.setBounds(Display.getWidth() / 4 * 3 - 32, Display.getHeight() / 5, 32 * 2, 32 * 2);
+		gestionnaireComposant.addComponent(fenetreDroite);
 
-		OpenGlImage image2 = new OpenGlImage(loader, "Client/IHM/Images/tamer.png");
-		image2.setBounds(Display.getWidth() / 2 - 750 / 8, Display.getHeight() / 100 * 35 - 750 / 4, 750 / 4, 868 / 4);
-		gestionnaireComposant.addComponent(image2);
+		OpenGlImage logo = new OpenGlImage(loader, "Client/IHM/Images/tamer.png");
+		logo.setBounds(Display.getWidth() / 2 - 750 / 8, Display.getHeight() / 100 * 35 - 750 / 4, 750 / 4, 868 / 4);
+		gestionnaireComposant.addComponent(logo);
 
-		OpenGlImage image4 = new OpenGlImage(loader, "Client/IHM/Images/Aspirateur.png");
-		image4.setBounds(Display.getWidth() - 500 / 4, Display.getHeight() - 438 / 3, 500 / 4, 438 / 4);
-		gestionnaireComposant.addComponent(image4);
+		OpenGlImage aspirateur = new OpenGlImage(loader, "Client/IHM/Images/Aspirateur.png");
+		aspirateur.setBounds(Display.getWidth() - 500 / 4, Display.getHeight() - 438 / 3, 500 / 4, 438 / 4);
+		gestionnaireComposant.addComponent(aspirateur);
 
 
-		usernameLabel = new OpenGlLabel("nom d'utilisateur : ");
-		usernameLabel.setBounds((Display.getWidth() / 3) - Display.getWidth(), Display.getHeight() / 10 * 5 + 12, 150, 50);
+		usernameLabel = new OpenGlLabel("Nom d'utilisateur : ");
+		usernameLabel.setBounds((Display.getWidth() / 5 * 3 - 75 - 150 - Display.getWidth()*5/100) - Display.getWidth(), Display.getHeight() / 10 * 7 + 12 - 50  - Display.getHeight()/100*5, 150, 50);
 		gestionnaireComposant.addComponent(usernameLabel);
 
 		usernameTextField = new OpenGlTextField();
-		usernameTextField.setBounds((Display.getWidth() / 5 * 3 - 75) - Display.getWidth(), Display.getHeight() / 10 * 5, 150, 50);
+		usernameTextField.setBounds((Display.getWidth() / 5 * 3 - 75) - Display.getWidth(),  Display.getHeight() / 10 * 7 + 12 - 50  - Display.getHeight()/100*5, 150, 50);
 		gestionnaireComposant.addComponent(usernameTextField);
 
 		pwdLabel = new OpenGlLabel("Mot de passe : ");
-		pwdLabel.setBounds((Display.getWidth() / 3) - Display.getWidth(), Display.getHeight() / 10 * 7 + 12, 150, 50);
+		pwdLabel.setBounds((Display.getWidth() / 5 * 3 - 75 - 150 - Display.getWidth()*5/100) - Display.getWidth(), Display.getHeight() / 10 * 7 + 12, 150, 50);
 		gestionnaireComposant.addComponent(pwdLabel);
 
 		pseudoTextField = new OpenGlTextField();
@@ -204,25 +257,49 @@ public class AccueilPanel implements ComponentListener, OpenGlPanel {
 		gestionnaireComposant.addComponent(connectionButton);
 
 		pseudoLabel = new OpenGlLabel("Pseudo : ");
-		pseudoLabel.setBounds((Display.getWidth() / 100 * 42) + Display.getWidth(), Display.getHeight() / 10 * 7 + 12, 150, 50);
+		pseudoLabel.setBounds((Display.getWidth() / 100 * 45) - 500/8 + Display.getWidth(), Display.getHeight() / 10 * 7 + 12, 150, 50);
 		gestionnaireComposant.addComponent(pseudoLabel);
 
 		start = new OpenGlButton("Client/IHM/Images/rouleau.png", "Client/IHM/Images/rouleau-jouer-hover.png");
-		start.setBounds(Display.getWidth() / 2 - 500 / 8 + Display.getWidth(), Display.getHeight() / 100 * 85, 500 / 4, 141 / 4);
+		start.setBounds(Display.getWidth() / 2 - 500/8 + Display.getWidth(), Display.getHeight() / 100 * 85, 500 / 4, 141 / 4);
 		gestionnaireComposant.addComponent(start);
 
-		playButton = new OpenGlButton("Client/IHM/Images/planche.png", "Client/IHM/Images/planche_hover.png");
-		playButton.setBounds(Display.getWidth() / 3 - 500 / 4 - 10, Display.getHeight() / 100 * 50, 500 / 2 + 20, 297 / 2);
-		gestionnaireComposant.addComponent(playButton);	
+		goToConnectionButton = new OpenGlButton("Client/IHM/Images/planche.png", "Client/IHM/Images/planche_hover.png");
+		goToConnectionButton.setBounds(Display.getWidth() / 3 - 500 / 4 - 10, Display.getHeight() / 100 * 80 - 297/2 - Display.getHeight()/100*5, 500 / 2 + 20, 297 / 2);
+		gestionnaireComposant.addComponent(goToConnectionButton);
+		goToConnectionButton.setVisible(!DisplayTaMere.dataBase.isConnected);
 		
 		inscription = new OpenGlButton("Client/IHM/Images/Hachette.png", "Client/IHM/Images/Hachette_hover.png");
-		inscription.setBounds(Display.getWidth() / 2 - 500/4, Display.getHeight()/10 * 8, 500/2, 151/2);
+		inscription.setBounds(Display.getWidth() / 2 - 500/4, Display.getHeight()/100 * 80, 500/2, 151/2);
 		gestionnaireComposant.addComponent(inscription);	
 		
 		playAsGuest = new OpenGlButton("Client/IHM/Images/Grille_pain.png", "Client/IHM/Images/Grille_pain_hover.png");
-		playAsGuest.setBounds(Display.getWidth()*2/ 3 - 500 / 4 - 10, Display.getHeight() / 100 * 48, 500 / 2 + 20, 330 / 2);
-		gestionnaireComposant.addComponent(playAsGuest);	
+		playAsGuest.setBounds(Display.getWidth()*2/ 3 - 500 / 4 - 10, Display.getHeight() / 100 * 80 - 330/2 - Display.getHeight()/100*5, 500 / 2 + 20, 330 / 2);
+		gestionnaireComposant.addComponent(playAsGuest);
 		
+		pseudoLabelConnecte = new OpenGlLabel("Pseudo : ");
+		pseudoLabelConnecte.setBounds(Display.getWidth()/2, Display.getHeight()/2 + 100, 100, 25);
+		gestionnaireComposant.addComponent(pseudoLabelConnecte);
+		
+		deconnexion = new OpenGlButton("Client/IHM/Images/deco.png");
+		deconnexion.setBounds(Display.getWidth()/2+ 200, Display.getHeight()/2 + 100, 100, 100);
+		gestionnaireComposant.addComponent(deconnexion);
+		
+		replayButton = new OpenGlButton("Client/IHM/Images/Couteau-rejouer.png", "Client/IHM/Images/Couteau-rejouer-hover.png");
+		replayButton.setBounds(Display.getWidth() / 2 - 128, Display.getHeight() / 100 * 80 -  21*2 - Display.getHeight()/100*8, 128*2, 21*2);
+		gestionnaireComposant.addComponent(replayButton);
+		
+		if(DisplayTaMere.dataBase.isConnected || !DisplayTaMere.dataBase.pseudo.equals("")) {
+			pseudoLabelConnecte.setTexte("Pseudo : " + DisplayTaMere.dataBase.pseudo);
+			inscription.setVisible(false);
+			playAsGuest.setVisible(false);
+			goToConnectionButton.setVisible(false);
+		}
+		else {
+			pseudoLabelConnecte.setVisible(false);
+			deconnexion.setVisible(false);
+			replayButton.setVisible(false);
+		}
 	}
 	
 	@Override
