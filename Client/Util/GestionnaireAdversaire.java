@@ -55,7 +55,7 @@ public class GestionnaireAdversaire {
 	}
 	
 	public void updateDonneCritique(String reception) {
-		System.out.println("Et c'est le critique : " + reception.length() + " " + reception);
+		//System.out.println("Et c'est le critique : " + reception.length() + " " + reception);
 		String messageSplit[] = reception.split(";");
 		for(String s : messageSplit) {
 			String messageSplit2[] = s.split("/");

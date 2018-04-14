@@ -15,8 +15,8 @@ public class Client {
 		try {
 
 			System.out.println("Demande de connexion");
-			 //socket = new Socket("195.221.218.183",18000);
-			socket = new Socket("localhost", 18000);
+			 socket = new Socket("192.168.43.114",18000);
+			//socket = new Socket("localhost", 18000);
 			//socket.setTcpNoDelay(true);
 			System.out.println("Connexion �tablie avec le serveur, authentification :"); // Si le message s'affiche c'est que je suis connect�
 
@@ -26,7 +26,7 @@ public class Client {
 			String message = p.getNom() + "/" + p.getX() + "/" + p.getY() + "/" + p.getIdSkin() + "/" + p.getIdWeapon();
 			System.out.println("Message d'envoie : " + message);
 
-			out.writeBytes(message + "\n");
+			out.writeBytes(message + "/E\n");
 			out.flush();
 
 			Thread t4 = new Thread(new Emission(out, p));

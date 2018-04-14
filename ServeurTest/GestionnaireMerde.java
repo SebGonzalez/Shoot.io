@@ -24,9 +24,11 @@ public class GestionnaireMerde {
 	}
 	
 	public void genererMerde(int id) {
+		if(id < 50) {
 		listeMerde.get(id).setX(r.nextInt(5000));
 		listeMerde.get(id).setY(r.nextInt(5000));
 		listeMerdeModifie.add(id);
+		}
 	}
 	
 	public String envoieInfo() {

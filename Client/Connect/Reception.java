@@ -21,9 +21,20 @@ public class Reception implements Runnable {
 			try {
 
 				String messageS = in.readLine();
-				if(messageS.length() > 1 && messageS.charAt(0) == 'I')
+				if(messageS.length() > 1 && messageS.charAt(0) == 'I') {
+					while(messageS.charAt(messageS.length()-1) != 'E') {
+						String tmp = in.readLine();
+						System.out.println("TMPPPPP : " + tmp);
+						messageS += tmp;
+					}
 					DisplayTaMere.gestionnaireAdversaire.updateDonneCritique(messageS.substring(1));
+				}
 
+				while(messageS.charAt(messageS.length()-1) != 'E') {
+					String tmp = in.readLine();
+					System.out.println("TMPPPPP : " + tmp);
+					messageS += tmp;
+				}
 				DisplayTaMere.gestionnaireAdversaire.setReception(messageS);
 
 			} catch (IOException e) {

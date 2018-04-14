@@ -281,8 +281,8 @@ public class AccueilPanel implements ComponentListener, OpenGlPanel {
 		pseudoLabelConnecte.setBounds(Display.getWidth()/2, Display.getHeight()/2 + 100, 100, 25);
 		gestionnaireComposant.addComponent(pseudoLabelConnecte);
 		
-		deconnexion = new OpenGlButton("Client/IHM/Images/deco.png");
-		deconnexion.setBounds(Display.getWidth()/2+ 200, Display.getHeight()/2 + 100, 100, 100);
+		deconnexion = new OpenGlButton("Client/IHM/Images/deco.png", "Client/IHM/Images/deco_hover.png");
+		deconnexion.setBounds(Display.getWidth()/2+ 250, Display.getHeight()/2 + 120, 100, 100);
 		gestionnaireComposant.addComponent(deconnexion);
 		
 		replayButton = new OpenGlButton("Client/IHM/Images/Couteau-rejouer.png", "Client/IHM/Images/Couteau-rejouer-hover.png");

@@ -33,7 +33,7 @@ public class Emission implements Runnable {
 			while (it3.hasNext()) {
 				Personnage p = it3.next();
 				joueurTue += "V/" + p.getNom() + "/" + p.getCaracteristique().santeDifferenceAdversaire + "/" +  p.getCaracteristique().santeDifferenceClient + ";";
-				System.out.println("Envoie : " + joueurTue);
+				//System.out.println("Envoie : " + joueurTue);
 				p.getCaracteristique().santeDifferenceAdversaire = 0;
 				p.getCaracteristique().santeDifferenceClient = 0;
 			}
@@ -52,8 +52,9 @@ public class Emission implements Runnable {
 
 				if (ServeurTest.gestionnaireJoueur.listeJoueur.get(cle) != null) {
 					try {
-						if(!joueurTue.equals("")) ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes("I" + joueurTue + "\n");
-						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes(message + "\n");
+						if(!joueurTue.equals("")) { ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes("I" + joueurTue + "E\n");
+						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).flush(); }
+						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).writeBytes(message + "E\n");
 						ServeurTest.gestionnaireJoueur.listeJoueur.get(cle).flush();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

@@ -54,7 +54,7 @@ public class Emission implements Runnable {
 			p.getCaracteristique().santeDifferenceClient = 0;
 
 			try {
-				out.writeBytes(message + "\n");
+				out.writeBytes(message + "E\n");
 				out.flush();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

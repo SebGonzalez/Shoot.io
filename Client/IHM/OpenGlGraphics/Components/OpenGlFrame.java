@@ -21,9 +21,9 @@ import org.lwjgl.opengl.DisplayMode;
 
 public class OpenGlFrame {
 	/** The width of the game display area */
-	private int width = 1650-1650/10;
+	private int width = 1400;
 	/** The height of the game display area */
-	private int height = 1050-1050/10;
+	private int height = 700;
 
 	private OpenGlPanel panel;
 	
@@ -32,7 +32,7 @@ public class OpenGlFrame {
 	public OpenGlFrame() {
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
-			Display.setTitle("Test");
+			Display.setTitle("TaMer.io");
 			Display.setInitialBackground(1.0F, 1.0F, 1.0F);
 			/*Display.setFullscreen(true);
 			width = Display.getWidth();

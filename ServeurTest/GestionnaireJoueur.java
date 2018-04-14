@@ -77,8 +77,8 @@ public class GestionnaireJoueur {
 						cle.getArme().setDecalageX(Integer.parseInt(messageSplit2[10]));
 						cle.getCaracteristique().setSante(cle.getCaracteristique().getSante() + Float.parseFloat(messageSplit2[11]));
 						cle.getCaracteristique().santeDifferenceClient += Float.parseFloat(messageSplit2[11]);
-						if(Float.parseFloat(messageSplit2[11]) > 0)
-							System.out.println("Reçu : " + cle.getCaracteristique().santeDifferenceClient);
+						//if(Float.parseFloat(messageSplit2[11]) > 0)
+							//System.out.println("Reçu : " + cle.getCaracteristique().santeDifferenceClient);
 						if(Float.parseFloat(messageSplit2[11]) > 0) listeJoueurUpdate.add(cle);
 						break;
 					}

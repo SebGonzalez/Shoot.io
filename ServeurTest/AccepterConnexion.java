@@ -30,6 +30,12 @@ public class AccepterConnexion implements Runnable {
 				String login = in.readLine();
 				//System.out.println("Message reçu : " + login);
 
+				System.out.println(login);
+				while(login.charAt(login.length()-1) != 'E') {
+					String tmp = in.readLine();
+					System.out.println("TMPPPPP : " + tmp);
+					login += tmp;
+				}
 				String[] loginSplit = login.split("/");
 				//System.out.println("login : " + login);
 				
@@ -40,7 +46,7 @@ public class AccepterConnexion implements Runnable {
 				messageInitial += ServeurTest.gestionnaireMerde.envoieAll();
 				//System.out.println("oui :  " + messageInitial.length() + " " + messageInitial);
 
-				out.writeBytes("I" + messageInitial + "\n");
+				out.writeBytes("I" + messageInitial + "E\n");
 				out.flush();
 
 				Thread threadReception = new Thread(new Reception(in, loginSplit[0], out));

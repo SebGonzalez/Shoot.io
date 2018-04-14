@@ -183,7 +183,7 @@ public class Arme {
 		x = x + xVectorRecuperer * delta * VITESSE*2;
 		y = y + yVectorRecuperer * delta * VITESSE*2;
 		
-		System.out.println("x : " + Math.abs(x-xPerso)  + " : " + Math.abs(y-yPerso));
+		//System.out.println("x : " + Math.abs(x-xPerso)  + " : " + Math.abs(y-yPerso));
 		if(Math.abs(x-xPerso) < 2 && Math.abs(y-yPerso) < 2) {
 			x = xPerso;
 			y = yPerso;
@@ -203,13 +203,13 @@ public class Arme {
 				if(!joueurTouche.contains(p.getNom())) {
 					DisplayTaMere.personnage.getStats().nbHits++;
 					if(p.getCaracteristique().getSante() - degat <= 0) {
-						System.out.println("iiiiii " + p.getCaracteristique().getSante() + " " + degat + " " + (p.getCaracteristique().getSante() - degat));
+						//System.out.println("iiiiii " + p.getCaracteristique().getSante() + " " + degat + " " + (p.getCaracteristique().getSante() - degat));
 						DisplayTaMere.gestionnaireAdversaire.addAversaireTue(p);
 						it.remove();
 						DisplayTaMere.personnage.getStats().nbKills++;
 					}
 					else {
-						System.out.println("eeeee " + p.getCaracteristique().getSante() + " " + degat + " " + p.getNom());
+						//System.out.println("eeeee " + p.getCaracteristique().getSante() + " " + degat + " " + p.getNom());
 						p.getCaracteristique().santeDifferenceAdversaire = degat;
 						DisplayTaMere.gestionnaireAdversaire.addAversaireUpdate(p);
 					}
